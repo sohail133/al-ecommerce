@@ -1,0 +1,31 @@
+default: &default
+  adapter: postgresql
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+  username: postgres
+  password: postgres
+
+development:
+  <<: *default
+  database: al-ecommerce-development
+
+test:
+  <<: *default
+  database: al-ecommerce-test
+
+production:
+  primary:
+    <<: *default
+    database: al-ecommerce-production
+  cache:
+    <<: *default
+    database: al-ecommerce-production-cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: al-ecommerce-production-queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *default
+    database: al-ecommerce-production-cable
+    migrations_paths: db/cable_migrate
