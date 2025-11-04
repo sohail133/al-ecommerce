@@ -33,16 +33,30 @@
           </span>
         </button>
 
-        <div class="relative">
-          <button class="flex items-center space-x-2 p-2 rounded-lg hover:bg-green-light dark:hover:bg-green-light transition-colors duration-200">
-            <div class="w-8 h-8 bg-green-primary rounded-full flex items-center justify-center">
-              <span class="text-white text-sm font-medium">A</span>
-            </div>
+        <div class="relative" data-controller="dropdown">
+          <button data-action="click->dropdown#toggle" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-green-light dark:hover:bg-green-light transition-colors duration-200">
+            <%= user_avatar(current_user, size: 8, class_names: "flex-shrink-0") %>
             <%= render "shared/svg_icons/chevron_down", class: "w-4 h-4 text-green-deep dark:text-green-deep hidden md:block" %>
           </button>
+          
+          <div data-dropdown-target="menu" class="hidden dropdown-menu">
+            <div class="py-1">
+              <div class="px-4 py-2 border-b border-pink-border">
+                <p class="text-sm font-medium text-green-deep"><%= current_user&.full_name %></p>
+                <p class="text-xs text-green-muted"><%= current_user&.email %></p>
+              </div>
+              <%= link_to edit_admin_user_path(current_user), class: "dropdown-item" do %>
+                <%= render "shared/svg_icons/user", class: "w-4 h-4 mr-2" %>
+                Edit Profile
+              <% end %>
+              <%= button_to destroy_user_session_path, method: :delete, class: "flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200", data: { turbo_method: :delete } do %>
+                <%= render "shared/svg_icons/logout", class: "w-4 h-4 mr-2" %>
+                Logout
+              <% end %>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </header>
-

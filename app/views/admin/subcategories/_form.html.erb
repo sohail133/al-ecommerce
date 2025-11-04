@@ -1,0 +1,31 @@
+<%= form_with model: [:admin, @subcategory], local: true, class: "space-y-6" do |f| %>
+  <%= render "shared/form_errors", object: @subcategory %>
+
+  <div>
+    <%= f.label :category_id, class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.select :category_id, options_from_collection_for_select(@categories, :id, :name, @subcategory.category_id), { prompt: "Select a category" }, { class: "form-select" } %>
+  </div>
+
+  <div>
+    <%= f.label :name, class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.text_field :name, class: "form-input" %>
+  </div>
+
+  <div>
+    <%= f.label :description, class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.text_area :description, rows: 4, class: "form-textarea" %>
+  </div>
+
+  <div class="flex items-center justify-between pt-4 border-t border-pink-border">
+    <div>
+      <% if @subcategory.persisted? %>
+        <%= render "admin/shared/delete_button", delete_path: admin_subcategory_path(@subcategory) %>
+      <% end %>
+    </div>
+    <div class="flex items-center space-x-3">
+      <%= link_to "Cancel", admin_subcategories_path, class: "btn-secondary" %>
+      <%= f.submit class: "btn-primary" %>
+    </div>
+  </div>
+<% end %>
+

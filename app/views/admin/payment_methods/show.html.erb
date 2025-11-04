@@ -1,0 +1,48 @@
+<% content_for :title, "#{@payment_method.name} - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep"><%= @payment_method.name %></h1>
+      <p class="mt-2 text-sm text-green-muted">Payment method details and usage</p>
+    </div>
+    <div class="flex items-center space-x-2">
+      <%= link_to edit_admin_payment_method_path(@payment_method), class: "flex items-center btn-secondary" do %>
+        <%= render "shared/svg_icons/edit", class: "w-4 h-4 mr-2" %>
+        Edit
+      <% end %>
+      <%= render "admin/shared/delete_button", delete_path: admin_payment_method_path(@payment_method) %>
+      <%= link_to admin_payment_methods_path, class: "flex items-center btn-secondary" do %>
+        <%= render "shared/svg_icons/arrow_left", class: "w-4 h-4 mr-2" %>
+        Back
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Name</label>
+        <p class="text-sm text-green-deep"><%= @payment_method.name %></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Code</label>
+        <p class="text-sm text-green-deep font-mono"><%= @payment_method.code %></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Status</label>
+        <div class="mt-1"><%= status_badge(@payment_method.active, type: :active) %></div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Created At</label>
+        <p class="text-sm text-green-deep"><%= @payment_method.created_at.strftime("%B %d, %Y") %></p>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-pink-border">
+      <h3 class="text-lg font-semibold text-green-deep mb-4">Orders</h3>
+      <p class="text-sm text-green-muted">Total orders using this payment method: <%= @payment_method.orders.count %></p>
+    </div>
+  </div>
+</div>
+

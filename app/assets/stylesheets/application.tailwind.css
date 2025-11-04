@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  button, a, input, select, textarea, [role="button"], [tabindex] {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+}
+
+@layer components {
+  .user-avatar {
+    @apply rounded-full bg-green-primary flex items-center justify-center text-white font-medium transition-all duration-200;
+  }
+  
+  .form-input {
+    @apply mt-1 block w-full px-3 py-2 border border-pink-border rounded-md shadow-sm focus:outline-none focus:ring-green-primary focus:border-green-primary sm:text-sm bg-white text-green-deep transition-all duration-200;
+  }
+  
+  .form-select {
+    @apply mt-1 block w-full px-3 py-2 border border-pink-border rounded-md shadow-sm focus:outline-none focus:ring-green-primary focus:border-green-primary sm:text-sm bg-white text-green-deep appearance-none pr-10 transition-all duration-200;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-size: 1.5em 1.5em;
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+  }
+  
+  .form-textarea {
+    @apply mt-1 block w-full px-3 py-2 border border-pink-border rounded-md shadow-sm focus:outline-none focus:ring-green-primary focus:border-green-primary sm:text-sm bg-white text-green-deep transition-all duration-200;
+  }
+  
+  .form-checkbox {
+    @apply h-4 w-4 text-green-primary focus:ring-green-primary border-pink-border rounded transition-all duration-200;
+  }
+  
+  .btn-primary {
+    @apply px-4 py-2 text-sm font-medium text-white bg-green-primary rounded-md hover:bg-green-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-primary transition-all duration-200;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 text-sm font-medium text-green-deep bg-white border border-pink-border rounded-md hover:bg-green-light transition-all duration-200;
+  }
+  
+  .btn-danger {
+    @apply flex items-center px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200;
+  }
+  
+  .dropdown-menu {
+    @apply absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 py-1 transition-all duration-200;
+  }
+  
+  .dropdown-item {
+    @apply flex items-center px-4 py-2 text-sm text-green-deep hover:bg-green-light transition-colors duration-200;
+  }
+}
+
+:root {
+  /* Green Tones */
+  --color-green-primary: hsl(145, 45%, 45%);
+  --color-green-dark: hsl(145, 50%, 35%);
+  --color-green-light: hsl(145, 50%, 85%);
+  --color-green-deep: hsl(145, 30%, 20%);
+  --color-green-muted: hsl(145, 15%, 45%);
+
+  /* Pink Tones */
+  --color-pink-lightest: hsl(350, 100%, 98%);
+  --color-pink-light: hsl(350, 100%, 95%);
+  --color-pink-accent: hsl(350, 100%, 88%);
+  --color-pink-border: hsl(350, 50%, 92%);
+
+  /* Neutral Colors */
+  --color-white: hsl(0, 0%, 100%);
+  --color-black: hsl(0, 0%, 0%);
+
+  /* System Colors */
+  --color-error: hsl(0, 84.2%, 60.2%);
+}
+
+/* Dark mode support */
+.dark {
+  --color-green-primary: hsl(145, 45%, 50%);
+  --color-green-dark: hsl(145, 50%, 40%);
+  --color-green-light: hsl(145, 50%, 25%);
+  --color-green-deep: hsl(145, 30%, 80%);
+  --color-green-muted: hsl(145, 15%, 65%);
+
+  --color-pink-lightest: hsl(350, 100%, 10%);
+  --color-pink-light: hsl(350, 100%, 8%);
+  --color-pink-accent: hsl(350, 100%, 15%);
+  --color-pink-border: hsl(350, 50%, 20%);
+
+  --color-white: hsl(0, 0%, 10%);
+  --color-black: hsl(0, 0%, 90%);
+}
+

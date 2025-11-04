@@ -1,0 +1,75 @@
+<% content_for :title, "Product Variants - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep">Product Variants</h1>
+      <p class="mt-2 text-sm text-green-muted">Manage product variants, SKUs, and inventory</p>
+    </div>
+    <%= link_to new_admin_product_variant_path, class: "flex items-center px-4 py-2 text-sm font-medium text-white bg-green-primary rounded-md hover:bg-green-dark transition-colors" do %>
+      <%= render "shared/svg_icons/add", class: "w-4 h-4 mr-2" %>
+      Add Variant
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-lg border border-pink-border shadow-sm">
+    <div>
+      <table class="min-w-full divide-y divide-pink-border">
+        <thead class="bg-green-light">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Product</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">SKU</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Price</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Stock</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-pink-border">
+          <% @product_variants.each do |variant| %>
+            <tr class="hover:bg-green-light transition-colors">
+              <td class="px-6 py-4">
+                <div class="text-sm font-medium text-green-deep"><%= variant.product.title %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-green-deep"><%= variant.name %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-green-deep font-mono"><%= variant.sku %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-green-deep"><%= format_currency(variant.price) %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% if variant.inventory %>
+                  <div class="text-sm text-green-deep">
+                    <%= variant.inventory.available_quantity %> available
+                  </div>
+                  <% if variant.low_stock? %>
+                    <div class="text-xs text-yellow-600">Low stock</div>
+                  <% end %>
+                <% else %>
+                  <div class="text-sm text-green-muted">No inventory</div>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <%= status_badge(variant.active, type: :active) %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <%= render "admin/shared/actions_dropdown", resource: variant, show_path: admin_product_variant_path(variant), edit_path: edit_admin_product_variant_path(variant), delete_path: admin_product_variant_path(variant) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <% if @product_variants.empty? %>
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
+      <p class="text-green-muted">No product variants found. Create your first variant to get started.</p>
+    </div>
+  <% end %>
+</div>
+

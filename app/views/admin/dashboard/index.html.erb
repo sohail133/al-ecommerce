@@ -3,7 +3,7 @@
 <div class="space-y-6">
   <div class="mb-8">
     <h1 class="text-3xl font-bold text-green-deep dark:text-green-deep">Dashboard</h1>
-    <p class="mt-2 text-sm text-green-muted dark:text-green-muted">Welcome back! Here's what's happening with your store today.</p>
+    <p class="mt-2 text-sm text-green-muted dark:text-green-muted">Welcome back, <%= current_user.full_name %>! Here's what's happening with your store today.</p>
   </div>
 
   <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -11,9 +11,9 @@
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm font-medium text-green-muted dark:text-green-muted">Total Revenue</p>
-          <p class="mt-2 text-3xl font-bold text-green-deep dark:text-green-deep">$24,567</p>
+          <p class="mt-2 text-3xl font-bold text-green-deep dark:text-green-deep"><%= format_currency(@total_revenue) %></p>
           <p class="mt-2 text-xs text-green-primary">
-            <span class="font-medium">+12.5%</span> from last month
+            <span class="font-medium">Delivered Orders</span>
           </p>
         </div>
         <div class="p-3 bg-green-light dark:bg-green-light rounded-lg">
@@ -26,9 +26,9 @@
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm font-medium text-green-muted dark:text-green-muted">Total Orders</p>
-          <p class="mt-2 text-3xl font-bold text-green-deep dark:text-green-deep">1,234</p>
+          <p class="mt-2 text-3xl font-bold text-green-deep dark:text-green-deep"><%= @total_orders %></p>
           <p class="mt-2 text-xs text-green-primary">
-            <span class="font-medium">+8.2%</span> from last month
+            <span class="font-medium"><%= @pending_orders %></span> pending
           </p>
         </div>
         <div class="p-3 bg-green-light dark:bg-green-light rounded-lg">
@@ -40,10 +40,10 @@
     <div class="bg-white dark:bg-white rounded-lg border border-pink-border dark:border-pink-border p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-green-muted dark:text-green-muted">Active Customers</p>
-          <p class="mt-2 text-3xl font-bold text-green-deep dark:text-green-deep">8,901</p>
+          <p class="text-sm font-medium text-green-muted dark:text-green-muted">Total Users</p>
+          <p class="mt-2 text-3xl font-bold text-green-deep dark:text-green-deep"><%= @total_users %></p>
           <p class="mt-2 text-xs text-green-primary">
-            <span class="font-medium">+15.3%</span> from last month
+            <span class="font-medium">Active Users</span>
           </p>
         </div>
         <div class="p-3 bg-green-light dark:bg-green-light rounded-lg">
@@ -56,9 +56,9 @@
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm font-medium text-green-muted dark:text-green-muted">Total Products</p>
-          <p class="mt-2 text-3xl font-bold text-green-deep dark:text-green-deep">456</p>
+          <p class="mt-2 text-3xl font-bold text-green-deep dark:text-green-deep"><%= @total_products %></p>
           <p class="mt-2 text-xs text-green-primary">
-            <span class="font-medium">+5.1%</span> from last month
+            <span class="font-medium"><%= @active_products %></span> active
           </p>
         </div>
         <div class="p-3 bg-green-light dark:bg-green-light rounded-lg">
@@ -70,47 +70,31 @@
 
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
     <div class="bg-white dark:bg-white rounded-lg border border-pink-border dark:border-pink-border shadow-sm">
-      <div class="px-6 py-4 border-b border-pink-border dark:border-pink-border">
+      <div class="px-6 py-4 border-b border-pink-border dark:border-pink-border flex items-center justify-between">
         <h2 class="text-lg font-semibold text-green-deep dark:text-green-deep">Recent Orders</h2>
+        <%= link_to admin_orders_path, class: "text-sm text-green-primary hover:text-green-dark" do %>
+          View all →
+        <% end %>
       </div>
       <div class="p-6">
-        <div class="space-y-4">
-          <div class="flex items-center justify-between p-4 rounded-lg hover:bg-green-light dark:hover:bg-green-light transition-colors duration-200">
-            <div class="flex-1">
-              <p class="text-sm font-medium text-green-deep dark:text-green-deep">Order #1234</p>
-              <p class="text-xs text-green-muted dark:text-green-muted">Customer Name • 2 items</p>
-            </div>
-            <div class="text-right">
-              <p class="text-sm font-semibold text-green-deep dark:text-green-deep">$234.56</p>
-              <p class="text-xs text-green-primary">Pending</p>
-            </div>
+        <% if @recent_orders.any? %>
+          <div class="space-y-4">
+            <% @recent_orders.each do |order| %>
+              <%= link_to admin_order_path(order), class: "flex items-center justify-between p-4 rounded-lg hover:bg-green-light dark:hover:bg-green-light transition-colors duration-200" do %>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-green-deep dark:text-green-deep">Order #<%= order.id %></p>
+                  <p class="text-xs text-green-muted dark:text-green-muted"><%= order.user.full_name %> • <%= order.items_count %> items</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm font-semibold text-green-deep dark:text-green-deep"><%= format_currency(order.total_amount) %></p>
+                  <%= status_badge(order.status, type: :order) %>
+                </div>
+              <% end %>
+            <% end %>
           </div>
-          <div class="flex items-center justify-between p-4 rounded-lg hover:bg-green-light dark:hover:bg-green-light transition-colors duration-200">
-            <div class="flex-1">
-              <p class="text-sm font-medium text-green-deep dark:text-green-deep">Order #1233</p>
-              <p class="text-xs text-green-muted dark:text-green-muted">Customer Name • 1 item</p>
-            </div>
-            <div class="text-right">
-              <p class="text-sm font-semibold text-green-deep dark:text-green-deep">$89.99</p>
-              <p class="text-xs text-green-primary">Shipped</p>
-            </div>
-          </div>
-          <div class="flex items-center justify-between p-4 rounded-lg hover:bg-green-light dark:hover:bg-green-light transition-colors duration-200">
-            <div class="flex-1">
-              <p class="text-sm font-medium text-green-deep dark:text-green-deep">Order #1232</p>
-              <p class="text-xs text-green-muted dark:text-green-muted">Customer Name • 3 items</p>
-            </div>
-            <div class="text-right">
-              <p class="text-sm font-semibold text-green-deep dark:text-green-deep">$456.78</p>
-              <p class="text-xs text-green-primary">Delivered</p>
-            </div>
-          </div>
-        </div>
-        <div class="mt-6">
-          <%= link_to "#", class: "block text-center text-sm text-green-primary hover:text-green-dark dark:hover:text-green-dark font-medium transition-colors duration-200" do %>
-            View all orders →
-          <% end %>
-        </div>
+        <% else %>
+          <p class="text-sm text-green-muted text-center py-4">No recent orders</p>
+        <% end %>
       </div>
     </div>
 
@@ -120,36 +104,43 @@
       </div>
       <div class="p-6">
         <div class="grid grid-cols-2 gap-4">
-          <%= link_to "#", class: "flex flex-col items-center justify-center p-6 rounded-lg border border-pink-border dark:border-pink-border hover:border-green-primary hover:bg-green-light dark:hover:bg-green-light transition-all duration-200 group" do %>
+          <%= link_to new_admin_product_path, class: "flex flex-col items-center justify-center p-6 rounded-lg border border-pink-border dark:border-pink-border hover:border-green-primary hover:bg-green-light dark:hover:bg-green-light transition-all duration-200 group" do %>
             <div class="p-3 bg-green-light dark:bg-green-light rounded-lg group-hover:bg-green-primary transition-colors duration-200">
               <%= render "shared/svg_icons/add", class: "w-6 h-6 text-green-primary group-hover:text-white transition-colors duration-200" %>
             </div>
             <p class="mt-3 text-sm font-medium text-green-deep dark:text-green-deep group-hover:text-green-primary transition-colors duration-200">Add Product</p>
           <% end %>
 
-          <%= link_to "#", class: "flex flex-col items-center justify-center p-6 rounded-lg border border-pink-border dark:border-pink-border hover:border-green-primary hover:bg-green-light dark:hover:bg-green-light transition-all duration-200 group" do %>
-            <div class="p-3 bg-green-light dark:bg-green-light rounded-lg group-hover:bg-green-primary transition-colors duration-200">
-              <%= render "shared/svg_icons/document", class: "w-6 h-6 text-green-primary group-hover:text-white transition-colors duration-200" %>
-            </div>
-            <p class="mt-3 text-sm font-medium text-green-deep dark:text-green-deep group-hover:text-green-primary transition-colors duration-200">Create Report</p>
-          <% end %>
-
-          <%= link_to "#", class: "flex flex-col items-center justify-center p-6 rounded-lg border border-pink-border dark:border-pink-border hover:border-green-primary hover:bg-green-light dark:hover:bg-green-light transition-all duration-200 group" do %>
+          <%= link_to admin_users_path, class: "flex flex-col items-center justify-center p-6 rounded-lg border border-pink-border dark:border-pink-border hover:border-green-primary hover:bg-green-light dark:hover:bg-green-light transition-all duration-200 group" do %>
             <div class="p-3 bg-green-light dark:bg-green-light rounded-lg group-hover:bg-green-primary transition-colors duration-200">
               <%= render "shared/svg_icons/customers", class: "w-6 h-6 text-green-primary group-hover:text-white transition-colors duration-200" %>
             </div>
             <p class="mt-3 text-sm font-medium text-green-deep dark:text-green-deep group-hover:text-green-primary transition-colors duration-200">Manage Users</p>
           <% end %>
 
-          <%= link_to "#", class: "flex flex-col items-center justify-center p-6 rounded-lg border border-pink-border dark:border-pink-border hover:border-green-primary hover:bg-green-light dark:hover:bg-green-light transition-all duration-200 group" do %>
+          <%= link_to admin_categories_path, class: "flex flex-col items-center justify-center p-6 rounded-lg border border-pink-border dark:border-pink-border hover:border-green-primary hover:bg-green-light dark:hover:bg-green-light transition-all duration-200 group" do %>
+            <div class="p-3 bg-green-light dark:bg-green-light rounded-lg group-hover:bg-green-primary transition-colors duration-200">
+              <%= render "shared/svg_icons/products", class: "w-6 h-6 text-green-primary group-hover:text-white transition-colors duration-200" %>
+            </div>
+            <p class="mt-3 text-sm font-medium text-green-deep dark:text-green-deep group-hover:text-green-primary transition-colors duration-200">Categories</p>
+          <% end %>
+
+          <%= link_to admin_payment_methods_path, class: "flex flex-col items-center justify-center p-6 rounded-lg border border-pink-border dark:border-pink-border hover:border-green-primary hover:bg-green-light dark:hover:bg-green-light transition-all duration-200 group" do %>
             <div class="p-3 bg-green-light dark:bg-green-light rounded-lg group-hover:bg-green-primary transition-colors duration-200">
               <%= render "shared/svg_icons/settings", class: "w-6 h-6 text-green-primary group-hover:text-white transition-colors duration-200" %>
             </div>
-            <p class="mt-3 text-sm font-medium text-green-deep dark:text-green-deep group-hover:text-green-primary transition-colors duration-200">Settings</p>
+            <p class="mt-3 text-sm font-medium text-green-deep dark:text-green-deep group-hover:text-green-primary transition-colors duration-200">Payment Methods</p>
           <% end %>
         </div>
+        
+        <% if @low_stock_items > 0 %>
+          <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p class="text-sm text-yellow-800">
+              <span class="font-medium"><%= @low_stock_items %></span> products are low on stock
+            </p>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
 </div>
-

@@ -1,0 +1,129 @@
+<% content_for :title, "Order ##{@order.id} - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep">Order #<%= @order.id %></h1>
+      <p class="mt-2 text-sm text-green-muted">Order details and customer information</p>
+    </div>
+    <div class="flex items-center space-x-2">
+      <%= link_to edit_admin_order_path(@order), class: "flex items-center btn-secondary" do %>
+        <%= render "shared/svg_icons/edit", class: "w-4 h-4 mr-2" %>
+        Edit
+      <% end %>
+      <%= link_to admin_orders_path, class: "flex items-center btn-secondary" do %>
+        <%= render "shared/svg_icons/arrow_left", class: "w-4 h-4 mr-2" %>
+        Back
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-green-deep mb-4">Order Information</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Order ID</label>
+          <p class="text-sm font-medium text-green-deep">#<%= @order.id %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Status</label>
+          <div class="mt-1"><%= status_badge(@order.status, type: :order) %></div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Total Amount</label>
+          <p class="text-sm font-medium text-green-deep"><%= format_currency(@order.total_amount) %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Items Count</label>
+          <p class="text-sm text-green-deep"><%= @order.items_count %> items</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Order Date</label>
+          <p class="text-sm text-green-deep"><%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-green-deep mb-4">Customer Information</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Customer</label>
+          <div class="flex items-center mt-1">
+            <%= user_avatar(@order.user, size: 10, class_names: "flex-shrink-0") %>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-green-deep"><%= @order.user.full_name %></p>
+              <p class="text-xs text-green-muted"><%= @order.user.email %></p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Payment Method</label>
+          <p class="text-sm text-green-deep"><%= @order.payment_method.name %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+    <h2 class="text-lg font-semibold text-green-deep mb-4">Shipping Address</h2>
+    <div class="space-y-2">
+      <p class="text-sm text-green-deep"><%= @order.address.full_name %></p>
+      <p class="text-sm text-green-deep"><%= @order.address.address_line_1 %></p>
+      <% if @order.address.address_line_2.present? %>
+        <p class="text-sm text-green-deep"><%= @order.address.address_line_2 %></p>
+      <% end %>
+      <p class="text-sm text-green-deep"><%= @order.address.city %>, <%= @order.address.province %> <%= @order.address.postal_code %></p>
+      <p class="text-sm text-green-deep"><%= @order.address.phone_number %></p>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+    <h2 class="text-lg font-semibold text-green-deep mb-4">Order Items</h2>
+    <div>
+      <table class="min-w-full divide-y divide-pink-border">
+        <thead class="bg-green-light">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Product</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Variant</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">SKU</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Quantity</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Price</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-pink-border">
+          <% @order_items.each do |item| %>
+            <tr class="hover:bg-green-light transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-green-deep"><%= item.product_variant.product.title %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-green-deep"><%= item.product_variant.name %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-green-deep font-mono"><%= item.product_variant.sku %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-green-deep"><%= item.quantity %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-green-deep"><%= format_currency(item.price) %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-green-deep"><%= format_currency(item.subtotal) %></div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot class="bg-green-light">
+          <tr>
+            <td colspan="5" class="px-6 py-3 text-right text-sm font-medium text-green-deep">Total</td>
+            <td class="px-6 py-3 text-left text-sm font-bold text-green-deep"><%= format_currency(@order.total_amount) %></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
