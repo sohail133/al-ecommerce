@@ -1,10 +1,12 @@
-module Admin
-  class BaseController < ApplicationController
-    layout "admin"
+class Admin::BaseController < ApplicationController
+  layout "admin"
 
-    # Add admin authentication/authorization logic here
-    # before_action :authenticate_admin!
-    # before_action :authorize_admin!
+  before_action :authenticate_user!
+  before_action :ensure_admin!
+
+  private
+
+  def ensure_admin!
+    render_404 unless current_user&.admin?
   end
 end
-

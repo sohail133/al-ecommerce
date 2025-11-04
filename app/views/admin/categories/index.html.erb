@@ -1,0 +1,43 @@
+<% content_for :title, "Categories - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep">Categories</h1>
+      <p class="mt-2 text-sm text-green-muted">Manage product categories</p>
+    </div>
+    <%= link_to new_admin_category_path, class: "flex items-center px-4 py-2 text-sm font-medium text-white bg-green-primary rounded-md hover:bg-green-dark transition-colors" do %>
+      <%= render "shared/svg_icons/add", class: "w-4 h-4 mr-2" %>
+      Add Category
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @categories.each do |category| %>
+      <div class="bg-white rounded-lg border border-pink-border shadow-sm hover:shadow-md transition-shadow duration-200 p-6">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold text-green-deep"><%= category.name %></h3>
+            <% if category.description.present? %>
+              <p class="mt-2 text-sm text-green-muted line-clamp-2"><%= category.description %></p>
+            <% end %>
+            <div class="mt-4 flex items-center space-x-4 text-xs text-green-muted">
+              <span><%= category.subcategories_count %> subcategories</span>
+              <span><%= category.products_count %> products</span>
+            </div>
+          </div>
+          <div>
+            <%= render "admin/shared/actions_dropdown", resource: category, show_path: admin_category_path(category), edit_path: edit_admin_category_path(category), delete_path: admin_category_path(category) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @categories.empty? %>
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
+      <p class="text-green-muted">No categories found. Create your first category to get started.</p>
+    </div>
+  <% end %>
+</div>
+

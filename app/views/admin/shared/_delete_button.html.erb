@@ -1,0 +1,5 @@
+<%= link_to delete_path, method: :delete, data: { confirm: "Are you sure you want to delete this? This action cannot be undone.", turbo_confirm: "Are you sure you want to delete this? This action cannot be undone.", turbo_method: :delete }, class: "btn-danger" do %>
+  <%= render "shared/svg_icons/trash", class: "w-4 h-4 mr-2" %>
+  Delete
+<% end %>
+

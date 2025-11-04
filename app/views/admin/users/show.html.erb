@@ -1,0 +1,68 @@
+<% content_for :title, "User Details - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep">User Details</h1>
+      <p class="mt-2 text-sm text-green-muted">View user information and manage account</p>
+    </div>
+    <div class="flex items-center space-x-2">
+      <%= link_to edit_admin_user_path(@user), class: "flex items-center btn-secondary" do %>
+        <%= render "shared/svg_icons/edit", class: "w-4 h-4 mr-2" %>
+        Edit
+      <% end %>
+      <% if @user.status? %>
+        <%= button_to deactivate_admin_user_path(@user), method: :patch, class: "flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 transition-all duration-200", data: { turbo_method: :patch } do %>
+          <span>Deactivate</span>
+        <% end %>
+      <% else %>
+        <%= button_to activate_admin_user_path(@user), method: :patch, class: "flex items-center px-4 py-2 text-sm font-medium text-green-700 bg-green-light border border-green-200 rounded-md hover:bg-green-primary hover:text-white transition-all duration-200", data: { turbo_method: :patch } do %>
+          <span>Activate</span>
+        <% end %>
+      <% end %>
+      <%= link_to admin_users_path, class: "flex items-center btn-secondary" do %>
+        <%= render "shared/svg_icons/arrow_left", class: "w-4 h-4 mr-2" %>
+        Back
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Full Name</label>
+        <p class="text-sm text-green-deep"><%= @user.full_name %></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Email</label>
+        <p class="text-sm text-green-deep"><%= @user.email %></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Role</label>
+        <div class="mt-1"><%= role_badge(@user.role) %></div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Status</label>
+        <div class="mt-1"><%= status_badge(@user.status, type: :user) %></div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Created At</label>
+        <p class="text-sm text-green-deep"><%= @user.created_at.strftime("%B %d, %Y") %></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Last Updated</label>
+        <p class="text-sm text-green-deep"><%= @user.updated_at.strftime("%B %d, %Y") %></p>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-pink-border">
+      <h3 class="text-lg font-semibold text-green-deep mb-4">Orders</h3>
+      <p class="text-sm text-green-muted">Total orders: <%= @user.orders.count %></p>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-pink-border">
+      <h3 class="text-lg font-semibold text-green-deep mb-4">Addresses</h3>
+      <p class="text-sm text-green-muted">Total addresses: <%= @user.addresses.count %></p>
+    </div>
+  </div>
+</div>

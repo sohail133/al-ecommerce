@@ -15,46 +15,56 @@
           Dashboard
         <% end %>
 
-        <%= link_to "#", 
-            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep" do %>
+        <%= link_to admin_users_path, 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 #{current_page?(admin_users_path) ? 'bg-green-primary text-white' : 'text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep'}" do %>
+          <%= render "shared/svg_icons/customers", class: "w-5 h-5 mr-3" %>
+          Users
+        <% end %>
+
+        <%= link_to admin_categories_path, 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 #{controller_name == 'categories' ? 'bg-green-primary text-white' : 'text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep'}" do %>
+          <%= render "shared/svg_icons/categories", class: "w-5 h-5 mr-3" %>
+          Categories
+        <% end %>
+
+        <%= link_to admin_subcategories_path, 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 #{controller_name == 'subcategories' ? 'bg-green-primary text-white' : 'text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep'}" do %>
+          <%= render "shared/svg_icons/subcategories", class: "w-5 h-5 mr-3" %>
+          Subcategories
+        <% end %>
+
+        <%= link_to admin_products_path, 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 #{controller_name == 'products' ? 'bg-green-primary text-white' : 'text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep'}" do %>
           <%= render "shared/svg_icons/products", class: "w-5 h-5 mr-3" %>
           Products
         <% end %>
 
-        <%= link_to "#", 
-            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep" do %>
+        <%= link_to admin_product_variants_path, 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 #{controller_name == 'product_variants' ? 'bg-green-primary text-white' : 'text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep'}" do %>
+          <%= render "shared/svg_icons/product_variants", class: "w-5 h-5 mr-3" %>
+          Product Variants
+        <% end %>
+
+        <%= link_to admin_payment_methods_path, 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 #{controller_name == 'payment_methods' ? 'bg-green-primary text-white' : 'text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep'}" do %>
+          <%= render "shared/svg_icons/payment_methods", class: "w-5 h-5 mr-3" %>
+          Payment Methods
+        <% end %>
+
+        <%= link_to admin_orders_path, 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 #{controller_name == 'orders' ? 'bg-green-primary text-white' : 'text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep'}" do %>
           <%= render "shared/svg_icons/orders", class: "w-5 h-5 mr-3" %>
           Orders
-        <% end %>
-
-        <%= link_to "#", 
-            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep" do %>
-          <%= render "shared/svg_icons/customers", class: "w-5 h-5 mr-3" %>
-          Customers
-        <% end %>
-
-        <%= link_to "#", 
-            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep" do %>
-          <%= render "shared/svg_icons/analytics", class: "w-5 h-5 mr-3" %>
-          Analytics
-        <% end %>
-
-        <%= link_to "#", 
-            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep" do %>
-          <%= render "shared/svg_icons/settings", class: "w-5 h-5 mr-3" %>
-          Settings
         <% end %>
       </nav>
     </div>
 
     <div class="border-t border-pink-border dark:border-pink-border p-4">
-      <div class="flex items-center px-4 py-2">
-        <div class="flex-shrink-0 w-8 h-8 bg-green-primary rounded-full flex items-center justify-center">
-          <span class="text-white text-sm font-medium">A</span>
-        </div>
-        <div class="ml-3">
-          <p class="text-sm font-medium text-green-deep dark:text-green-deep">Admin User</p>
-          <p class="text-xs text-green-muted dark:text-green-muted">admin@example.com</p>
+      <div class="flex items-center px-4 py-3">
+        <%= user_avatar(current_user, size: 10, class_names: "flex-shrink-0") %>
+        <div class="ml-3 flex-1 min-w-0">
+          <p class="text-sm font-medium text-green-deep dark:text-green-deep truncate"><%= current_user&.full_name || "Admin User" %></p>
+          <p class="text-xs text-green-muted dark:text-green-muted truncate"><%= current_user&.email || "admin@example.com" %></p>
         </div>
       </div>
     </div>
