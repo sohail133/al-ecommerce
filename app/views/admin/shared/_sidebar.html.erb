@@ -1,0 +1,63 @@
+<nav data-admin-target="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-white border-r border-pink-border dark:border-pink-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 -translate-x-full lg:static lg:inset-0">
+  <div class="flex flex-col h-full">
+    <div class="flex items-center justify-between h-16 px-6 border-b border-pink-border dark:border-pink-border">
+      <h1 class="text-xl font-bold text-green-deep dark:text-green-deep">Admin</h1>
+      <button data-action="click->admin#closeSidebar" class="lg:hidden text-green-deep dark:text-green-deep hover:text-green-primary dark:hover:text-green-primary">
+        <%= render "shared/svg_icons/close" %>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto py-4">
+      <nav class="space-y-1 px-3">
+        <%= link_to admin_root_path, 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 #{current_page?(admin_root_path) ? 'bg-green-primary text-white' : 'text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep'}" do %>
+          <%= render "shared/svg_icons/dashboard", class: "w-5 h-5 mr-3" %>
+          Dashboard
+        <% end %>
+
+        <%= link_to "#", 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep" do %>
+          <%= render "shared/svg_icons/products", class: "w-5 h-5 mr-3" %>
+          Products
+        <% end %>
+
+        <%= link_to "#", 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep" do %>
+          <%= render "shared/svg_icons/orders", class: "w-5 h-5 mr-3" %>
+          Orders
+        <% end %>
+
+        <%= link_to "#", 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep" do %>
+          <%= render "shared/svg_icons/customers", class: "w-5 h-5 mr-3" %>
+          Customers
+        <% end %>
+
+        <%= link_to "#", 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep" do %>
+          <%= render "shared/svg_icons/analytics", class: "w-5 h-5 mr-3" %>
+          Analytics
+        <% end %>
+
+        <%= link_to "#", 
+            class: "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-green-deep dark:text-green-deep hover:bg-green-light dark:hover:bg-green-light hover:text-green-deep dark:hover:text-green-deep" do %>
+          <%= render "shared/svg_icons/settings", class: "w-5 h-5 mr-3" %>
+          Settings
+        <% end %>
+      </nav>
+    </div>
+
+    <div class="border-t border-pink-border dark:border-pink-border p-4">
+      <div class="flex items-center px-4 py-2">
+        <div class="flex-shrink-0 w-8 h-8 bg-green-primary rounded-full flex items-center justify-center">
+          <span class="text-white text-sm font-medium">A</span>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium text-green-deep dark:text-green-deep">Admin User</p>
+          <p class="text-xs text-green-muted dark:text-green-muted">admin@example.com</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+

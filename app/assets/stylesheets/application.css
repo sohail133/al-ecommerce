@@ -1,10 +1,42 @@
-/*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Green Tones */
+  --color-green-primary: hsl(145, 45%, 45%);
+  --color-green-dark: hsl(145, 50%, 35%);
+  --color-green-light: hsl(145, 50%, 85%);
+  --color-green-deep: hsl(145, 30%, 20%);
+  --color-green-muted: hsl(145, 15%, 45%);
+
+  /* Pink Tones */
+  --color-pink-lightest: hsl(350, 100%, 98%);
+  --color-pink-light: hsl(350, 100%, 95%);
+  --color-pink-accent: hsl(350, 100%, 88%);
+  --color-pink-border: hsl(350, 50%, 92%);
+
+  /* Neutral Colors */
+  --color-white: hsl(0, 0%, 100%);
+  --color-black: hsl(0, 0%, 0%);
+
+  /* System Colors */
+  --color-error: hsl(0, 84.2%, 60.2%);
+}
+
+/* Dark mode support */
+.dark {
+  --color-green-primary: hsl(145, 45%, 50%);
+  --color-green-dark: hsl(145, 50%, 40%);
+  --color-green-light: hsl(145, 50%, 25%);
+  --color-green-deep: hsl(145, 30%, 80%);
+  --color-green-muted: hsl(145, 15%, 65%);
+
+  --color-pink-lightest: hsl(350, 100%, 10%);
+  --color-pink-light: hsl(350, 100%, 8%);
+  --color-pink-accent: hsl(350, 100%, 15%);
+  --color-pink-border: hsl(350, 50%, 20%);
+
+  --color-white: hsl(0, 0%, 10%);
+  --color-black: hsl(0, 0%, 90%);
+}

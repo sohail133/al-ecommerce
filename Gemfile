@@ -8,8 +8,10 @@ gem "propshaft"
 gem 'pg', '~> 1.6', '>= 1.6.2'
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
-# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
+# Use JavaScript bundling [https://github.com/rails/jsbundling-rails]
+gem "jsbundling-rails"
+# Use CSS bundling [https://github.com/rails/cssbundling-rails]
+gem "cssbundling-rails"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
@@ -57,6 +59,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  
+  # Process manager for Procfile-based applications
+  gem "foreman"
 end
 
 group :test do
