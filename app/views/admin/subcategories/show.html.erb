@@ -1,0 +1,57 @@
+<% content_for :title, "#{@subcategory.name} - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep"><%= @subcategory.name %></h1>
+      <p class="mt-2 text-sm text-green-muted">Subcategory details and related products</p>
+    </div>
+    <div class="flex items-center space-x-2">
+      <%= link_to edit_admin_subcategory_path(@subcategory), class: "flex items-center btn-secondary" do %>
+        <%= render "shared/svg_icons/edit", class: "w-4 h-4 mr-2" %>
+        Edit
+      <% end %>
+      <%= render "admin/shared/delete_button", delete_path: admin_subcategory_path(@subcategory) %>
+      <%= link_to admin_subcategories_path, class: "flex items-center btn-secondary" do %>
+        <%= render "shared/svg_icons/arrow_left", class: "w-4 h-4 mr-2" %>
+        Back
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Name</label>
+        <p class="text-sm text-green-deep"><%= @subcategory.name %></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-muted mb-1">Category</label>
+        <p class="text-sm text-green-deep"><%= link_to @subcategory.category.name, admin_category_path(@subcategory.category), class: "text-green-primary hover:text-green-dark" %></p>
+      </div>
+      <% if @subcategory.description.present? %>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-green-muted mb-1">Description</label>
+          <p class="text-sm text-green-deep"><%= @subcategory.description %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-pink-border">
+      <h3 class="text-lg font-semibold text-green-deep mb-4">Products</h3>
+      <% if @subcategory.products.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <% @subcategory.products.each do |product| %>
+            <%= link_to admin_product_path(product), class: "p-4 border border-pink-border rounded-lg hover:bg-green-light transition-colors" do %>
+              <p class="font-medium text-green-deep"><%= product.title %></p>
+              <p class="text-xs text-green-muted mt-1"><%= format_currency(product.price) %></p>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-green-muted">No products in this subcategory</p>
+      <% end %>
+    </div>
+  </div>
+</div>
+

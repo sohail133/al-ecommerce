@@ -1,0 +1,52 @@
+<% content_for :title, "Users - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep">Users</h1>
+      <p class="mt-2 text-sm text-green-muted">Manage all users and their accounts</p>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg border border-pink-border shadow-sm">
+    <div>
+      <table class="min-w-full divide-y divide-pink-border">
+        <thead class="bg-green-light sticky top-0 z-10">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">User</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Role</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-pink-border">
+          <% @users.each do |user| %>
+            <tr class="hover:bg-green-light transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <%= user_avatar(user, size: 10, class_names: "flex-shrink-0") %>
+                  <div class="ml-3">
+                    <div class="text-sm font-medium text-green-deep"><%= user.full_name %></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-green-deep"><%= user.email %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <%= role_badge(user.role) %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <%= status_badge(user.status, type: :user) %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <%= render "admin/shared/actions_dropdown", resource: user, show_path: admin_user_path(user), edit_path: nil, delete_path: nil %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="min-h-screen bg-pink-lightest flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div class="bg-white rounded-lg shadow-sm border border-pink-border p-8">
+      <div>
+        <h2 class="text-center text-3xl font-bold text-green-deep">Change your password</h2>
+        <p class="mt-2 text-center text-sm text-green-muted">Enter your new password below.</p>
+      </div>
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "mt-8 space-y-6" }) do |f| %>
+        <%= render "shared/form_errors", object: resource %>
+        <%= f.hidden_field :reset_password_token %>
+
+        <div class="space-y-4">
+          <div>
+            <%= f.label :password, "New password", class: "block text-sm font-medium text-green-muted mb-1" %>
+            <%= f.password_field :password, autofocus: true, autocomplete: "new-password", placeholder: "New password", class: "form-input" %>
+            <% if @minimum_password_length %>
+              <p class="mt-1 text-xs text-green-muted"><%= @minimum_password_length %> characters minimum</p>
+            <% end %>
+          </div>
+          <div>
+            <%= f.label :password_confirmation, "Confirm new password", class: "block text-sm font-medium text-green-muted mb-1" %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm new password", class: "form-input" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.submit "Change my password", class: "btn-primary w-full" %>
+        </div>
+      <% end %>
+
+      <div class="mt-6">
+        <%= link_to "Back to log in", new_session_path(resource_name), class: "block w-full text-center text-sm text-green-primary hover:text-green-dark transition-colors duration-200" %>
+      </div>
+    </div>
+  </div>
+</div>

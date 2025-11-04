@@ -1,0 +1,103 @@
+<% content_for :title, "#{@product_variant.name} - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep"><%= @product_variant.name %></h1>
+      <p class="mt-2 text-sm text-green-muted">Product variant details and inventory</p>
+    </div>
+    <div class="flex items-center space-x-2">
+      <%= link_to edit_admin_product_variant_path(@product_variant), class: "flex items-center btn-secondary" do %>
+        <%= render "shared/svg_icons/edit", class: "w-4 h-4 mr-2" %>
+        Edit
+      <% end %>
+      <%= render "admin/shared/delete_button", delete_path: admin_product_variant_path(@product_variant) %>
+      <% if @product_variant.inventory %>
+        <%= link_to edit_admin_inventory_path(@product_variant.inventory), class: "flex items-center btn-secondary" do %>
+          <%= render "shared/svg_icons/settings", class: "w-4 h-4 mr-2" %>
+          Manage Inventory
+        <% end %>
+      <% else %>
+        <%= link_to edit_admin_inventory_path(product_variant_id: @product_variant.id), class: "flex items-center btn-secondary" do %>
+          <%= render "shared/svg_icons/add", class: "w-4 h-4 mr-2" %>
+          Create Inventory
+        <% end %>
+      <% end %>
+      <%= link_to admin_product_variants_path, class: "flex items-center btn-secondary" do %>
+        <%= render "shared/svg_icons/arrow_left", class: "w-4 h-4 mr-2" %>
+        Back
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-green-deep mb-4">Variant Information</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Product</label>
+          <p class="text-sm text-green-deep"><%= link_to @product_variant.product.title, admin_product_path(@product_variant.product), class: "text-green-primary hover:text-green-dark" %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Name</label>
+          <p class="text-sm text-green-deep"><%= @product_variant.name %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">SKU</label>
+          <p class="text-sm text-green-deep font-mono"><%= @product_variant.sku %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Price</label>
+          <p class="text-sm font-medium text-green-deep"><%= format_currency(@product_variant.price) %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Status</label>
+          <div class="mt-1"><%= status_badge(@product_variant.active, type: :active) %></div>
+        </div>
+      </div>
+    </div>
+
+    <% if @product_variant.inventory %>
+      <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-green-deep mb-4">Inventory</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-green-muted mb-1">Total Quantity</label>
+            <p class="text-sm font-medium text-green-deep"><%= @product_variant.inventory.quantity %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-green-muted mb-1">Reserved Quantity</label>
+            <p class="text-sm text-green-deep"><%= @product_variant.inventory.reserved_quantity %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-green-muted mb-1">Available Quantity</label>
+            <p class="text-sm font-medium text-green-deep"><%= @product_variant.inventory.available_quantity %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-green-muted mb-1">Threshold Level</label>
+            <p class="text-sm text-green-deep"><%= @product_variant.inventory.threshold_level %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-green-muted mb-1">Stock Status</label>
+            <div class="mt-1">
+              <% if @product_variant.inventory.low_stock? %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Low Stock</span>
+              <% elsif @product_variant.inventory.in_stock? %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-light text-green-deep">In Stock</span>
+              <% else %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Out of Stock</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-green-deep mb-4">Inventory</h2>
+        <p class="text-sm text-green-muted mb-4">No inventory record found. Create one to track stock.</p>
+        <%= link_to "Create Inventory", edit_admin_inventory_path(product_variant_id: @product_variant.id), class: "px-4 py-2 text-sm font-medium text-white bg-green-primary rounded-md hover:bg-green-dark" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

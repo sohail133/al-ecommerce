@@ -1,0 +1,43 @@
+<% content_for :title, "Payment Methods - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep">Payment Methods</h1>
+      <p class="mt-2 text-sm text-green-muted">Manage payment methods available to customers</p>
+    </div>
+    <%= link_to new_admin_payment_method_path, class: "flex items-center px-4 py-2 text-sm font-medium text-white bg-green-primary rounded-md hover:bg-green-dark transition-colors" do %>
+      <%= render "shared/svg_icons/add", class: "w-4 h-4 mr-2" %>
+      Add Payment Method
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @payment_methods.each do |payment_method| %>
+      <div class="bg-white rounded-lg border border-pink-border shadow-sm hover:shadow-md transition-shadow duration-200 p-6">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold text-green-deep"><%= payment_method.name %></h3>
+            <p class="mt-1 text-sm text-green-muted font-mono"><%= payment_method.code %></p>
+            <div class="mt-4">
+              <%= status_badge(payment_method.active, type: :active) %>
+            </div>
+            <div class="mt-4 text-xs text-green-muted">
+              Used in <%= payment_method.orders.count %> orders
+            </div>
+          </div>
+          <div>
+            <%= render "admin/shared/actions_dropdown", resource: payment_method, show_path: admin_payment_method_path(payment_method), edit_path: edit_admin_payment_method_path(payment_method), delete_path: admin_payment_method_path(payment_method) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @payment_methods.empty? %>
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
+      <p class="text-green-muted">No payment methods found. Create your first payment method to get started.</p>
+    </div>
+  <% end %>
+</div>
+

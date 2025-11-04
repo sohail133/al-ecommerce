@@ -1,0 +1,41 @@
+<%= form_with model: [:admin, @product_variant], local: true, class: "space-y-6" do |f| %>
+  <%= render "shared/form_errors", object: @product_variant %>
+
+  <div>
+    <%= f.label :product_id, class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.select :product_id, options_from_collection_for_select(@products, :id, :title, @product_variant.product_id), { prompt: "Select a product" }, { class: "form-select" } %>
+  </div>
+
+  <div>
+    <%= f.label :sku, class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.text_field :sku, class: "form-input font-mono" %>
+  </div>
+
+  <div>
+    <%= f.label :name, class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.text_field :name, placeholder: "e.g., Large - Red", class: "form-input" %>
+  </div>
+
+  <div>
+    <%= f.label :price, class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.number_field :price, step: 0.01, min: 0, class: "form-input" %>
+  </div>
+
+  <div class="flex items-center">
+    <%= f.check_box :active, class: "form-checkbox" %>
+    <%= f.label :active, "Active", class: "ml-2 block text-sm text-green-deep" %>
+  </div>
+
+  <div class="flex items-center justify-between pt-4 border-t border-pink-border">
+    <div>
+      <% if @product_variant.persisted? %>
+        <%= render "admin/shared/delete_button", delete_path: admin_product_variant_path(@product_variant) %>
+      <% end %>
+    </div>
+    <div class="flex items-center space-x-3">
+      <%= link_to "Cancel", admin_product_variants_path, class: "btn-secondary" %>
+      <%= f.submit class: "btn-primary" %>
+    </div>
+  </div>
+<% end %>
+

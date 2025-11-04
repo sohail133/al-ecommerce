@@ -1,0 +1,32 @@
+<%= form_with model: [:admin, @payment_method], local: true, class: "space-y-6" do |f| %>
+  <%= render "shared/form_errors", object: @payment_method %>
+
+  <div>
+    <%= f.label :name, class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.text_field :name, placeholder: "e.g., Cash on Delivery", class: "form-input" %>
+  </div>
+
+  <div>
+    <%= f.label :code, class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.text_field :code, placeholder: "e.g., COD, JAZZCASH, CARD", class: "form-input font-mono uppercase" %>
+    <p class="mt-1 text-xs text-green-muted">Unique code identifier (e.g., COD, JAZZCASH, CARD)</p>
+  </div>
+
+  <div class="flex items-center">
+    <%= f.check_box :active, class: "form-checkbox" %>
+    <%= f.label :active, "Active", class: "ml-2 block text-sm text-green-deep" %>
+  </div>
+
+  <div class="flex items-center justify-between pt-4 border-t border-pink-border">
+    <div>
+      <% if @payment_method.persisted? %>
+        <%= render "admin/shared/delete_button", delete_path: admin_payment_method_path(@payment_method) %>
+      <% end %>
+    </div>
+    <div class="flex items-center space-x-3">
+      <%= link_to "Cancel", admin_payment_methods_path, class: "btn-secondary" %>
+      <%= f.submit class: "btn-primary" %>
+    </div>
+  </div>
+<% end %>
+

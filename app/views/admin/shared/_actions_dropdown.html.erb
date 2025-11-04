@@ -1,0 +1,30 @@
+<div class="relative inline-block text-left" data-controller="dropdown">
+  <button type="button" data-action="click->dropdown#toggle" class="inline-flex items-center text-green-deep hover:text-green-primary focus:outline-none p-1 rounded hover:bg-green-light">
+    <%= render "shared/svg_icons/more_vertical", class: "w-5 h-5" %>
+  </button>
+  
+  <div data-dropdown-target="menu" class="hidden dropdown-menu">
+    <div class="py-1">
+      <% if defined?(show_path) && show_path %>
+        <%= link_to show_path, class: "dropdown-item" do %>
+          <%= render "shared/svg_icons/eye", class: "w-4 h-4 mr-2" %>
+          View
+        <% end %>
+      <% end %>
+      
+      <% if defined?(edit_path) && edit_path %>
+        <%= link_to edit_path, class: "dropdown-item" do %>
+          <%= render "shared/svg_icons/edit", class: "w-4 h-4 mr-2" %>
+          Edit
+        <% end %>
+      <% end %>
+      
+      <% if defined?(delete_path) && delete_path %>
+        <%= link_to delete_path, method: :delete, data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?", turbo_method: :delete }, class: "flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200" do %>
+          <%= render "shared/svg_icons/trash", class: "w-4 h-4 mr-2" %>
+          Delete
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

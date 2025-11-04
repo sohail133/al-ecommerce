@@ -1,0 +1,58 @@
+<% content_for :title, "Subcategories - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep">Subcategories</h1>
+      <p class="mt-2 text-sm text-green-muted">Manage product subcategories</p>
+    </div>
+    <%= link_to new_admin_subcategory_path, class: "flex items-center px-4 py-2 text-sm font-medium text-white bg-green-primary rounded-md hover:bg-green-dark transition-colors" do %>
+      <%= render "shared/svg_icons/add", class: "w-4 h-4 mr-2" %>
+      Add Subcategory
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-lg border border-pink-border shadow-sm">
+    <div>
+      <table class="min-w-full divide-y divide-pink-border">
+        <thead class="bg-green-light">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Category</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Description</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Products</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-pink-border">
+          <% @subcategories.each do |subcategory| %>
+            <tr class="hover:bg-green-light transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-green-deep"><%= subcategory.name %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-green-deep"><%= subcategory.category.name %></div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm text-green-muted line-clamp-2"><%= subcategory.description %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-green-deep"><%= subcategory.products_count %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <%= render "admin/shared/actions_dropdown", resource: subcategory, show_path: admin_subcategory_path(subcategory), edit_path: edit_admin_subcategory_path(subcategory), delete_path: admin_subcategory_path(subcategory) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <% if @subcategories.empty? %>
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
+      <p class="text-green-muted">No subcategories found. Create your first subcategory to get started.</p>
+    </div>
+  <% end %>
+</div>
+

@@ -8,8 +8,10 @@ gem "propshaft"
 gem 'pg', '~> 1.6', '>= 1.6.2'
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
-# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
+# Use JavaScript bundling [https://github.com/rails/jsbundling-rails]
+gem "jsbundling-rails"
+# Use CSS bundling [https://github.com/rails/cssbundling-rails]
+gem "cssbundling-rails"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
@@ -40,6 +42,9 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# Authentication
+gem "devise"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -57,6 +62,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  
+  # Process manager for Procfile-based applications
+  gem "foreman"
 end
 
 group :test do
