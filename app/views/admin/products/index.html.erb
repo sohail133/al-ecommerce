@@ -12,6 +12,8 @@
     <% end %>
   </div>
 
+  <%= render "filters" %>
+
   <div class="bg-white rounded-lg border border-pink-border shadow-sm">
     <div>
       <table class="min-w-full divide-y divide-pink-border">
@@ -29,10 +31,45 @@
           <% @products.each do |product| %>
             <tr class="hover:bg-green-light transition-colors">
               <td class="px-6 py-4">
-                <div class="text-sm font-medium text-green-deep"><%= product.title %></div>
-                <% if product.description.present? %>
-                  <div class="text-xs text-green-muted line-clamp-1 mt-1"><%= product.description %></div>
-                <% end %>
+                <div class="flex items-start space-x-4">
+                  <div class="flex-shrink-0">
+                    <% if product.cover_image.attached? %>
+                      <%= link_to admin_product_path(product), class: "block" do %>
+                        <%= image_tag product.cover_image, class: "w-16 h-16 object-cover rounded-full border-2 border-green-primary hover:opacity-75 transition-opacity" %>
+                      <% end %>
+                    <% elsif product.images.attached? %>
+                      <%= link_to admin_product_path(product), class: "block" do %>
+                        <%= image_tag product.images.first, class: "w-16 h-16 object-cover rounded-full border border-pink-border hover:opacity-75 transition-opacity" %>
+                      <% end %>
+                    <% else %>
+                      <%= link_to admin_product_path(product), class: "block bg-gradient-to-br from-green-light to-green-primary w-16 h-16 rounded-full flex items-center justify-center hover:opacity-75 transition-opacity" do %>
+                        <span class="text-lg font-bold text-white"><%= product.title.first(2).upcase %></span>
+                      <% end %>
+                    <% end %>
+                  </div>
+                  
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-medium text-green-deep"><%= link_to product.title, admin_product_path(product), class: "hover:text-green-primary transition-colors" %></div>
+                    <% if product.description.present? %>
+                      <div class="text-xs text-green-muted line-clamp-1 mt-1"><%= product.description %></div>
+                    <% end %>
+                    
+                    <% if product.images.attached? && product.images.count > 1 %>
+                      <div class="mt-2 flex space-x-1">
+                        <% product.images.take(3).each do |image| %>
+                          <%= link_to admin_product_path(product), class: "block" do %>
+                            <%= image_tag image, class: "w-7 h-7 object-cover rounded border border-pink-border hover:opacity-75 transition-opacity" %>
+                          <% end %>
+                        <% end %>
+                        <% if product.images.count > 3 %>
+                          <%= link_to admin_product_path(product), class: "w-7 h-7 bg-green-deep rounded flex items-center justify-center hover:bg-green-primary transition-colors" do %>
+                            <span class="text-xs text-white font-semibold">+<%= product.images.count - 3 %></span>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm text-green-deep"><%= product.category.name %></div>
@@ -61,7 +98,26 @@
 
   <% if @products.empty? %>
     <div class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
-      <p class="text-green-muted">No products found. Create your first product to get started.</p>
+      <p class="text-green-muted">
+        <% if filters_active? %>
+          No products found matching your search. Try adjusting your filters.
+        <% else %>
+          No products found. Create your first product to get started.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+
+  <% if @products.present? %>
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-green-muted">
+          Showing <span class="font-medium text-green-deep"><%= @products.offset_value + 1 %></span> to <span class="font-medium text-green-deep"><%= [@products.offset_value + @products.limit_value, @products.total_count].min %></span> of <span class="font-medium text-green-deep"><%= @products.total_count %></span> products
+        </div>
+        <div>
+          <%= paginate @products, theme: 'admin' %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>

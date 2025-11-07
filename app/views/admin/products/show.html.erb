@@ -26,6 +26,29 @@
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
       <h2 class="text-lg font-semibold text-green-deep mb-4">Product Information</h2>
+      
+      <% if @product.cover_image.attached? || @product.images.attached? %>
+        <div class="mb-6 pb-6 border-b border-pink-border">
+          <% if @product.cover_image.attached? %>
+            <div class="mb-4">
+              <p class="text-xs font-medium text-green-primary mb-2">Cover Photo</p>
+              <%= image_tag @product.cover_image, class: "w-full max-w-sm h-64 object-cover rounded-lg border-2 border-green-primary" %>
+            </div>
+          <% end %>
+
+          <% if @product.images.attached? %>
+            <div>
+              <p class="text-xs font-medium text-green-muted mb-2">Gallery (<%= @product.images.count %> images)</p>
+              <div class="grid grid-cols-4 gap-2">
+                <% @product.images.each do |image| %>
+                  <%= image_tag image, class: "w-full h-20 object-cover rounded border border-pink-border hover:opacity-75 transition-opacity cursor-pointer" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      
       <div class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-green-muted mb-1">Title</label>

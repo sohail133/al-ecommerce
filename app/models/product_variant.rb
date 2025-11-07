@@ -10,9 +10,18 @@ class ProductVariant < ApplicationRecord
 
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
+  scope :recent, -> { order(created_at: :desc) }
   scope :by_product, ->(product_id) { where(product_id: product_id) }
+  scope :by_status, ->(status) { where(active: status) }
 
   after_create :create_inventory
+
+  def self.search(params)
+    variants = includes(:product, :inventory)
+    variants = variants.by_product(params[:product_id]) if params[:product_id].present?
+    variants = variants.by_status(params[:status]) if params[:status].present?
+    variants.recent
+  end
 
   def active?
     active

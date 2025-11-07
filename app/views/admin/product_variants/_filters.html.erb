@@ -1,0 +1,42 @@
+<div class="bg-white rounded-lg border border-pink-border shadow-sm p-4" data-controller="filter-accordion">
+  <button data-action="click->filter-accordion#toggle" class="flex items-center justify-between w-full text-left" type="button">
+    <div class="flex items-center space-x-2">
+      <%= render "shared/svg_icons/filter", class: "w-5 h-5 text-green-primary" %>
+      <span class="text-sm font-medium text-green-deep">Filters</span>
+      <% if filters_active? %>
+        <span class="bg-green-primary text-white text-xs px-2 py-0.5 rounded-full">Active</span>
+      <% end %>
+    </div>
+    <svg data-filter-accordion-target="icon" class="w-5 h-5 text-green-deep transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+
+  <div data-filter-accordion-target="content" class="hidden mt-4">
+    <%= form_with url: admin_product_variants_path, method: :get, class: "space-y-4" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :product_id, "Product", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.select :product_id, 
+              options_for_select([["All Products", ""]] + @products.map { |p| [p.title, p.id] }, params[:product_id]), 
+              {}, 
+              { class: "form-select" } %>
+        </div>
+
+        <div>
+          <%= f.label :status, "Status", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.select :status, 
+              options_for_select([["All Status", ""], ["Active", "true"], ["Inactive", "false"]], params[:status]), 
+              {}, 
+              { class: "form-select" } %>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-3 pt-4 border-t border-pink-border">
+        <%= link_to "Clear Filters", admin_product_variants_path, class: "btn-secondary" %>
+        <%= f.submit "Apply Filters", class: "btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

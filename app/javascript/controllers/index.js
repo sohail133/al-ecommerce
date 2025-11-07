@@ -11,3 +11,15 @@ application.register("dropdown", DropdownController)
 
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
+
+import HeroSliderController from "./hero_slider_controller"
+application.register("hero-slider", HeroSliderController)
+
+import ReviewsSliderController from "./reviews_slider_controller"
+application.register("reviews-slider", ReviewsSliderController)
+
+import FilterAccordionController from "./filter_accordion_controller"
+application.register("filter-accordion", FilterAccordionController)
+
+import CartVariantController from "./cart_variant_controller"
+application.register("cart-variant", CartVariantController)

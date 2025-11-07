@@ -12,6 +12,8 @@
     <% end %>
   </div>
 
+  <%= render "filters" %>
+
   <div class="bg-white rounded-lg border border-pink-border shadow-sm">
     <div>
       <table class="min-w-full divide-y divide-pink-border">
@@ -68,7 +70,26 @@
 
   <% if @product_variants.empty? %>
     <div class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
-      <p class="text-green-muted">No product variants found. Create your first variant to get started.</p>
+      <p class="text-green-muted">
+        <% if filters_active? %>
+          No product variants found matching your search. Try adjusting your filters.
+        <% else %>
+          No product variants found. Create your first variant to get started.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+
+  <% if @product_variants.present? %>
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-green-muted">
+          Showing <span class="font-medium text-green-deep"><%= @product_variants.offset_value + 1 %></span> to <span class="font-medium text-green-deep"><%= [@product_variants.offset_value + @product_variants.limit_value, @product_variants.total_count].min %></span> of <span class="font-medium text-green-deep"><%= @product_variants.total_count %></span> variants
+        </div>
+        <div>
+          <%= paginate @product_variants, theme: 'admin' %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>

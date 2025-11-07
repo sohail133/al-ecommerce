@@ -1,0 +1,214 @@
+<%
+  product ||= nil
+  image_url ||= nil
+  show_badge ||= false
+  badge_text ||= nil
+  index ||= 0
+  clickable ||= false
+%>
+
+<% if clickable && product.present? %>
+  <%= link_to product_path(product), class: "block" do %>
+    <div class="bg-white rounded-lg shadow-sm border border-pink-border overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+      <div class="relative h-64 overflow-hidden">
+        <% if product.present? %>
+          <% if product.cover_image.attached? %>
+            <%= image_tag product.cover_image, alt: product.title, class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" %>
+          <% elsif product.images.attached? %>
+            <%= image_tag product.images.first, alt: product.title, class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" %>
+          <% else %>
+            <div class="w-full h-full bg-gradient-to-br from-green-light to-green-primary flex items-center justify-center">
+              <span class="text-4xl font-bold text-white"><%= product.title.first(2).upcase %></span>
+            </div>
+          <% end %>
+        <% elsif image_url.present? %>
+          <img src="<%= image_url %>" alt="Product" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+        <% else %>
+          <div class="w-full h-full bg-gradient-to-br from-green-light to-green-primary flex items-center justify-center">
+            <span class="text-4xl font-bold text-white">PR</span>
+          </div>
+        <% end %>
+        
+        <% if show_badge && badge_text.present? %>
+          <div class="absolute top-4 left-4 bg-pink-accent text-white text-xs px-3 py-1 rounded-full font-semibold shadow-lg animate-pulse">
+            <%= badge_text %>
+          </div>
+        <% end %>
+        
+        <div class="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+          <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-pink-accent hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110">
+            <%= render "shared/svg_icons/heart", class: "w-5 h-5" %>
+          </button>
+          <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-green-primary hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110">
+            <%= render "shared/svg_icons/eye", class: "w-5 h-5" %>
+          </button>
+        </div>
+        
+        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      </div>
+      
+      <div class="p-4">
+        <% if product.present? %>
+          <p class="text-xs text-green-primary font-semibold mb-1 uppercase tracking-wide"><%= product.category.name %></p>
+          <h3 class="text-lg font-semibold text-green-deep mb-2 truncate group-hover:text-green-primary transition-colors duration-200"><%= product.title %></h3>
+        <% else %>
+          <p class="text-xs text-green-primary font-semibold mb-1 uppercase tracking-wide">Electronics</p>
+          <h3 class="text-lg font-semibold text-green-deep mb-2 group-hover:text-green-primary transition-colors duration-200">Premium Product</h3>
+        <% end %>
+        
+        <div class="flex items-center mb-3">
+          <% 5.times do |i| %>
+            <%= render "shared/svg_icons/star", class: "w-4 h-4 text-yellow-400" %>
+          <% end %>
+          <span class="text-sm text-green-muted ml-2">(4.8)</span>
+          <span class="text-xs text-green-muted ml-2">· 124 reviews</span>
+        </div>
+        
+        <% if product&.product_variants&.any? %>
+          <div class="mb-3">
+            <p class="text-xs text-green-muted mb-2">Variants:</p>
+            <div class="flex flex-wrap gap-2">
+              <% product.product_variants.limit(3).each do |variant| %>
+                <button class="px-3 py-1 text-xs border-2 border-pink-border rounded-full hover:border-green-primary hover:text-green-primary hover:bg-green-light transition-all duration-200 transform hover:scale-105">
+                  <%= variant.name %>
+                </button>
+              <% end %>
+              <% if product.product_variants.count > 3 %>
+                <button class="px-3 py-1 text-xs text-green-primary font-semibold">
+                  +<%= product.product_variants.count - 3 %> more
+                </button>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        
+        <div class="flex items-center justify-between pt-3 border-t border-pink-border">
+          <div>
+            <% if product.present? %>
+              <span class="text-2xl font-bold text-green-primary">$<%= product.price %></span>
+            <% else %>
+              <span class="text-2xl font-bold text-green-primary">$99.99</span>
+            <% end %>
+          </div>
+          <% if product.present? && product.product_variants.any? %>
+            <% first_variant = product.product_variants.first %>
+            <%= form_with url: add_to_cart_path, method: :post, class: "inline" do |f| %>
+              <%= f.hidden_field :variant_id, value: first_variant.id %>
+              <%= f.hidden_field :quantity, value: 1 %>
+              <%= f.button type: :submit, class: "bg-green-primary text-white px-6 py-2.5 rounded-lg hover:bg-green-dark transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg transform hover:scale-105", onclick: "event.stopPropagation();" do %>
+                <%= render "shared/svg_icons/cart", class: "w-4 h-4" %>
+                <span class="font-semibold">Add</span>
+              <% end %>
+            <% end %>
+          <% else %>
+            <button class="bg-green-primary text-white px-6 py-2.5 rounded-lg hover:bg-green-dark transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg transform hover:scale-105" disabled>
+              <%= render "shared/svg_icons/cart", class: "w-4 h-4" %>
+              <span class="font-semibold">Add</span>
+            </button>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <div class="bg-white rounded-lg shadow-sm border border-pink-border overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+    <div class="relative h-64 overflow-hidden">
+      <% if product.present? %>
+        <% if product.cover_image.attached? %>
+          <%= image_tag product.cover_image, alt: product.title, class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" %>
+        <% elsif product.images.attached? %>
+          <%= image_tag product.images.first, alt: product.title, class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" %>
+        <% else %>
+          <div class="w-full h-full bg-gradient-to-br from-green-light to-green-primary flex items-center justify-center">
+            <span class="text-4xl font-bold text-white"><%= product.title.first(2).upcase %></span>
+          </div>
+        <% end %>
+      <% elsif image_url.present? %>
+        <img src="<%= image_url %>" alt="Product" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+      <% else %>
+        <div class="w-full h-full bg-gradient-to-br from-green-light to-green-primary flex items-center justify-center">
+          <span class="text-4xl font-bold text-white">PR</span>
+        </div>
+      <% end %>
+      
+      <% if show_badge && badge_text.present? %>
+        <div class="absolute top-4 left-4 bg-pink-accent text-white text-xs px-3 py-1 rounded-full font-semibold shadow-lg animate-pulse">
+          <%= badge_text %>
+        </div>
+      <% end %>
+      
+      <div class="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+        <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-pink-accent hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110">
+          <%= render "shared/svg_icons/heart", class: "w-5 h-5" %>
+        </button>
+        <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-green-primary hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110">
+          <%= render "shared/svg_icons/eye", class: "w-5 h-5" %>
+        </button>
+      </div>
+      
+      <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    </div>
+    
+    <div class="p-4">
+      <% if product.present? %>
+        <p class="text-xs text-green-primary font-semibold mb-1 uppercase tracking-wide"><%= product.category.name %></p>
+        <h3 class="text-lg font-semibold text-green-deep mb-2 truncate group-hover:text-green-primary transition-colors duration-200"><%= product.title %></h3>
+      <% else %>
+        <p class="text-xs text-green-primary font-semibold mb-1 uppercase tracking-wide">Electronics</p>
+        <h3 class="text-lg font-semibold text-green-deep mb-2 group-hover:text-green-primary transition-colors duration-200">Premium Product</h3>
+      <% end %>
+      
+      <div class="flex items-center mb-3">
+        <% 5.times do |i| %>
+          <%= render "shared/svg_icons/star", class: "w-4 h-4 text-yellow-400" %>
+        <% end %>
+        <span class="text-sm text-green-muted ml-2">(4.8)</span>
+        <span class="text-xs text-green-muted ml-2">· 124 reviews</span>
+      </div>
+      
+      <% if product&.product_variants&.any? %>
+        <div class="mb-3">
+          <p class="text-xs text-green-muted mb-2">Variants:</p>
+          <div class="flex flex-wrap gap-2">
+            <% product.product_variants.limit(3).each do |variant| %>
+              <button class="px-3 py-1 text-xs border-2 border-pink-border rounded-full hover:border-green-primary hover:text-green-primary hover:bg-green-light transition-all duration-200 transform hover:scale-105">
+                <%= variant.name %>
+              </button>
+            <% end %>
+            <% if product.product_variants.count > 3 %>
+              <button class="px-3 py-1 text-xs text-green-primary font-semibold">
+                +<%= product.product_variants.count - 3 %> more
+              </button>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
+      <div class="flex items-center justify-between pt-3 border-t border-pink-border">
+        <div>
+          <% if product.present? %>
+            <span class="text-2xl font-bold text-green-primary">$<%= product.price %></span>
+          <% else %>
+            <span class="text-2xl font-bold text-green-primary">$99.99</span>
+          <% end %>
+        </div>
+        <% if product.present? && product.product_variants.any? %>
+          <% first_variant = product.product_variants.first %>
+          <%= form_with url: add_to_cart_path, method: :post, class: "inline" do |f| %>
+            <%= f.hidden_field :variant_id, value: first_variant.id %>
+            <%= f.hidden_field :quantity, value: 1 %>
+            <%= f.button type: :submit, class: "bg-green-primary text-white px-6 py-2.5 rounded-lg hover:bg-green-dark transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg transform hover:scale-105" do %>
+              <%= render "shared/svg_icons/cart", class: "w-4 h-4" %>
+              <span class="font-semibold">Add</span>
+            <% end %>
+          <% end %>
+        <% else %>
+          <button class="bg-green-primary text-white px-6 py-2.5 rounded-lg hover:bg-green-dark transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg transform hover:scale-105" disabled>
+            <%= render "shared/svg_icons/cart", class: "w-4 h-4" %>
+            <span class="font-semibold">Add</span>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -2,11 +2,10 @@ class Admin::UsersController < Admin::BaseController
   before_action :set_user, only: [:show, :edit, :update, :activate, :deactivate]
 
   def index
-    @users = User.all.order(created_at: :desc)
+    @users = User.search(filter_params).page(params[:page])
   end
 
-  def show
-  end
+  def show; end
 
   def edit
   end
@@ -37,5 +36,9 @@ class Admin::UsersController < Admin::BaseController
 
   def user_params
     params.require(:user).permit(:full_name, :email)
+  end
+
+  def filter_params
+    params.permit(:name, :email, :role, :status)
   end
 end

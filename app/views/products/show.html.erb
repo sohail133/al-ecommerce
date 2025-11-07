@@ -1,0 +1,122 @@
+<% content_for :title, "#{@product.title} - AL Ecommerce" %>
+
+<div class="min-h-screen bg-pink-lightest">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-6 text-sm">
+      <%= link_to "Home", root_path, class: "text-green-primary hover:underline" %> 
+      <span class="text-green-muted mx-2">/</span>
+      <%= link_to "Products", products_path, class: "text-green-primary hover:underline" %>
+      <span class="text-green-muted mx-2">/</span>
+      <span class="text-green-deep"><%= @product.title %></span>
+    </nav>
+
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6 md:p-8 mb-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <% if @product.cover_image.attached? %>
+            <%= image_tag @product.cover_image, alt: @product.title, class: "w-full h-96 object-cover rounded-lg mb-4" %>
+          <% elsif @product.images.attached? %>
+            <%= image_tag @product.images.first, alt: @product.title, class: "w-full h-96 object-cover rounded-lg mb-4" %>
+          <% else %>
+            <div class="w-full h-96 bg-gradient-to-br from-green-light to-green-primary rounded-lg mb-4 flex items-center justify-center">
+              <span class="text-8xl font-bold text-white"><%= @product.title.first(2).upcase %></span>
+            </div>
+          <% end %>
+
+          <% if @product.images.attached? && @product.images.count > 1 %>
+            <div class="grid grid-cols-4 gap-2">
+              <% @product.images.take(4).each do |image| %>
+                <%= image_tag image, alt: @product.title, class: "w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <div>
+          <div class="mb-4">
+            <span class="inline-block bg-green-light text-green-primary text-xs px-3 py-1 rounded-full font-semibold mb-2">
+              <%= @product.category.name %>
+            </span>
+            <% if @product.subcategory %>
+              <span class="inline-block bg-pink-light text-pink-accent text-xs px-3 py-1 rounded-full font-semibold mb-2 ml-2">
+                <%= @product.subcategory.name %>
+              </span>
+            <% end %>
+          </div>
+
+          <h1 class="text-3xl md:text-4xl font-bold text-green-deep mb-4"><%= @product.title %></h1>
+
+          <div class="flex items-center mb-4">
+            <% 5.times do %>
+              <%= render "shared/svg_icons/star", class: "w-5 h-5 text-yellow-400" %>
+            <% end %>
+            <span class="text-green-muted ml-2">(4.8) · 124 reviews</span>
+          </div>
+
+          <div class="text-4xl font-bold text-green-primary mb-6">
+            $<%= @product.price %>
+          </div>
+
+          <% if @product.description.present? %>
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold text-green-deep mb-2">Description</h3>
+              <p class="text-green-muted leading-relaxed"><%= @product.description %></p>
+            </div>
+          <% end %>
+
+          <% if @product.product_variants.any? %>
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold text-green-deep mb-3">Available Variants</h3>
+              <div class="grid grid-cols-2 gap-3">
+                <% @product.product_variants.each do |variant| %>
+                  <div class="border-2 border-pink-border rounded-lg p-3 hover:border-green-primary transition-colors cursor-pointer">
+                    <p class="font-medium text-green-deep text-sm"><%= variant.name %></p>
+                    <p class="text-green-primary font-bold">$<%= variant.price %></p>
+                    <p class="text-xs text-green-muted"><%= variant.inventory&.available_quantity || 0 %> in stock</p>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="flex space-x-4">
+            <% if @product.product_variants.any? %>
+              <% first_variant = @product.product_variants.first %>
+              <%= form_with url: add_to_cart_path, method: :post, class: "flex-1" do |f| %>
+                <%= f.hidden_field :variant_id, value: first_variant.id %>
+                <%= f.hidden_field :quantity, value: 1 %>
+                <%= f.button type: :submit, class: "w-full bg-green-primary text-white px-8 py-3 rounded-lg hover:bg-green-dark transition-all duration-200 flex items-center justify-center space-x-2 font-semibold" do %>
+                  <%= render "shared/svg_icons/cart", class: "w-5 h-5" %>
+                  <span>Add to Cart</span>
+                <% end %>
+              <% end %>
+            <% else %>
+              <button class="flex-1 bg-green-primary text-white px-8 py-3 rounded-lg hover:bg-green-dark transition-all duration-200 flex items-center justify-center space-x-2 font-semibold" disabled>
+                <%= render "shared/svg_icons/cart", class: "w-5 h-5" %>
+                <span>No Variants Available</span>
+              </button>
+            <% end %>
+            <button class="bg-white border-2 border-green-primary text-green-primary px-6 py-3 rounded-lg hover:bg-green-light transition-all duration-200">
+              <%= render "shared/svg_icons/heart", class: "w-6 h-6" %>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if @related_products.any? %>
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-green-deep mb-6">Related Products</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <% @related_products.each_with_index do |product, index| %>
+            <%= render "shared/product_card", product: product, index: index, clickable: true %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>

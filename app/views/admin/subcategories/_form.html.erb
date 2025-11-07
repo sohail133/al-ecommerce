@@ -16,6 +16,20 @@
     <%= f.text_area :description, rows: 4, class: "form-textarea" %>
   </div>
 
+  <div>
+    <%= f.label :image, "Subcategory Image", class: "block text-sm font-medium text-green-deep mb-1" %>
+    <div class="mt-2">
+      <% if @subcategory.image.attached? %>
+        <div class="mb-4">
+          <%= image_tag @subcategory.image, class: "w-48 h-48 object-cover rounded-lg border border-pink-border" %>
+          <p class="text-sm text-green-muted mt-2">Current image (uploading a new one will replace it)</p>
+        </div>
+      <% end %>
+      <%= f.file_field :image, accept: "image/*", class: "block w-full text-sm text-green-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-primary file:text-white hover:file:bg-green-dark cursor-pointer" %>
+      <p class="text-xs text-green-muted mt-1">Recommended: Square images (500x500px) for best display</p>
+    </div>
+  </div>
+
   <div class="flex items-center justify-between pt-4 border-t border-pink-border">
     <div>
       <% if @subcategory.persisted? %>
