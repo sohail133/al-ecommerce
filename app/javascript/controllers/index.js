@@ -23,3 +23,12 @@ application.register("filter-accordion", FilterAccordionController)
 
 import CartVariantController from "./cart_variant_controller"
 application.register("cart-variant", CartVariantController)
+
+import RowClickController from "./row_click_controller"
+application.register("row-click", RowClickController)
+
+import TabsController from "./tabs_controller"
+application.register("tabs", TabsController)
+
+import RatingController from "./rating_controller"
+application.register("rating", RatingController)

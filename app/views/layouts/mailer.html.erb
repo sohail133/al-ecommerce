@@ -1,13 +1,173 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-      /* Email styles need to be inline */
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fef5f5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .email-wrapper {
+        background-color: #fef5f5;
+        padding: 20px 0;
+      }
+      .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .email-header {
+        background: linear-gradient(135deg, #4a7c59 0%, #2d5016 100%);
+        padding: 40px 20px;
+        text-align: center;
+      }
+      .email-header .logo-container {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        background-color: #ffffff;
+        border-radius: 50%;
+        line-height: 60px;
+        font-weight: bold;
+        font-size: 24px;
+        color: #4a7c59;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+      .email-header .brand-name {
+        color: #ffffff;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .email-body {
+        padding: 40px 30px;
+        background-color: #ffffff;
+      }
+      .email-footer {
+        background: linear-gradient(135deg, #2d5016 0%, #1a3310 100%);
+        padding: 40px 20px;
+        text-align: center;
+        color: #ffffff;
+      }
+      .email-footer .footer-content {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+      .email-footer .brand-footer {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      .email-footer .contact-info {
+        font-size: 13px;
+        line-height: 1.8;
+        margin-bottom: 25px;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .email-footer .contact-info strong {
+        color: #ffffff;
+        display: block;
+        margin-bottom: 5px;
+      }
+      .email-footer .social-links {
+        margin: 25px 0;
+      }
+      .email-footer .social-links a {
+        display: inline-block;
+        margin: 0 8px;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        line-height: 40px;
+        text-align: center;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+      .email-footer .social-links a:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+      .email-footer .footer-links {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .email-footer .footer-links a {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        font-size: 12px;
+        margin: 0 8px;
+      }
+      .email-footer .footer-links a:hover {
+        color: #ffffff;
+        text-decoration: underline;
+      }
+      .email-footer .copyright {
+        margin-top: 20px;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.7);
+      }
     </style>
   </head>
-
   <body>
-    <%= yield %>
+    <div class="email-wrapper">
+      <div class="email-container">
+        <div class="email-header">
+          <div class="logo-container">AL</div>
+          <h1 class="brand-name">AL Ecommerce</h1>
+        </div>
+
+        <div class="email-body">
+          <%= yield %>
+        </div>
+
+        <div class="email-footer">
+          <div class="footer-content">
+            <div class="brand-footer">AL Ecommerce</div>
+            <div class="contact-info">
+              <% store_setting = StoreSetting.instance %>
+              <strong>Contact Us:</strong>
+              <div style="margin-top: 8px;">
+                📍 <%= store_setting.location %><br>
+                📞 <%= store_setting.phone_number %><br>
+                ✉️ <%= store_setting.email %>
+              </div>
+            </div>
+            <div class="social-links">
+              <% if store_setting.facebook_url.present? %>
+                <a href="<%= store_setting.facebook_url %>" target="_blank">f</a>
+              <% end %>
+              <% if store_setting.instagram_url.present? %>
+                <a href="<%= store_setting.instagram_url %>" target="_blank">📷</a>
+              <% end %>
+              <% if store_setting.youtube_url.present? %>
+                <a href="<%= store_setting.youtube_url %>" target="_blank">▶</a>
+              <% end %>
+            </div>
+            <div class="footer-links">
+              <a href="#">Privacy Policy</a> |
+              <a href="#">Terms of Service</a> |
+              <a href="#">Cookie Policy</a>
+            </div>
+            <div class="copyright">
+              © <%= Time.now.year %> AL Ecommerce. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

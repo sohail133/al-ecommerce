@@ -1,0 +1,59 @@
+<%= form_with model: [:admin, hero_image], class: "space-y-6" do |f| %>
+  <%= render "shared/form_errors", object: hero_image %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= f.label :title, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :title, class: "form-input", required: true %>
+    </div>
+    <div>
+      <%= f.label :position, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.number_field :position, class: "form-input", min: 0, required: true %>
+      <p class="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
+    </div>
+    <div class="md:col-span-2">
+      <%= f.label :subtitle, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :subtitle, class: "form-input" %>
+    </div>
+    <div class="md:col-span-2">
+      <%= f.label :description, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_area :description, rows: 3, class: "form-input" %>
+    </div>
+    <div class="md:col-span-2">
+      <div class="flex items-center">
+        <%= f.check_box :active, class: "form-checkbox mr-2" %>
+        <%= f.label :active, "Active", class: "text-sm text-gray-700" %>
+      </div>
+    </div>
+    <div class="md:col-span-2">
+      <%= f.label :images, "Images (Multiple images can be uploaded)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.file_field :images, multiple: true, accept: "image/*", class: "form-input" %>
+      <p class="text-xs text-gray-500 mt-1">You can upload multiple images for this hero slide</p>
+    </div>
+  </div>
+
+  <% if hero_image.persisted? && hero_image.images.attached? %>
+    <div class="border-t border-gray-200 pt-6">
+      <h3 class="text-sm font-medium text-gray-700 mb-4">Current Images</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <% hero_image.images.each do |image| %>
+          <div class="relative group">
+            <%= image_tag image, class: "w-full h-32 object-cover rounded border border-gray-200" %>
+            <%= link_to delete_image_admin_hero_image_path(hero_image, image_id: image.id), 
+                method: :delete, 
+                data: { turbo_method: :delete, turbo_confirm: "Delete this image?" },
+                class: "absolute top-2 right-2 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity" do %>
+              <%= render "shared/svg_icons/trash", class: "w-4 h-4" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="flex items-center space-x-3 pt-4 border-t border-gray-200">
+    <%= link_to "Cancel", admin_hero_images_path, class: "btn-secondary" %>
+    <%= f.submit hero_image.persisted? ? "Update Hero Image" : "Create Hero Image", class: "btn-primary" %>
+  </div>
+<% end %>
+

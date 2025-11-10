@@ -10,15 +10,22 @@
         </div>
         <p class="text-white/80 mb-4">Your one-stop shop for quality products at great prices. Shop with confidence!</p>
         <div class="flex items-center space-x-4">
-          <a href="#" class="text-white hover:text-green-primary transition-colors duration-200">
-            <%= render "shared/svg_icons/facebook", class: "w-5 h-5" %>
-          </a>
-          <a href="#" class="text-white hover:text-green-primary transition-colors duration-200">
-            <%= render "shared/svg_icons/twitter", class: "w-5 h-5" %>
-          </a>
-          <a href="#" class="text-white hover:text-green-primary transition-colors duration-200">
-            <%= render "shared/svg_icons/instagram", class: "w-5 h-5" %>
-          </a>
+          <% store_setting = StoreSetting.instance %>
+          <% if store_setting.facebook_url.present? %>
+            <%= link_to store_setting.facebook_url, target: "_blank", class: "text-white hover:text-green-primary transition-colors duration-200" do %>
+              <%= render "shared/svg_icons/facebook", class: "w-5 h-5" %>
+            <% end %>
+          <% end %>
+          <% if store_setting.instagram_url.present? %>
+            <%= link_to store_setting.instagram_url, target: "_blank", class: "text-white hover:text-green-primary transition-colors duration-200" do %>
+              <%= render "shared/svg_icons/instagram", class: "w-5 h-5" %>
+            <% end %>
+          <% end %>
+          <% if store_setting.youtube_url.present? %>
+            <%= link_to store_setting.youtube_url, target: "_blank", class: "text-white hover:text-green-primary transition-colors duration-200" do %>
+              <%= render "shared/svg_icons/youtube", class: "w-5 h-5" %>
+            <% end %>
+          <% end %>
         </div>
       </div>
 
@@ -26,10 +33,10 @@
         <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
         <ul class="space-y-2">
           <li><%= link_to "Home", root_path, class: "text-white/80 hover:text-white transition-colors duration-200" %></li>
-          <li><%= link_to "Products", "#products", class: "text-white/80 hover:text-white transition-colors duration-200" %></li>
-          <li><%= link_to "Categories", "#categories", class: "text-white/80 hover:text-white transition-colors duration-200" %></li>
-          <li><%= link_to "About Us", "#about", class: "text-white/80 hover:text-white transition-colors duration-200" %></li>
-          <li><%= link_to "Contact", "#contact", class: "text-white/80 hover:text-white transition-colors duration-200" %></li>
+          <li><%= link_to "Products", products_path, class: "text-white/80 hover:text-white transition-colors duration-200" %></li>
+          <li><%= link_to "Categories", root_path(anchor: "categories"), class: "text-white/80 hover:text-white transition-colors duration-200" %></li>
+          <li><%= link_to "About Us", about_path, class: "text-white/80 hover:text-white transition-colors duration-200" %></li>
+          <li><%= link_to "Contact", contact_path, class: "text-white/80 hover:text-white transition-colors duration-200" %></li>
         </ul>
       </div>
 
@@ -47,17 +54,18 @@
       <div>
         <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
         <ul class="space-y-3">
+          <% store_setting = StoreSetting.instance %>
           <li class="flex items-start">
-            <%= render "shared/svg_icons/location", class: "w-5 h-5 mr-2 mt-0.5 flex-shrink-0" %>
-            <span class="text-white/80">123 Commerce Street, City, State 12345</span>
+            <%= render "shared/svg_icons/location", class: "w-5 h-5 mr-2 mt-0.5 flex-shrink-0 text-white/80" %>
+            <span class="text-white/80"><%= store_setting.location %></span>
           </li>
           <li class="flex items-center">
-            <%= render "shared/svg_icons/phone", class: "w-5 h-5 mr-2 flex-shrink-0" %>
-            <span class="text-white/80">+1 234 567 8900</span>
+            <%= render "shared/svg_icons/phone", class: "w-5 h-5 mr-2 flex-shrink-0 text-white/80" %>
+            <%= link_to store_setting.phone_number, "tel:#{store_setting.phone_number}", class: "text-white/80 hover:text-white transition-colors" %>
           </li>
           <li class="flex items-center">
-            <%= render "shared/svg_icons/email", class: "w-5 h-5 mr-2 flex-shrink-0" %>
-            <span class="text-white/80">info@alecommerce.com</span>
+            <%= render "shared/svg_icons/email", class: "w-5 h-5 mr-2 flex-shrink-0 text-white/80" %>
+            <%= link_to store_setting.email, "mailto:#{store_setting.email}", class: "text-white/80 hover:text-white transition-colors" %>
           </li>
         </ul>
       </div>

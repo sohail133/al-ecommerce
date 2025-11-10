@@ -5,37 +5,58 @@
   
   <section class="relative overflow-hidden" data-controller="hero-slider" data-hero-slider-interval-value="5000">
     <div class="relative h-[600px] md:h-[700px] lg:h-[800px]">
-      <% @hero_slides.each_with_index do |slide, index| %>
-        <div data-hero-slider-target="slide" class="absolute inset-0 transition-opacity duration-1000 <%= 'hidden opacity-0' unless index == 0 %>">
-          <div class="relative h-full bg-cover bg-center animate-ken-burns" style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('<%= slide[:image_url] %>');">
-            <div class="container mx-auto px-4 h-full flex items-center">
-              <div class="text-white max-w-2xl" data-aos="fade-right" data-aos-duration="1000">
-                <p class="text-lg md:text-xl mb-2 font-medium animate-fade-in-up" style="animation-delay: 0.2s;"><%= slide[:subtitle] %></p>
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 animate-fade-in-up" style="animation-delay: 0.4s;"><%= slide[:title] %></h1>
-                <p class="text-lg md:text-xl mb-8 text-white/90 animate-fade-in-up" style="animation-delay: 0.6s;"><%= slide[:description] %></p>
-                <div class="animate-fade-in-up" style="animation-delay: 0.8s;">
-                  <%= link_to "Shop Now", "#products", class: "inline-block bg-white text-green-primary px-8 py-3 rounded-lg font-semibold hover:bg-green-light hover:text-white transition-all duration-200 transform hover:scale-105" %>
+      <% if @hero_images.any? %>
+        <% @hero_images.each_with_index do |hero_image, index| %>
+          <% if hero_image.images.attached? %>
+            <% hero_image.images.each_with_index do |image, img_index| %>
+              <div data-hero-slider-target="slide" class="absolute inset-0 transition-opacity duration-1000 <%= 'hidden opacity-0' unless index == 0 && img_index == 0 %>">
+                <div class="relative h-full bg-cover bg-center animate-ken-burns" style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('<%= url_for(image) %>');">
+                  <div class="container mx-auto px-4 h-full flex items-center">
+                    <div class="text-white max-w-2xl" data-aos="fade-right" data-aos-duration="1000">
+                      <% if hero_image.subtitle.present? %>
+                        <p class="text-lg md:text-xl mb-2 font-medium animate-fade-in-up" style="animation-delay: 0.2s;"><%= hero_image.subtitle %></p>
+                      <% end %>
+                      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 animate-fade-in-up" style="animation-delay: 0.4s;"><%= hero_image.title %></h1>
+                      <% if hero_image.description.present? %>
+                        <p class="text-lg md:text-xl mb-8 text-white/90 animate-fade-in-up" style="animation-delay: 0.6s;"><%= hero_image.description %></p>
+                      <% end %>
+                      <div class="animate-fade-in-up" style="animation-delay: 0.8s;">
+                        <%= link_to "Shop Now", products_path, class: "inline-block bg-white text-green-primary px-8 py-3 rounded-lg font-semibold hover:bg-green-light hover:text-white transition-all duration-200 transform hover:scale-105" %>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="absolute inset-0 bg-gradient-to-br from-green-primary to-green-dark flex items-center justify-center">
+          <div class="text-white text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">Welcome to AL Ecommerce</h1>
+            <p class="text-xl mb-8">Discover amazing products</p>
+            <%= link_to "Shop Now", products_path, class: "inline-block bg-white text-green-primary px-8 py-3 rounded-lg font-semibold hover:bg-green-light hover:text-white transition-all duration-200" %>
           </div>
         </div>
       <% end %>
     </div>
 
-    <button data-action="click->hero-slider#previous" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg transition-all duration-200">
-      <%= render "shared/svg_icons/chevron_left", class: "w-6 h-6 text-green-deep" %>
-    </button>
+    <% if @hero_images.any? && @hero_images.sum { |hi| hi.images.count } > 1 %>
+      <button data-action="click->hero-slider#previous" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg transition-all duration-200 z-10">
+        <%= render "shared/svg_icons/chevron_left", class: "w-6 h-6 text-green-deep" %>
+      </button>
 
-    <button data-action="click->hero-slider#next" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg transition-all duration-200">
-      <%= render "shared/svg_icons/chevron_right", class: "w-6 h-6 text-green-deep" %>
-    </button>
+      <button data-action="click->hero-slider#next" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg transition-all duration-200 z-10">
+        <%= render "shared/svg_icons/chevron_right", class: "w-6 h-6 text-green-deep" %>
+      </button>
 
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-2">
-      <% @hero_slides.each_with_index do |_, index| %>
-        <button data-action="click->hero-slider#goToSlide" data-index="<%= index %>" class="w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-colors duration-200"></button>
-      <% end %>
-    </div>
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+        <% total_slides = @hero_images.sum { |hi| hi.images.count } %>
+        <% total_slides.times do |index| %>
+          <button data-action="click->hero-slider#goToSlide" data-index="<%= index %>" class="w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-colors duration-200"></button>
+        <% end %>
+      </div>
+    <% end %>
   </section>
 
   <section class="py-16">
@@ -91,7 +112,7 @@
                 else ""
               end
             %>
-            <a href="#" class="group block <%= card_class %>" data-aos="fade-up" data-aos-delay="<%= (index % 6) * 100 %>">
+            <%= link_to category_path(category), class: "group block #{card_class}", data: { aos: "fade-up", aos_delay: (index % 6) * 100 } do %>
               <div class="relative h-full min-h-[300px] <%= index == 1 ? 'md:min-h-[620px]' : 'md:min-h-[300px]' %> rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.02]">
                 <% if category.image.attached? %>
                   <%= image_tag category.image, alt: category.name, class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" %>
@@ -118,7 +139,7 @@
                   </div>
                 <% end %>
               </div>
-            </a>
+            <% end %>
           <% end %>
         <% else %>
           <div class="col-span-full text-center py-12">

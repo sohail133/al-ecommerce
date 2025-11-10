@@ -1,0 +1,104 @@
+<% content_for :title, "Contact Us - AL Ecommerce" %>
+
+<div class="min-h-screen bg-pink-lightest">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-16">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h1 class="text-4xl md:text-5xl font-bold text-green-deep mb-4">Contact Us</h1>
+        <p class="text-lg text-green-muted">We'd love to hear from you. Get in touch with us!</p>
+        <div class="w-24 h-1 bg-green-primary mx-auto mt-4"></div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="space-y-6" data-aos="fade-right">
+          <div class="bg-white rounded-lg shadow-lg border border-pink-border p-8">
+            <h2 class="text-2xl font-bold text-green-deep mb-6">Get in Touch</h2>
+            
+            <div class="space-y-6">
+              <div class="flex items-start space-x-4">
+                <div class="w-12 h-12 bg-green-light rounded-full flex items-center justify-center flex-shrink-0">
+                  <%= render "shared/svg_icons/phone", class: "w-6 h-6 text-green-primary" %>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-green-deep mb-1">Phone</h3>
+                  <%= link_to @store_setting.phone_number, "tel:#{@store_setting.phone_number}", class: "text-green-muted hover:text-green-primary transition-colors" %>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <div class="w-12 h-12 bg-green-light rounded-full flex items-center justify-center flex-shrink-0">
+                  <%= render "shared/svg_icons/email", class: "w-6 h-6 text-green-primary" %>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-green-deep mb-1">Email</h3>
+                  <%= link_to @store_setting.email, "mailto:#{@store_setting.email}", class: "text-green-muted hover:text-green-primary transition-colors" %>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <div class="w-12 h-12 bg-green-light rounded-full flex items-center justify-center flex-shrink-0">
+                  <%= render "shared/svg_icons/location", class: "w-6 h-6 text-green-primary" %>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-green-deep mb-1">Location</h3>
+                  <p class="text-green-muted"><%= @store_setting.location %></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-pink-border">
+              <h3 class="font-semibold text-green-deep mb-4">Follow Us</h3>
+              <div class="flex space-x-4">
+                <% if @store_setting.facebook_url.present? %>
+                  <%= link_to @store_setting.facebook_url, target: "_blank", class: "w-10 h-10 bg-green-light hover:bg-green-primary rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110 group" do %>
+                    <%= render "shared/svg_icons/facebook", class: "w-5 h-5 text-green-deep group-hover:text-white" %>
+                  <% end %>
+                <% end %>
+                <% if @store_setting.instagram_url.present? %>
+                  <%= link_to @store_setting.instagram_url, target: "_blank", class: "w-10 h-10 bg-green-light hover:bg-green-primary rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110 group" do %>
+                    <%= render "shared/svg_icons/instagram", class: "w-5 h-5 text-green-deep group-hover:text-white" %>
+                  <% end %>
+                <% end %>
+                <% if @store_setting.youtube_url.present? %>
+                  <%= link_to @store_setting.youtube_url, target: "_blank", class: "w-10 h-10 bg-green-light hover:bg-green-primary rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110 group" do %>
+                    <%= render "shared/svg_icons/youtube", class: "w-5 h-5 text-green-deep group-hover:text-white" %>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg border border-pink-border p-8" data-aos="fade-left">
+          <h2 class="text-2xl font-bold text-green-deep mb-6">Send us a Message</h2>
+          <%= form_with model: @contact_us || ContactUs.new, url: contacts_path, class: "space-y-4" do |f| %>
+            <%= render "shared/form_errors", object: @contact_us if @contact_us.present? %>
+            
+            <div>
+              <%= f.label :name, "Your Name", class: "block text-sm font-medium text-green-deep mb-1" %>
+              <%= f.text_field :name, class: "form-input", required: true %>
+            </div>
+            <div>
+              <%= f.label :email, "Your Email", class: "block text-sm font-medium text-green-deep mb-1" %>
+              <%= f.email_field :email, class: "form-input", required: true %>
+            </div>
+            <div>
+              <%= f.label :subject, "Subject", class: "block text-sm font-medium text-green-deep mb-1" %>
+              <%= f.text_field :subject, class: "form-input", required: true %>
+            </div>
+            <div>
+              <%= f.label :message, "Message", class: "block text-sm font-medium text-green-deep mb-1" %>
+              <%= f.text_area :message, rows: 5, class: "form-input", required: true %>
+            </div>
+            <%= f.submit "Send Message", class: "w-full bg-green-primary text-white px-6 py-3 rounded-lg hover:bg-green-dark transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:scale-105" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>
+

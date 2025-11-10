@@ -3,6 +3,7 @@ class Order < ApplicationRecord
   belongs_to :address
   belongs_to :payment_method
   has_many :order_items, dependent: :destroy
+  has_many :reviews, through: :order_items
 
   enum :status, {
     pending: 0,

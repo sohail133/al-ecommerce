@@ -1,9 +1,9 @@
 <div class="relative inline-block text-left" data-controller="dropdown">
-  <button type="button" data-action="click->dropdown#toggle" class="inline-flex items-center text-green-deep hover:text-green-primary focus:outline-none p-1 rounded hover:bg-green-light">
+  <button type="button" data-action="click->dropdown#toggle" class="inline-flex items-center text-green-deep hover:text-green-primary focus:outline-none p-1 rounded hover:bg-green-light" onclick="event.stopPropagation();">
     <%= render "shared/svg_icons/more_vertical", class: "w-5 h-5" %>
   </button>
   
-  <div data-dropdown-target="menu" class="hidden dropdown-menu">
+  <div data-dropdown-target="menu" class="hidden dropdown-menu" onclick="event.stopPropagation();">
     <div class="py-1">
       <% if defined?(show_path) && show_path %>
         <%= link_to show_path, class: "dropdown-item" do %>
@@ -20,7 +20,19 @@
       <% end %>
       
       <% if defined?(delete_path) && delete_path %>
-        <%= link_to delete_path, method: :delete, data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?", turbo_method: :delete }, class: "flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200" do %>
+        <% confirm_message = defined?(delete_confirm) && delete_confirm ? delete_confirm : "Are you sure you want to delete this?" %>
+        <%= button_to delete_path,
+            method: :delete,
+            form: {
+              data: {
+                confirm: confirm_message,
+                turbo_confirm: confirm_message
+              },
+              class: "inline m-0 p-0",
+              onclick: "event.stopPropagation();"
+            },
+            class: "flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200 bg-transparent border-0 cursor-pointer",
+            onclick: "event.stopPropagation();" do %>
           <%= render "shared/svg_icons/trash", class: "w-4 h-4 mr-2" %>
           Delete
         <% end %>

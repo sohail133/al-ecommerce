@@ -1,0 +1,61 @@
+<div class="mb-6">
+  <h1 class="text-3xl font-bold text-green-deep">Reply to Contact Query</h1>
+  <p class="mt-2 text-sm text-green-muted">Send a response to the customer</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+  <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6">
+    <h2 class="text-lg font-semibold text-green-deep mb-4">Customer Information</h2>
+    <div class="space-y-3">
+      <div>
+        <label class="block text-sm font-medium text-green-deep mb-1">Name</label>
+        <p class="text-green-deep"><%= @contact_us.name %></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-deep mb-1">Email</label>
+        <p class="text-green-deep">
+          <%= mail_to @contact_us.email, @contact_us.email, class: "text-green-primary hover:text-green-dark" %>
+        </p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-deep mb-1">Subject</label>
+        <p class="text-green-deep"><%= @contact_us.subject %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6">
+    <h2 class="text-lg font-semibold text-green-deep mb-4">Original Message</h2>
+    <div class="bg-green-light/30 rounded-lg p-4">
+      <p class="text-green-deep whitespace-pre-wrap"><%= @contact_us.message %></p>
+    </div>
+  </div>
+</div>
+
+<div class="bg-white rounded-lg shadow-sm border border-pink-border p-6">
+  <%= form_with model: [:admin, @contact_us], url: reply_admin_contact_path(@contact_us), method: :post, class: "space-y-6" do |f| %>
+    <%= render "shared/form_errors", object: @contact_us %>
+
+    <div>
+      <%= f.label :admin_response, "Your Response", class: "block text-sm font-medium text-green-deep mb-1" %>
+      <%= f.text_area :admin_response, rows: 8, class: "form-input", placeholder: "Type your response here...", required: true %>
+      <p class="text-xs text-green-muted mt-1">This response will be sent to <%= @contact_us.email %> via email.</p>
+    </div>
+
+    <div class="flex items-center space-x-3 pt-4 border-t border-pink-border">
+      <%= link_to "Cancel", admin_contact_path(@contact_us), class: "btn-secondary" %>
+      <%= f.submit "Send Reply", class: "btn-primary" %>
+    </div>
+  <% end %>
+</div>
+
+<% if @contact_us.replied? %>
+  <div class="mt-6 bg-white rounded-lg shadow-sm border border-pink-border p-6">
+    <h2 class="text-lg font-semibold text-green-deep mb-4">Previous Response</h2>
+    <div class="bg-green-light/30 rounded-lg p-4 border-l-4 border-green-primary">
+      <p class="text-green-deep whitespace-pre-wrap"><%= @contact_us.admin_response %></p>
+      <p class="text-sm text-green-muted mt-2">Sent on <%= @contact_us.replied_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+    </div>
+  </div>
+<% end %>
+

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_07_100933) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_10_125318) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -85,6 +85,17 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_07_100933) do
     t.index ["slug"], name: "index_categories_on_slug", unique: true
   end
 
+  create_table "contact_us", force: :cascade do |t|
+    t.text "admin_response"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.text "message"
+    t.string "name"
+    t.datetime "replied_at"
+    t.string "subject"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.datetime "created_at"
     t.string "scope"
@@ -94,6 +105,16 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_07_100933) do
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
+  create_table "hero_images", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.integer "position", default: 0
+    t.text "subtitle"
+    t.string "title"
+    t.datetime "updated_at", null: false
   end
 
   create_table "inventories", force: :cascade do |t|
@@ -165,6 +186,29 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_07_100933) do
     t.index ["subcategory_id"], name: "index_products_on_subcategory_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.text "comment", null: false
+    t.datetime "created_at", null: false
+    t.bigint "order_item_id", null: false
+    t.integer "rating", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["order_item_id", "user_id"], name: "index_reviews_on_order_item_id_and_user_id"
+    t.index ["order_item_id"], name: "index_reviews_on_order_item_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
+  create_table "store_settings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "facebook_url"
+    t.string "instagram_url"
+    t.text "location"
+    t.string "phone_number"
+    t.datetime "updated_at", null: false
+    t.string "youtube_url"
+  end
+
   create_table "subcategories", force: :cascade do |t|
     t.bigint "category_id", null: false
     t.datetime "created_at", null: false
@@ -206,5 +250,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_07_100933) do
   add_foreign_key "product_variants", "products"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "subcategories"
+  add_foreign_key "reviews", "order_items"
+  add_foreign_key "reviews", "users"
   add_foreign_key "subcategories", "categories"
 end

@@ -6,7 +6,13 @@ class Admin::OrdersController < Admin::BaseController
   end
 
   def show
-    @order_items = @order.order_items.includes(:product_variant)
+    @order = Order.includes(
+      order_items: {
+        reviews: [:user, { images_attachments: :blob }],
+        product_variant: :product
+      }
+    ).find(params[:id])
+    @order_items = @order.order_items.includes(:product_variant, reviews: [:user, { images_attachments: :blob }])
   end
 
   def edit; end

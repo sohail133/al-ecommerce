@@ -10,4 +10,12 @@ module ApplicationHelper
                  end
     content_tag(:div, initial, class: "user-avatar #{size_class} text-sm #{class_names}")
   end
+
+  def status_badge(status, type: :default)
+    render "shared/status_badge", status: status, type: type
+  end
+
+  def format_currency(amount)
+    number_to_currency(amount, unit: "$", separator: ".", delimiter: ",")
+  end
 end

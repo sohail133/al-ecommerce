@@ -1,0 +1,82 @@
+<% content_for :title, "Hero Images - Admin" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-green-deep">Hero Images</h1>
+      <p class="mt-2 text-sm text-green-muted">Manage hero section images for the homepage</p>
+    </div>
+    <%= link_to new_admin_hero_image_path, class: "flex items-center px-4 py-2 text-sm font-medium text-white bg-green-primary rounded-md hover:bg-green-dark transition-colors" do %>
+      <%= render "shared/svg_icons/add", class: "w-4 h-4 mr-2" %>
+      New Hero Image
+    <% end %>
+  </div>
+
+<div class="bg-white rounded-lg border border-pink-border shadow-sm">
+  <div>
+    <table class="min-w-full divide-y divide-pink-border">
+        <thead class="bg-green-light sticky top-0 z-10">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Title</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Images</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Position</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-pink-border">
+      <% if @hero_images.any? %>
+            <% @hero_images.each do |hero_image| %>
+              <tr class="hover:bg-green-light transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <%= link_to admin_hero_image_path(hero_image), class: "block hover:text-green-primary transition-colors" do %>
+                    <div class="text-sm font-medium text-green-deep"><%= hero_image.title %></div>
+                    <% if hero_image.subtitle.present? %>
+                      <div class="text-sm text-green-muted"><%= hero_image.subtitle %></div>
+                    <% end %>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex space-x-2">
+                    <% if hero_image.images.attached? %>
+                      <% hero_image.images.limit(3).each do |image| %>
+                        <%= image_tag image, class: "w-16 h-16 object-cover rounded border border-pink-border" %>
+                      <% end %>
+                      <% if hero_image.images.count > 3 %>
+                        <div class="w-16 h-16 bg-green-light rounded border border-pink-border flex items-center justify-center text-xs text-green-muted">
+                          +<%= hero_image.images.count - 3 %>
+                        </div>
+                      <% end %>
+                    <% else %>
+                      <span class="text-sm text-green-muted">No images</span>
+                    <% end %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-green-deep">
+                  <%= hero_image.position %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <%= status_badge(hero_image.active?, type: :active) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm relative" onclick="event.stopPropagation()">
+                  <%= render "admin/shared/actions_dropdown", 
+                      edit_path: edit_admin_hero_image_path(hero_image),
+                      show_path: admin_hero_image_path(hero_image),
+                      delete_path: admin_hero_image_path(hero_image),
+                      delete_confirm: "Are you sure you want to delete this hero image?" %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="5" class="px-6 py-12 text-center text-green-muted">
+                No hero images found. <%= link_to "Create one", new_admin_hero_image_path, class: "text-green-primary hover:text-green-dark" %>
+              </td>
+            </tr>
+          <% end %>
+    </tbody>
+  </table>
+  </div>
+</div>
+</div>
+

@@ -8,7 +8,8 @@ class CartController < ApplicationController
 
   def add
     variant_id = params[:variant_id].to_i
-    quantity = params[:quantity].to_i || 1
+    quantity = params[:quantity].to_i
+    quantity = 1 if quantity <= 0
 
     variant = ProductVariant.find_by(id: variant_id)
     
@@ -20,7 +21,14 @@ class CartController < ApplicationController
     cart = current_user.cart || current_user.create_cart
     
     cart_item = cart.cart_items.find_or_initialize_by(product_variant_id: variant_id)
-    cart_item.quantity = (cart_item.quantity || 0) + quantity
+    
+    if cart_item.new_record?
+      cart_item.quantity = quantity
+    else
+      cart_item.quantity += quantity
+    end
+    
+    cart_item.price_snapshot = variant.price
     cart_item.save
 
     redirect_back(fallback_location: products_path, notice: "Item added to cart successfully!")

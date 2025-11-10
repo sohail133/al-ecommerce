@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   root "pages#home"
   
+  get "about", to: "pages#about", as: :about
+  get "contact", to: "pages#contact", as: :contact
+  
+  resources :contacts, only: [:create], controller: "contact_us", path: "contact-us"
+  
   resources :products, only: [:index, :show]
   resources :categories, only: [:show]
   
@@ -16,6 +21,14 @@ Rails.application.routes.draw do
   get "orders/:id/confirmation", to: "orders#confirmation", as: :order_confirmation
   
   resources :addresses, only: [:new, :create]
+  
+  get "dashboard", to: "dashboard#show", as: :dashboard
+  
+  resources :orders, only: [:index, :show] do
+    resources :order_items, only: [] do
+      resources :reviews, only: [:create]
+    end
+  end
   
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -54,5 +67,29 @@ Rails.application.routes.draw do
     resources :inventories, only: [:edit, :create, :update]
     resources :payment_methods
     resources :orders, only: [:index, :show, :edit, :update]
+    
+    resource :store_setting, only: [:show, :edit, :update]
+    resources :hero_images do
+      member do
+        patch :toggle_active
+        delete :delete_image
+      end
+    end
+    resources :contacts, only: [:index, :show, :edit, :update, :destroy], controller: "contact_us" do
+      member do
+        post :reply
+      end
+    end
+    resources :reviews do
+      collection do
+        get :new_standalone
+        post :create_standalone
+      end
+    end
+    resources :orders, only: [:index, :show, :edit, :update] do
+      resources :order_items, only: [] do
+        resources :reviews, only: [:new, :create], controller: "reviews"
+      end
+    end
   end
 end

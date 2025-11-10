@@ -345,4 +345,55 @@ OrderItem.find_or_create_by(order: order, product_variant: variant3) do |oi|
   oi.subtotal = 29.99
 end
 
+store_setting = StoreSetting.instance
+store_setting.update!(
+  email: "info@alecommerce.com",
+  phone_number: "+1 234 567 8900",
+  location: "123 Main Street, City, State, ZIP Code",
+  facebook_url: "https://facebook.com/alecommerce",
+  instagram_url: "https://instagram.com/alecommerce",
+  youtube_url: "https://youtube.com/alecommerce"
+)
+puts "✓ Store settings created/updated"
+
+require 'open-uri'
+
+hero_image1 = HeroImage.find_or_create_by(title: "Summer Collection 2024") do |hi|
+  hi.subtitle = "Discover the latest trends"
+  hi.description = "Shop our newest arrivals and get up to 50% off on selected items"
+  hi.active = true
+  hi.position = 0
+end
+
+hero_image2 = HeroImage.find_or_create_by(title: "Quality Products") do |hi|
+  hi.subtitle = "Best prices guaranteed"
+  hi.description = "Experience premium quality at unbeatable prices"
+  hi.active = true
+  hi.position = 1
+end
+
+hero_image3 = HeroImage.find_or_create_by(title: "Fast Delivery") do |hi|
+  hi.subtitle = "Free shipping over $50"
+  hi.description = "Get your products delivered to your doorstep in no time"
+  hi.active = true
+  hi.position = 2
+end
+
+[hero_image1, hero_image2, hero_image3].each_with_index do |hero_image, index|
+  if hero_image.images.count == 0
+    begin
+      image_urls = [
+        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1200&h=600&fit=crop"
+      ]
+      file = URI.open(image_urls[index])
+      hero_image.images.attach(io: file, filename: "hero_#{index + 1}.jpg", content_type: "image/jpeg")
+      puts "✓ Attached image to Hero Image #{index + 1}"
+    rescue => e
+      puts "✗ Failed to attach image to Hero Image #{index + 1}: #{e.message}"
+    end
+  end
+end
+
 puts "Seeds completed successfully!"

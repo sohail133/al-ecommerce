@@ -67,6 +67,9 @@ group :development do
   
   # Process manager for Procfile-based applications
   gem "foreman"
+  
+  # Open emails in browser instead of sending them
+  gem "letter_opener"
 end
 
 group :test do
