@@ -1,0 +1,70 @@
+<div class="min-h-screen bg-pink-lightest">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="mb-8">
+      <nav class="text-sm text-green-muted mb-4">
+        <%= link_to "Home", root_path, class: "hover:text-green-primary transition-colors" %> / 
+        <%= link_to "Categories", root_path(anchor: "categories"), class: "hover:text-green-primary transition-colors" %> / 
+        <span class="text-green-deep"><%= @category.name %></span>
+      </nav>
+      
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl md:text-4xl font-bold text-green-deep mb-2"><%= @category.name %></h1>
+          <p class="text-green-muted"><%= @products.total_count %> <%= @products.total_count == 1 ? 'product' : 'products' %> available</p>
+        </div>
+        <% if @category.image.attached? %>
+          <div class="hidden md:block w-32 h-32 rounded-lg overflow-hidden shadow-lg">
+            <%= image_tag @category.image, alt: @category.name, class: "w-full h-full object-cover" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @subcategories.any? %>
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold text-green-deep mb-4">Subcategories</h2>
+        <div class="flex flex-wrap gap-3">
+          <% @subcategories.each do |subcategory| %>
+            <%= link_to products_path(subcategory_id: subcategory.id), class: "px-4 py-2 bg-white border-2 border-pink-border rounded-lg hover:border-green-primary hover:text-green-primary transition-all duration-200" do %>
+              <%= subcategory.name %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @products.any? %>
+      <div class="mb-4 flex items-center justify-between">
+        <p class="text-sm text-green-muted">
+          Showing <span class="font-medium text-green-deep"><%= @products.offset_value + 1 %></span> 
+          to <span class="font-medium text-green-deep"><%= [@products.offset_value + @products.limit_value, @products.total_count].min %></span> 
+          of <span class="font-medium text-green-deep"><%= @products.total_count %></span> products
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+        <% @products.each_with_index do |product, index| %>
+          <%= render "shared/product_card", product: product, index: index, clickable: true %>
+        <% end %>
+      </div>
+
+      <div class="flex justify-center">
+        <%= paginate @products, theme: 'customer' %>
+      </div>
+    <% else %>
+      <div class="bg-white rounded-lg shadow-sm border border-pink-border p-12 text-center">
+        <div class="mb-4">
+          <%= render "shared/svg_icons/search", class: "w-16 h-16 text-green-muted mx-auto" %>
+        </div>
+        <h2 class="text-2xl font-bold text-green-deep mb-2">No Products Found</h2>
+        <p class="text-green-muted mb-6">This category doesn't have any products yet.</p>
+        <%= link_to "Browse All Products", products_path, class: "btn-primary inline-flex items-center" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>
+

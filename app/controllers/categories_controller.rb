@@ -5,6 +5,7 @@ class CategoriesController < ApplicationController
                          .includes(:category, :subcategory, cover_image_attachment: :blob, images_attachments: :blob)
                          .page(params[:page]).per(12)
     @subcategories = @category.subcategories.ordered
+    @favorited_product_ids = user_signed_in? ? current_user.favorited_product_ids : []
   end
 end
 

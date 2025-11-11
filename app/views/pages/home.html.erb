@@ -206,39 +206,50 @@
       <div class="relative" data-controller="reviews-slider" data-reviews-slider-interval-value="3000">
         <div class="overflow-hidden">
           <div data-reviews-slider-target="container" class="flex gap-6 transition-transform duration-300">
-            <% 6.times do |index| %>
-              <div data-reviews-slider-target="review" class="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
-                <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6 h-full">
-                  <div class="flex items-center mb-4">
-                    <% 5.times do |i| %>
-                      <%= render "shared/svg_icons/star", class: "w-5 h-5 text-yellow-400" %>
-                    <% end %>
-                    <span class="text-sm text-green-muted ml-2"><%= rand(3..6) %> days ago</span>
-                  </div>
-                  <h4 class="text-lg font-semibold text-green-deep mb-2">
-                    <%= ["Excellent", "Great Product", "Love it!", "Amazing quality", "Highly recommended", "Perfect"][index] %>
-                  </h4>
-                  <p class="text-green-muted mb-4">
-                    <%= ["Comfortable and stylish! Exactly what I was looking for.", 
-                         "I ordered this product and I'm fascinated by its quality.", 
-                         "Received it some days ago and I am absolutely fascinated by its quality.",
-                         "It's super soft, delightful fragrance. Great purchase!",
-                         "Long lasting and nostalgic smell. Worth every penny!",
-                         "Pretty enough. Excellent value for money."][index] %>
-                  </p>
-                  <div class="flex items-center">
-                    <div class="w-10 h-10 bg-green-primary rounded-full flex items-center justify-center text-white font-semibold">
-                      <%= ["S", "H", "A", "T", "M", "K"][index] %>
+            <% if @recent_reviews.any? %>
+              <% @recent_reviews.each_with_index do |review, index| %>
+                <div data-reviews-slider-target="review" class="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                  <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6 h-full">
+                    <div class="flex items-center mb-4">
+                      <% 5.times do |i| %>
+                        <%= render "shared/svg_icons/star", class: "w-5 h-5 #{i < review.rating ? 'text-yellow-400' : 'text-gray-300'}" %>
+                      <% end %>
+                      <span class="text-sm text-green-muted ml-2">
+                        <%= time_ago_in_words(review.created_at) %> ago
+                      </span>
                     </div>
-                    <div class="ml-3">
-                      <p class="text-sm font-semibold text-green-deep">
-                        <%= ["Sibgha Shoaib", "Hammad Younas", "Abdul Qayyum", "Talha Qayyum", "Maria Khan", "Khalid Ahmed"][index] %>
-                      </p>
-                      <p class="text-xs text-green-muted">Verified Customer</p>
+                    <h4 class="text-lg font-semibold text-green-deep mb-2">
+                      <%= review.comment.split.first(3).join(' ') %>...
+                    </h4>
+                    <p class="text-green-muted mb-4">
+                      <%= review.comment %>
+                    </p>
+                    <div class="flex items-center">
+                      <%= user_avatar(review.user, size: 10, class_names: "flex-shrink-0") %>
+                      <div class="ml-3">
+                        <p class="text-sm font-semibold text-green-deep">
+                          <%= review.user.full_name %>
+                        </p>
+                        <p class="text-xs text-green-muted">Verified Customer</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              <% end %>
+            <% else %>
+              <% 3.times do |index| %>
+                <div data-reviews-slider-target="review" class="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                  <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6 h-full">
+                    <div class="flex items-center mb-4">
+                      <% 5.times do |i| %>
+                        <%= render "shared/svg_icons/star", class: "w-5 h-5 text-yellow-400" %>
+                      <% end %>
+                      <span class="text-sm text-green-muted ml-2">No reviews yet</span>
+                    </div>
+                    <p class="text-green-muted">Be the first to review our products!</p>
+                  </div>
+                </div>
+              <% end %>
             <% end %>
           </div>
         </div>
@@ -259,10 +270,14 @@
       <div class="max-w-3xl mx-auto text-center" data-aos="fade-up">
         <h2 class="text-3xl md:text-4xl font-bold mb-4">Subscribe to Our Newsletter</h2>
         <p class="text-white/90 mb-8">Get the latest updates on new products and upcoming sales</p>
-        <div class="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
-          <input type="email" placeholder="Enter your email" class="flex-1 px-6 py-3 rounded-lg text-green-deep focus:outline-none focus:ring-2 focus:ring-white">
-          <button class="bg-white text-green-primary px-8 py-3 rounded-lg font-semibold hover:bg-green-light hover:text-white transition-all duration-200">Subscribe</button>
-        </div>
+        <%= form_with model: Subscriber.new, url: subscribers_path, class: "flex flex-col sm:flex-row gap-4 max-w-xl mx-auto" do |f| %>
+          <%= f.email_field :email, 
+              placeholder: "Enter your email", 
+              required: true,
+              class: "flex-1 px-6 py-3 rounded-lg text-green-deep focus:outline-none focus:ring-2 focus:ring-white" %>
+          <%= f.submit "Subscribe", 
+              class: "bg-white text-green-primary px-8 py-3 rounded-lg font-semibold hover:bg-green-light hover:text-white transition-all duration-200 cursor-pointer" %>
+        <% end %>
       </div>
     </div>
   </section>

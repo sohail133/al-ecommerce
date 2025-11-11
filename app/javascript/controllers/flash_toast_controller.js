@@ -1,9 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["message"]
-
   connect() {
+    const container = document.getElementById("flash-toast-container")
+    if (container && this.element.parentElement !== container) {
+      container.appendChild(this.element)
+    }
+    
     requestAnimationFrame(() => {
       this.element.classList.remove("translate-x-full", "opacity-0")
       this.element.classList.add("translate-x-0", "opacity-100")

@@ -20,7 +20,16 @@ class User < ApplicationRecord
   has_many :addresses, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_many :reviews, dependent: :destroy
+  has_many :favorites, dependent: :destroy
   has_one :cart, dependent: :destroy
+
+  def favorited_product_ids
+    @favorited_product_ids ||= favorites.pluck(:product_id)
+  end
+
+  def favorited?(product_id)
+    favorited_product_ids.include?(product_id)
+  end
 
   after_create :create_cart
 

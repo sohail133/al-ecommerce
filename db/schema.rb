@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_10_125318) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_11_132530) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -94,6 +94,16 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_10_125318) do
     t.datetime "replied_at"
     t.string "subject"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "product_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["product_id"], name: "index_favorites_on_product_id"
+    t.index ["user_id", "product_id"], name: "index_favorites_on_user_id_and_product_id", unique: true
+    t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -220,6 +230,17 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_10_125318) do
     t.index ["slug"], name: "index_subcategories_on_slug", unique: true
   end
 
+  create_table "subscribers", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "status", default: "active", null: false
+    t.datetime "subscribed_at"
+    t.datetime "unsubscribed_at"
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_subscribers_on_email", unique: true
+    t.index ["status"], name: "index_subscribers_on_status"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
@@ -241,6 +262,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_10_125318) do
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "product_variants"
   add_foreign_key "carts", "users"
+  add_foreign_key "favorites", "products"
+  add_foreign_key "favorites", "users"
   add_foreign_key "inventories", "product_variants"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "product_variants"

@@ -49,14 +49,23 @@
 
       <div class="flex items-center space-x-6">
         <div class="hidden md:block relative">
-          <input type="text" placeholder="Search products..." class="w-64 px-4 py-2 border border-pink-border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-primary focus:border-transparent transition-all duration-200">
-          <%= render "shared/svg_icons/search", class: "w-5 h-5 text-green-muted absolute right-3 top-1/2 transform -translate-y-1/2" %>
+          <%= form_with url: products_path, method: :get, local: true, class: "relative" do |f| %>
+            <%= f.text_field :name, 
+                value: params[:name], 
+                placeholder: "Search products...", 
+                class: "w-64 px-4 py-2 pr-10 border border-pink-border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-primary focus:border-transparent transition-all duration-200" %>
+            <%= f.button type: :submit, class: "absolute right-3 top-1/2 transform -translate-y-1/2 text-green-muted hover:text-green-primary transition-colors duration-200" do %>
+              <%= render "shared/svg_icons/search", class: "w-5 h-5" %>
+            <% end %>
+          <% end %>
         </div>
 
-        <button class="relative p-2 text-green-deep hover:text-green-primary transition-colors duration-200">
+        <%= link_to favorites_path, class: "relative p-2 text-green-deep hover:text-green-primary transition-colors duration-200" do %>
           <%= render "shared/svg_icons/heart", class: "w-6 h-6" %>
-          <span class="absolute top-0 right-0 w-5 h-5 bg-pink-accent text-white text-xs rounded-full flex items-center justify-center">0</span>
-        </button>
+          <span class="absolute top-0 right-0 w-5 h-5 bg-pink-accent text-white text-xs rounded-full flex items-center justify-center" id="favorites-count">
+            <%= user_signed_in? ? current_user.favorites.count : 0 %>
+          </span>
+        <% end %>
 
         <%= link_to cart_path, class: "relative p-2 text-green-deep hover:text-green-primary transition-colors duration-200" do %>
           <%= render "shared/svg_icons/cart", class: "w-6 h-6" %>

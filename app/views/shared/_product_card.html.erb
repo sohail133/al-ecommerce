@@ -8,8 +8,8 @@
 %>
 
 <% if clickable && product.present? %>
-  <%= link_to product_path(product), class: "block" do %>
-    <div class="bg-white rounded-lg shadow-sm border border-pink-border overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+  <div id="product-card-<%= product.id %>" class="bg-white rounded-lg shadow-sm border border-pink-border overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 relative" data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+    <%= link_to product_path(product), class: "block" do %>
       <div class="relative h-64 overflow-hidden">
         <% if product.present? %>
           <% if product.cover_image.attached? %>
@@ -35,13 +35,35 @@
           </div>
         <% end %>
         
-        <div class="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-          <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-pink-accent hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110">
-            <%= render "shared/svg_icons/heart", class: "w-5 h-5" %>
-          </button>
-          <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-green-primary hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110">
-            <%= render "shared/svg_icons/eye", class: "w-5 h-5" %>
-          </button>
+        <div class="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0 z-30 pointer-events-none">
+          <% if product.present? && user_signed_in? %>
+            <% is_favorited = defined?(@favorited_product_ids) && @favorited_product_ids ? @favorited_product_ids.include?(product.id) : current_user.favorited?(product.id) %>
+            <%= form_with url: is_favorited ? unfavorite_product_path(product) : favorite_product_path(product),
+                method: is_favorited ? :delete : :post,
+                data: { turbo_method: is_favorited ? :delete : :post, controller: "favorite" },
+                class: "inline-block m-0 p-0 pointer-events-auto",
+                id: "favorite-form-card-#{product.id}" do |f| %>
+              <%= f.button type: :submit,
+                  class: "w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-pink-accent hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110 #{'text-pink-accent' if is_favorited}",
+                  data: { action: "click->favorite#submit" },
+                  id: "favorite-button-card-#{product.id}" do %>
+                <% if is_favorited %>
+                  <%= render "shared/svg_icons/heart_filled", class: "w-5 h-5" %>
+                <% else %>
+                  <%= render "shared/svg_icons/heart", class: "w-5 h-5" %>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% elsif product.present? %>
+            <%= link_to new_user_session_path, class: "w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-pink-accent hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110", style: "pointer-events: auto;", onclick: "event.preventDefault(); event.stopPropagation();" do %>
+              <%= render "shared/svg_icons/heart", class: "w-5 h-5" %>
+            <% end %>
+          <% end %>
+          <div style="pointer-events: auto;">
+            <%= link_to product.present? ? product_path(product) : "#", class: "w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-green-primary hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110" do %>
+              <%= render "shared/svg_icons/eye", class: "w-5 h-5" %>
+            <% end %>
+          </div>
         </div>
         
         <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -57,11 +79,29 @@
         <% end %>
         
         <div class="flex items-center mb-3">
-          <% 5.times do |i| %>
-            <%= render "shared/svg_icons/star", class: "w-4 h-4 text-yellow-400" %>
+          <% if product.present? %>
+            <% avg_rating = product.average_rating %>
+            <% review_count = product.review_count %>
+            <% if review_count > 0 %>
+              <% 5.times do |i| %>
+                <%= render "shared/svg_icons/star", class: "w-4 h-4 #{i < avg_rating.to_i ? 'text-yellow-400' : 'text-gray-300'}" %>
+              <% end %>
+              <span class="text-sm text-green-muted ml-2">(<%= avg_rating %>)</span>
+              <span class="text-xs text-green-muted ml-2">· <%= review_count %> <%= review_count == 1 ? 'review' : 'reviews' %></span>
+            <% else %>
+              <% 5.times do |i| %>
+                <%= render "shared/svg_icons/star", class: "w-4 h-4 text-gray-300" %>
+              <% end %>
+              <span class="text-sm text-green-muted ml-2">(0.0)</span>
+              <span class="text-xs text-green-muted ml-2">· No reviews yet</span>
+            <% end %>
+          <% else %>
+            <% 5.times do |i| %>
+              <%= render "shared/svg_icons/star", class: "w-4 h-4 text-yellow-400" %>
+            <% end %>
+            <span class="text-sm text-green-muted ml-2">(4.8)</span>
+            <span class="text-xs text-green-muted ml-2">· 124 reviews</span>
           <% end %>
-          <span class="text-sm text-green-muted ml-2">(4.8)</span>
-          <span class="text-xs text-green-muted ml-2">· 124 reviews</span>
         </div>
         
         <% if product&.product_variants&.any? %>
@@ -111,7 +151,7 @@
     </div>
   <% end %>
 <% else %>
-  <div class="bg-white rounded-lg shadow-sm border border-pink-border overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+  <div id="<%= product.present? ? "product-card-#{product.id}" : "product-card-placeholder-#{index}" %>" class="bg-white rounded-lg shadow-sm border border-pink-border overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
     <div class="relative h-64 overflow-hidden">
       <% if product.present? %>
         <% if product.cover_image.attached? %>
@@ -137,13 +177,36 @@
         </div>
       <% end %>
       
-      <div class="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-        <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-pink-accent hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110">
-          <%= render "shared/svg_icons/heart", class: "w-5 h-5" %>
-        </button>
-        <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-green-primary hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110">
-          <%= render "shared/svg_icons/eye", class: "w-5 h-5" %>
-        </button>
+      <div class="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0 z-20">
+        <% if product.present? && user_signed_in? %>
+          <% is_favorited = defined?(@favorited_product_ids) && @favorited_product_ids ? @favorited_product_ids.include?(product.id) : current_user.favorited?(product.id) %>
+          <%= form_with url: is_favorited ? unfavorite_product_path(product) : favorite_product_path(product),
+              method: is_favorited ? :delete : :post,
+              data: { turbo_method: is_favorited ? :delete : :post, controller: "favorite" },
+              class: "inline-block m-0 p-0",
+              style: "pointer-events: auto;",
+              id: "favorite-form-card-#{product.id}" do |f| %>
+            <%= f.button type: :submit,
+                class: "w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-pink-accent hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110 #{'text-pink-accent' if is_favorited}",
+                data: { action: "click->favorite#submit" },
+                id: "favorite-button-card-#{product.id}" do %>
+              <% if is_favorited %>
+                <%= render "shared/svg_icons/heart_filled", class: "w-5 h-5" %>
+              <% else %>
+                <%= render "shared/svg_icons/heart", class: "w-5 h-5" %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% elsif product.present? %>
+          <%= link_to new_user_session_path, class: "w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-pink-accent hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110", onclick: "event.preventDefault(); event.stopPropagation();" do %>
+            <%= render "shared/svg_icons/heart", class: "w-5 h-5" %>
+          <% end %>
+        <% end %>
+        <div style="pointer-events: auto;">
+          <%= link_to product.present? ? product_path(product) : "#", class: "w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-green-primary hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110" do %>
+            <%= render "shared/svg_icons/eye", class: "w-5 h-5" %>
+          <% end %>
+        </div>
       </div>
       
       <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -159,11 +222,29 @@
       <% end %>
       
       <div class="flex items-center mb-3">
-        <% 5.times do |i| %>
-          <%= render "shared/svg_icons/star", class: "w-4 h-4 text-yellow-400" %>
+        <% if product.present? %>
+          <% avg_rating = product.average_rating %>
+          <% review_count = product.review_count %>
+          <% if review_count > 0 %>
+            <% 5.times do |i| %>
+              <%= render "shared/svg_icons/star", class: "w-4 h-4 #{i < avg_rating.to_i ? 'text-yellow-400' : 'text-gray-300'}" %>
+            <% end %>
+            <span class="text-sm text-green-muted ml-2">(<%= avg_rating %>)</span>
+            <span class="text-xs text-green-muted ml-2">· <%= review_count %> <%= review_count == 1 ? 'review' : 'reviews' %></span>
+          <% else %>
+            <% 5.times do |i| %>
+              <%= render "shared/svg_icons/star", class: "w-4 h-4 text-gray-300" %>
+            <% end %>
+            <span class="text-sm text-green-muted ml-2">(0.0)</span>
+            <span class="text-xs text-green-muted ml-2">· No reviews yet</span>
+          <% end %>
+        <% else %>
+          <% 5.times do |i| %>
+            <%= render "shared/svg_icons/star", class: "w-4 h-4 text-yellow-400" %>
+          <% end %>
+          <span class="text-sm text-green-muted ml-2">(4.8)</span>
+          <span class="text-xs text-green-muted ml-2">· 124 reviews</span>
         <% end %>
-        <span class="text-sm text-green-muted ml-2">(4.8)</span>
-        <span class="text-xs text-green-muted ml-2">· 124 reviews</span>
       </div>
       
       <% if product&.product_variants&.any? %>

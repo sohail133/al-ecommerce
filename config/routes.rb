@@ -6,6 +6,12 @@ Rails.application.routes.draw do
   
   resources :contacts, only: [:create], controller: "contact_us", path: "contact-us"
   
+  resources :subscribers, only: [:create] do
+    collection do
+      delete :unsubscribe
+    end
+  end
+  
   resources :products, only: [:index, :show]
   resources :categories, only: [:show]
   
@@ -27,6 +33,15 @@ Rails.application.routes.draw do
   resources :orders, only: [:index, :show] do
     resources :order_items, only: [] do
       resources :reviews, only: [:create]
+    end
+  end
+  
+  resources :favorites, only: [:index]
+  
+  resources :products, only: [] do
+    member do
+      post :favorite, to: "favorites#create"
+      delete :unfavorite, to: "favorites#destroy"
     end
   end
   
@@ -89,6 +104,15 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show, :edit, :update] do
       resources :order_items, only: [] do
         resources :reviews, only: [:new, :create], controller: "reviews"
+      end
+    end
+    
+    resources :subscribers, only: [:index, :show, :destroy] do
+      member do
+        patch :toggle_status
+      end
+      collection do
+        get :export
       end
     end
   end

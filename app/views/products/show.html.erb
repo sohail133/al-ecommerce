@@ -49,10 +49,19 @@
           <h1 class="text-3xl md:text-4xl font-bold text-green-deep mb-4"><%= @product.title %></h1>
 
           <div class="flex items-center mb-4">
-            <% 5.times do %>
-              <%= render "shared/svg_icons/star", class: "w-5 h-5 text-yellow-400" %>
+            <% avg_rating = @product.average_rating %>
+            <% review_count = @product.review_count %>
+            <% if review_count > 0 %>
+              <% 5.times do |i| %>
+                <%= render "shared/svg_icons/star", class: "w-5 h-5 #{i < avg_rating.to_i ? 'text-yellow-400' : 'text-gray-300'}" %>
+              <% end %>
+              <span class="text-green-muted ml-2">(<%= avg_rating %>) · <%= review_count %> <%= review_count == 1 ? 'review' : 'reviews' %></span>
+            <% else %>
+              <% 5.times do |i| %>
+                <%= render "shared/svg_icons/star", class: "w-5 h-5 text-gray-300" %>
+              <% end %>
+              <span class="text-green-muted ml-2">(0.0) · No reviews yet</span>
             <% end %>
-            <span class="text-green-muted ml-2">(4.8) · 124 reviews</span>
           </div>
 
           <div class="text-4xl font-bold text-green-primary mb-6">
@@ -67,44 +76,119 @@
           <% end %>
 
           <% if @product.product_variants.any? %>
-            <div class="mb-6">
-              <h3 class="text-lg font-semibold text-green-deep mb-3">Available Variants</h3>
-              <div class="grid grid-cols-2 gap-3">
-                <% @product.product_variants.each do |variant| %>
-                  <div class="border-2 border-pink-border rounded-lg p-3 hover:border-green-primary transition-colors cursor-pointer">
-                    <p class="font-medium text-green-deep text-sm"><%= variant.name %></p>
-                    <p class="text-green-primary font-bold">$<%= variant.price %></p>
-                    <p class="text-xs text-green-muted"><%= variant.inventory&.available_quantity || 0 %> in stock</p>
-                  </div>
+            <div data-controller="product-variant">
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-green-deep mb-3">Available Variants</h3>
+                <div class="grid grid-cols-2 gap-3">
+                  <% @product.product_variants.each_with_index do |variant, index| %>
+                    <div 
+                      data-product-variant-target="variant"
+                      data-action="click->product-variant#select"
+                      data-variant-id="<%= variant.id %>"
+                      data-variant-price="<%= variant.price %>"
+                      class="border-2 <%= index == 0 ? 'border-green-primary bg-green-light' : 'border-pink-border bg-white' %> rounded-lg p-3 hover:border-green-primary transition-colors cursor-pointer">
+                      <p class="font-medium text-green-deep text-sm"><%= variant.name %></p>
+                      <p class="text-green-primary font-bold">$<%= variant.price %></p>
+                      <p class="text-xs text-green-muted"><%= variant.inventory&.available_quantity || 0 %> in stock</p>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+
+              <div class="flex space-x-4">
+                <% first_variant = @product.product_variants.first %>
+                <%= form_with url: add_to_cart_path, method: :post, class: "flex-1" do |f| %>
+                  <%= f.hidden_field :variant_id, value: first_variant.id, data: { product_variant_target: "input" } %>
+                  <%= f.hidden_field :quantity, value: 1 %>
+                  <%= f.button type: :submit, class: "w-full bg-green-primary text-white px-8 py-3 rounded-lg hover:bg-green-dark transition-all duration-200 flex items-center justify-center space-x-2 font-semibold" do %>
+                    <%= render "shared/svg_icons/cart", class: "w-5 h-5" %>
+                    <span>Add to Cart</span>
+                  <% end %>
+                <% end %>
+                <% is_favorited = user_signed_in? && (defined?(@favorited_product_ids) && @favorited_product_ids ? @favorited_product_ids.include?(@product.id) : current_user.favorited?(@product.id)) %>
+                <%= form_with url: is_favorited ? unfavorite_product_path(@product) : favorite_product_path(@product),
+                    method: is_favorited ? :delete : :post,
+                    data: { turbo_method: is_favorited ? :delete : :post },
+                    class: "inline-block m-0 p-0",
+                    id: "favorite-form-#{@product.id}" do |f| %>
+                  <%= f.button type: :submit,
+                      class: "bg-white border-2 border-green-primary text-green-primary px-6 py-3 rounded-lg hover:bg-green-light transition-all duration-200 #{'text-pink-accent border-pink-accent' if is_favorited}",
+                      id: "favorite-button-#{@product.id}" do %>
+                    <% if is_favorited %>
+                      <%= render "shared/svg_icons/heart_filled", class: "w-6 h-6" %>
+                    <% else %>
+                      <%= render "shared/svg_icons/heart", class: "w-6 h-6" %>
+                    <% end %>
+                  <% end %>
                 <% end %>
               </div>
-            </div>
-          <% end %>
-
-          <div class="flex space-x-4">
-            <% if @product.product_variants.any? %>
-              <% first_variant = @product.product_variants.first %>
-              <%= form_with url: add_to_cart_path, method: :post, class: "flex-1" do |f| %>
-                <%= f.hidden_field :variant_id, value: first_variant.id %>
-                <%= f.hidden_field :quantity, value: 1 %>
-                <%= f.button type: :submit, class: "w-full bg-green-primary text-white px-8 py-3 rounded-lg hover:bg-green-dark transition-all duration-200 flex items-center justify-center space-x-2 font-semibold" do %>
-                  <%= render "shared/svg_icons/cart", class: "w-5 h-5" %>
-                  <span>Add to Cart</span>
-                <% end %>
-              <% end %>
-            <% else %>
+          </div>
+          <% else %>
+            <div class="flex space-x-4">
               <button class="flex-1 bg-green-primary text-white px-8 py-3 rounded-lg hover:bg-green-dark transition-all duration-200 flex items-center justify-center space-x-2 font-semibold" disabled>
                 <%= render "shared/svg_icons/cart", class: "w-5 h-5" %>
                 <span>No Variants Available</span>
               </button>
-            <% end %>
-            <button class="bg-white border-2 border-green-primary text-green-primary px-6 py-3 rounded-lg hover:bg-green-light transition-all duration-200">
-              <%= render "shared/svg_icons/heart", class: "w-6 h-6" %>
-            </button>
-          </div>
+              <% is_favorited = user_signed_in? && (defined?(@favorited_product_ids) && @favorited_product_ids ? @favorited_product_ids.include?(@product.id) : current_user.favorited?(@product.id)) %>
+              <%= form_with url: is_favorited ? unfavorite_product_path(@product) : favorite_product_path(@product),
+                  method: is_favorited ? :delete : :post,
+                  data: { turbo_method: is_favorited ? :delete : :post },
+                  class: "inline-block m-0 p-0",
+                  id: "favorite-form-#{@product.id}" do |f| %>
+                <%= f.button type: :submit,
+                    class: "bg-white border-2 border-green-primary text-green-primary px-6 py-3 rounded-lg hover:bg-green-light transition-all duration-200 #{'text-pink-accent border-pink-accent' if is_favorited}",
+                    id: "favorite-button-#{@product.id}" do %>
+                  <% if is_favorited %>
+                    <%= render "shared/svg_icons/heart_filled", class: "w-6 h-6" %>
+                  <% else %>
+                    <%= render "shared/svg_icons/heart", class: "w-6 h-6" %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
+
+    <% product_reviews = Review.joins(order_item: :product_variant)
+                               .where(product_variants: { product_id: @product.id })
+                               .includes(:user, order_item: { product_variant: :product })
+                               .recent %>
+    
+    <% if product_reviews.any? %>
+      <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6 md:p-8 mb-8">
+        <h2 class="text-2xl font-bold text-green-deep mb-6">Customer Reviews</h2>
+        <div class="space-y-6">
+          <% product_reviews.each do |review| %>
+            <div class="border-b border-pink-border pb-6 last:border-0 last:pb-0">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center space-x-4">
+                  <%= user_avatar(review.user, size: 12, class_names: "flex-shrink-0") %>
+                  <div>
+                    <p class="font-semibold text-green-deep"><%= review.user.full_name %></p>
+                    <p class="text-xs text-green-muted"><%= review.created_at.strftime("%B %d, %Y") %></p>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <% 5.times do |i| %>
+                    <%= render "shared/svg_icons/star", class: "w-4 h-4 #{i < review.rating ? 'text-yellow-400' : 'text-gray-300'}" %>
+                  <% end %>
+                </div>
+              </div>
+              <p class="text-green-deep mb-3"><%= review.comment %></p>
+              <% if review.images.attached? %>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
+                  <% review.images.each do |image| %>
+                    <%= image_tag image, class: "w-full h-24 object-cover rounded-lg border border-pink-border" %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
     <% if @related_products.any? %>
       <div class="mb-8">

@@ -16,6 +16,20 @@ class CheckoutController < ApplicationController
       return
     end
 
+    # Check stock availability before creating order
+    insufficient_stock_items = []
+    @cart.cart_items.each do |cart_item|
+      inventory = cart_item.product_variant.inventory
+      if inventory.nil? || inventory.available_quantity < cart_item.quantity
+        insufficient_stock_items << cart_item.product_variant.name
+      end
+    end
+
+    if insufficient_stock_items.any?
+      redirect_to cart_path, alert: "Insufficient stock for: #{insufficient_stock_items.join(', ')}"
+      return
+    end
+
     @order = current_user.orders.build(order_params)
     
     @cart.cart_items.each do |cart_item|

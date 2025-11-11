@@ -3,7 +3,7 @@ class Admin::ProductVariantsController < Admin::BaseController
   before_action :load_products, only: [:index, :new, :edit, :create, :update]
 
   def index
-    @product_variants = ProductVariant.search(filter_params).page(params[:page])
+    @product_variants = ProductVariant.includes(:product, :inventory).search(filter_params).page(params[:page])
   end
 
   def show; end

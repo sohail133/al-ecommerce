@@ -5,6 +5,8 @@ class ProductsController < ApplicationController
     @products = Product.search(filter_params).page(params[:page]).per(12)
     @categories = Category.includes(image_attachment: :blob).order(:name)
     @subcategories = Subcategory.includes(image_attachment: :blob).order(:name)
+    # Preload favorites for current user to avoid N+1 queries
+    @favorited_product_ids = user_signed_in? ? current_user.favorited_product_ids : []
   end
 
   def show

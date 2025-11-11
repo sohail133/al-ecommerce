@@ -12,6 +12,7 @@ class Product < ApplicationRecord
   belongs_to :category
   belongs_to :subcategory, optional: true
   has_many :product_variants, dependent: :destroy
+  has_many :favorites, dependent: :destroy
 
   validates :title, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
@@ -58,5 +59,18 @@ class Product < ApplicationRecord
 
   def variants_count
     product_variants.count
+  end
+
+  def average_rating
+    reviews = Review.joins(order_item: :product_variant)
+                   .where(product_variants: { product_id: id })
+    return 0.0 if reviews.empty?
+    reviews.average(:rating).round(1)
+  end
+
+  def review_count
+    Review.joins(order_item: :product_variant)
+          .where(product_variants: { product_id: id })
+          .count
   end
 end

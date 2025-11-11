@@ -28,6 +28,7 @@ class Order < ApplicationRecord
   scope :by_max_price, ->(max_price) { where("total_amount <= ?", max_price) }
 
   before_validation :calculate_total, on: :create
+  after_update :restore_inventory_on_cancel, if: :saved_change_to_status?
 
   def self.search(params)
     orders = includes(:user, :address, :payment_method, :order_items)
@@ -65,5 +66,14 @@ class Order < ApplicationRecord
 
   def calculate_total
     self.total_amount = order_items.sum(&:subtotal) if order_items.any?
+  end
+
+  def restore_inventory_on_cancel
+    # Restore inventory when order is canceled
+    if canceled? && status_was != 'canceled'
+      order_items.each do |order_item|
+        order_item.restore_inventory
+      end
+    end
   end
 end

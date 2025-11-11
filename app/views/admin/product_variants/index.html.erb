@@ -58,8 +58,26 @@
               <td class="px-6 py-4 whitespace-nowrap">
                 <%= status_badge(variant.active, type: :active) %>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <%= render "admin/shared/actions_dropdown", resource: variant, show_path: admin_product_variant_path(variant), edit_path: edit_admin_product_variant_path(variant), delete_path: admin_product_variant_path(variant) %>
+              <td class="px-6 py-4 whitespace-nowrap text-sm relative" onclick="event.stopPropagation()">
+                <div class="flex items-center space-x-2">
+                  <% if variant.inventory %>
+                    <%= link_to edit_admin_inventory_path(variant.inventory), class: "inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-primary bg-green-light rounded-md hover:bg-green-primary hover:text-white transition-colors", title: "Manage Stock" do %>
+                      <%= render "shared/svg_icons/settings", class: "w-4 h-4 mr-1" %>
+                      Stock
+                    <% end %>
+                  <% else %>
+                    <%= link_to edit_admin_inventory_path(product_variant_id: variant.id), class: "inline-flex items-center px-3 py-1.5 text-xs font-medium text-yellow-600 bg-yellow-50 rounded-md hover:bg-yellow-100 transition-colors", title: "Create Inventory" do %>
+                      <%= render "shared/svg_icons/add", class: "w-4 h-4 mr-1" %>
+                      Add Stock
+                    <% end %>
+                  <% end %>
+                  <%= render "admin/shared/actions_dropdown", 
+                      resource: variant, 
+                      show_path: admin_product_variant_path(variant), 
+                      edit_path: edit_admin_product_variant_path(variant), 
+                      stock_path: variant.inventory ? edit_admin_inventory_path(variant.inventory) : edit_admin_inventory_path(product_variant_id: variant.id),
+                      delete_path: admin_product_variant_path(variant) %>
+                </div>
               </td>
             </tr>
           <% end %>

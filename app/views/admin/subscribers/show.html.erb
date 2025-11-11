@@ -1,0 +1,123 @@
+<div class="flex flex-col flex-1 overflow-x-hidden overflow-y-auto">
+  <div class="p-4 lg:p-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-green-deep dark:text-green-deep">Subscriber Details</h1>
+        <p class="text-green-muted dark:text-green-muted mt-1"><%= @subscriber.email %></p>
+      </div>
+      <div class="flex gap-2">
+        <%= link_to "Back to Subscribers", admin_subscribers_path, class: "btn-secondary inline-flex items-center" %>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-white dark:bg-white rounded-lg shadow-sm border border-pink-border dark:border-pink-border p-6">
+        <h2 class="text-lg font-semibold text-green-deep dark:text-green-deep mb-4">Basic Information</h2>
+        <dl class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-green-muted dark:text-green-muted">Email Address</dt>
+            <dd class="mt-1 text-sm text-green-deep dark:text-green-deep"><%= @subscriber.email %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-green-muted dark:text-green-muted">Status</dt>
+            <dd class="mt-1">
+              <% if @subscriber.active? %>
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Active
+                </span>
+              <% else %>
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                  Unsubscribed
+                </span>
+              <% end %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-green-muted dark:text-green-muted">Subscribed At</dt>
+            <dd class="mt-1 text-sm text-green-deep dark:text-green-deep">
+              <%= @subscriber.subscribed_at&.strftime("%B %d, %Y at %I:%M %p") || "-" %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-green-muted dark:text-green-muted">Unsubscribed At</dt>
+            <dd class="mt-1 text-sm text-green-deep dark:text-green-deep">
+              <%= @subscriber.unsubscribed_at&.strftime("%B %d, %Y at %I:%M %p") || "-" %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-green-muted dark:text-green-muted">Created At</dt>
+            <dd class="mt-1 text-sm text-green-deep dark:text-green-deep">
+              <%= @subscriber.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-green-muted dark:text-green-muted">Last Updated</dt>
+            <dd class="mt-1 text-sm text-green-deep dark:text-green-deep">
+              <%= @subscriber.updated_at.strftime("%B %d, %Y at %I:%M %p") %>
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="bg-white dark:bg-white rounded-lg shadow-sm border border-pink-border dark:border-pink-border p-6">
+        <h2 class="text-lg font-semibold text-green-deep dark:text-green-deep mb-4">Actions</h2>
+        <div class="space-y-3">
+          <% if @subscriber.active? %>
+            <%= button_to toggle_status_admin_subscriber_path(@subscriber), 
+                method: :patch,
+                class: "w-full btn-secondary inline-flex items-center justify-center" do %>
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+              </svg>
+              Unsubscribe
+            <% end %>
+          <% else %>
+            <%= button_to toggle_status_admin_subscriber_path(@subscriber), 
+                method: :patch,
+                class: "w-full btn-primary inline-flex items-center justify-center" do %>
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Resubscribe
+            <% end %>
+          <% end %>
+          
+          <%= button_to admin_subscriber_path(@subscriber), 
+              method: :delete,
+              data: { turbo_confirm: "Are you sure you want to permanently delete this subscriber?" },
+              class: "w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all duration-200 font-semibold inline-flex items-center justify-center" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            Delete Subscriber
+          <% end %>
+        </div>
+
+        <div class="mt-6 pt-6 border-t border-pink-border dark:border-pink-border">
+          <h3 class="text-sm font-semibold text-green-deep dark:text-green-deep mb-3">Quick Info</h3>
+          <div class="space-y-2">
+            <div class="flex items-center text-sm">
+              <svg class="w-4 h-4 mr-2 text-green-muted dark:text-green-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="text-green-muted dark:text-green-muted">
+                Subscribed <%= time_ago_in_words(@subscriber.subscribed_at || @subscriber.created_at) %> ago
+              </span>
+            </div>
+            <% if @subscriber.unsubscribed_at %>
+              <div class="flex items-center text-sm">
+                <svg class="w-4 h-4 mr-2 text-green-muted dark:text-green-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="text-green-muted dark:text-green-muted">
+                  Unsubscribed <%= time_ago_in_words(@subscriber.unsubscribed_at) %> ago
+                </span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

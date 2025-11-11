@@ -4,6 +4,8 @@ source "https://rubygems.org"
 gem "rails", "~> 8.1.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
+# CSV library for exporting data
+gem "csv"
 # Use sqlite3 as the database for Active Record
 gem 'pg', '~> 1.6', '>= 1.6.2'
 # Use the Puma web server [https://github.com/puma/puma]
