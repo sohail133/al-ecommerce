@@ -1,0 +1,35 @@
+<div class="min-h-screen bg-pink-lightest">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-green-deep mb-2">My Favorites</h1>
+        <p class="text-green-muted">Products you've saved for later</p>
+      </div>
+
+      <div id="favorites-list">
+        <% if @favorites.any? %>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <% @favorites.each_with_index do |favorite, index| %>
+              <div id="favorite-item-<%= favorite.product.id %>">
+                <%= render "shared/product_card", product: favorite.product, index: index, clickable: true %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div id="no-favorites-message" class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
+            <div class="mb-4">
+              <%= render "shared/svg_icons/heart", class: "w-16 h-16 text-green-muted mx-auto" %>
+            </div>
+            <h2 class="text-2xl font-bold text-green-deep mb-2">No Favorites Yet</h2>
+            <p class="text-green-muted mb-6">Start adding products to your favorites by clicking the heart icon on any product.</p>
+            <%= link_to "Browse Products", products_path, class: "btn-primary inline-flex items-center" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>

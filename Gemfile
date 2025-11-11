@@ -4,6 +4,8 @@ source "https://rubygems.org"
 gem "rails", "~> 8.1.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
+# CSV library for exporting data
+gem "csv"
 # Use sqlite3 as the database for Active Record
 gem 'pg', '~> 1.6', '>= 1.6.2'
 # Use the Puma web server [https://github.com/puma/puma]
@@ -44,6 +46,8 @@ gem "image_processing", "~> 1.2"
 
 # Authentication
 gem "devise"
+gem "kaminari"
+gem "friendly_id", "~> 5.5"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -65,6 +69,9 @@ group :development do
   
   # Process manager for Procfile-based applications
   gem "foreman"
+  
+  # Open emails in browser instead of sending them
+  gem "letter_opener"
 end
 
 group :test do

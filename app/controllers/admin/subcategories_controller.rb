@@ -1,16 +1,15 @@
 class Admin::SubcategoriesController < Admin::BaseController
   before_action :set_subcategory, only: [:show, :edit, :update, :destroy]
+  before_action :load_categories, only: [:index, :new, :edit, :create, :update]
 
   def index
-    @subcategories = Subcategory.includes(:category).order(created_at: :desc)
+    @subcategories = Subcategory.search(filter_params).page(params[:page])
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @subcategory = Subcategory.new
-    @categories = Category.ordered
   end
 
   def create
@@ -18,20 +17,16 @@ class Admin::SubcategoriesController < Admin::BaseController
     if @subcategory.save
       redirect_to admin_subcategory_path(@subcategory), notice: "Subcategory created successfully"
     else
-      @categories = Category.ordered
       render :new, status: :unprocessable_entity
     end
   end
 
-  def edit
-    @categories = Category.ordered
-  end
+  def edit; end
 
   def update
     if @subcategory.update(subcategory_params)
       redirect_to admin_subcategory_path(@subcategory), notice: "Subcategory updated successfully"
     else
-      @categories = Category.ordered
       render :edit, status: :unprocessable_entity
     end
   end
@@ -44,10 +39,18 @@ class Admin::SubcategoriesController < Admin::BaseController
   private
 
   def set_subcategory
-    @subcategory = Subcategory.find(params[:id])
+    @subcategory = Subcategory.friendly.find(params[:id])
+  end
+
+  def load_categories
+    @categories = Category.ordered
   end
 
   def subcategory_params
-    params.require(:subcategory).permit(:category_id, :name, :description)
+    params.require(:subcategory).permit(:category_id, :name, :description, :image)
+  end
+
+  def filter_params
+    params.permit(:name, :category_id)
   end
 end

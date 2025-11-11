@@ -1,0 +1,64 @@
+<%= turbo_stream.replace "favorite-form-#{@product.id}" do %>
+  <% is_favorited = user_signed_in? && current_user.favorited?(@product.id) %>
+  <%= form_with url: is_favorited ? unfavorite_product_path(@product) : favorite_product_path(@product),
+      method: is_favorited ? :delete : :post,
+      data: { turbo_method: is_favorited ? :delete : :post },
+      class: "inline-block m-0 p-0",
+      id: "favorite-form-#{@product.id}" do |f| %>
+    <%= f.button type: :submit,
+        class: "bg-white border-2 border-green-primary text-green-primary px-6 py-3 rounded-lg hover:bg-green-light transition-all duration-200 #{'text-pink-accent border-pink-accent' if is_favorited}",
+        id: "favorite-button-#{@product.id}" do %>
+      <% if is_favorited %>
+        <%= render "shared/svg_icons/heart_filled", class: "w-6 h-6" %>
+      <% else %>
+        <%= render "shared/svg_icons/heart", class: "w-6 h-6" %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.replace "favorite-form-card-#{@product.id}" do %>
+  <% current_user.favorites.reset %>
+  <% is_favorited = user_signed_in? && current_user.favorites.exists?(product_id: @product.id) %>
+  <%= form_with url: is_favorited ? unfavorite_product_path(@product) : favorite_product_path(@product),
+      method: is_favorited ? :delete : :post,
+      data: { turbo_method: is_favorited ? :delete : :post, controller: "favorite" },
+      class: "inline-block m-0 p-0 pointer-events-auto",
+      id: "favorite-form-card-#{@product.id}" do |f| %>
+    <%= f.button type: :submit,
+        class: "w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-pink-accent hover:text-white transition-all duration-200 shadow-lg transform hover:scale-110 #{'text-pink-accent' if is_favorited}",
+        data: { action: "click->favorite#submit" },
+        id: "favorite-button-card-#{@product.id}" do %>
+      <% if is_favorited %>
+        <%= render "shared/svg_icons/heart_filled", class: "w-5 h-5" %>
+      <% else %>
+        <%= render "shared/svg_icons/heart", class: "w-5 h-5" %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.remove "favorite-item-#{@product.id}" %>
+
+<% if current_user.favorites.count == 0 %>
+  <%= turbo_stream.replace "favorites-list" do %>
+    <div id="favorites-list">
+      <div id="no-favorites-message" class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
+        <div class="mb-4">
+          <%= render "shared/svg_icons/heart", class: "w-16 h-16 text-green-muted mx-auto" %>
+        </div>
+        <h2 class="text-2xl font-bold text-green-deep mb-2">No Favorites Yet</h2>
+        <p class="text-green-muted mb-6">Start adding products to your favorites by clicking the heart icon on any product.</p>
+        <%= link_to "Browse Products", products_path, class: "btn-primary inline-flex items-center" %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.append "flash-toast-container" do %>
+  <%= render "shared/flash_toast_message", type: :notice, message: "Removed from favorites", id: "flash-toast-#{SecureRandom.hex(4)}" %>
+<% end %>
+
+<%= turbo_stream.update "favorites-count" do %>
+  <%= user_signed_in? ? current_user.favorites.count : 0 %>
+<% end %>

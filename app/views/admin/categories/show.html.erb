@@ -21,6 +21,13 @@
 
   <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <% if @category.image.attached? %>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-green-muted mb-2">Category Image</label>
+          <%= image_tag @category.image, class: "w-64 h-64 object-cover rounded-lg border border-pink-border" %>
+        </div>
+      <% end %>
+      
       <div>
         <label class="block text-sm font-medium text-green-muted mb-1">Name</label>
         <p class="text-sm text-green-deep"><%= @category.name %></p>
@@ -34,7 +41,7 @@
     </div>
 
     <div class="mt-6 pt-6 border-t border-pink-border">
-      <h3 class="text-lg font-semibold text-green-deep mb-4">Subcategories</h3>
+      <h3 class="text-lg font-semibold text-green-deep mb-4">Sub Categories</h3>
       <% if @category.subcategories.any? %>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <% @category.subcategories.each do |subcategory| %>

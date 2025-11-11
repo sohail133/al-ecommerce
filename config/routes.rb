@@ -1,4 +1,50 @@
 Rails.application.routes.draw do
+  root "pages#home"
+  
+  get "about", to: "pages#about", as: :about
+  get "contact", to: "pages#contact", as: :contact
+  
+  resources :contacts, only: [:create], controller: "contact_us", path: "contact-us"
+  
+  resources :subscribers, only: [:create] do
+    collection do
+      delete :unsubscribe
+    end
+  end
+  
+  resources :products, only: [:index, :show]
+  resources :categories, only: [:show]
+  
+  get "cart", to: "cart#show", as: :cart
+  post "cart/add", to: "cart#add", as: :add_to_cart
+  delete "cart/remove/:variant_id", to: "cart#remove", as: :remove_from_cart
+  delete "cart/clear", to: "cart#clear", as: :clear_cart
+  patch "cart/update_quantity/:id", to: "cart#update_quantity", as: :cart_update_quantity
+  patch "cart/update_variant/:id", to: "cart#update_variant", as: :cart_update_variant
+  
+  get "checkout", to: "checkout#show", as: :checkout
+  post "checkout", to: "checkout#create"
+  get "orders/:id/confirmation", to: "orders#confirmation", as: :order_confirmation
+  
+  resources :addresses, only: [:new, :create]
+  
+  get "dashboard", to: "dashboard#show", as: :dashboard
+  
+  resources :orders, only: [:index, :show] do
+    resources :order_items, only: [] do
+      resources :reviews, only: [:create]
+    end
+  end
+  
+  resources :favorites, only: [:index]
+  
+  resources :products, only: [] do
+    member do
+      post :favorite, to: "favorites#create"
+      delete :unfavorite, to: "favorites#destroy"
+    end
+  end
+  
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -27,10 +73,47 @@ Rails.application.routes.draw do
     resources :addresses, only: [:index, :show]
     resources :categories
     resources :subcategories
-    resources :products
+    resources :products do
+      member do
+        delete :delete_image
+      end
+    end
     resources :product_variants
     resources :inventories, only: [:edit, :create, :update]
     resources :payment_methods
     resources :orders, only: [:index, :show, :edit, :update]
+    
+    resource :store_setting, only: [:show, :edit, :update]
+    resources :hero_images do
+      member do
+        patch :toggle_active
+        delete :delete_image
+      end
+    end
+    resources :contacts, only: [:index, :show, :edit, :update, :destroy], controller: "contact_us" do
+      member do
+        post :reply
+      end
+    end
+    resources :reviews do
+      collection do
+        get :new_standalone
+        post :create_standalone
+      end
+    end
+    resources :orders, only: [:index, :show, :edit, :update] do
+      resources :order_items, only: [] do
+        resources :reviews, only: [:new, :create], controller: "reviews"
+      end
+    end
+    
+    resources :subscribers, only: [:index, :show, :destroy] do
+      member do
+        patch :toggle_status
+      end
+      collection do
+        get :export
+      end
+    end
   end
 end

@@ -1,0 +1,85 @@
+<% content_for :title, "About Us - AL Ecommerce" %>
+
+<div class="min-h-screen bg-pink-lightest">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-16">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h1 class="text-4xl md:text-5xl font-bold text-green-deep mb-4">About AL Ecommerce</h1>
+        <div class="w-24 h-1 bg-green-primary mx-auto"></div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-lg border border-pink-border p-8 md:p-12 mb-8" data-aos="fade-up" data-aos-delay="100">
+        <h2 class="text-3xl font-bold text-green-deep mb-6">Our Story</h2>
+        <div class="prose prose-lg max-w-none text-green-muted">
+          <p class="text-lg leading-relaxed mb-4">
+            Welcome to AL Ecommerce, your trusted destination for quality products and exceptional service. 
+            We are committed to providing you with the best shopping experience, offering a wide range of 
+            carefully curated products that meet your needs and exceed your expectations.
+          </p>
+          <p class="text-lg leading-relaxed mb-4">
+            Founded with a vision to make quality products accessible to everyone, we have grown into a 
+            platform that values customer satisfaction above all else. Our team works tirelessly to ensure 
+            that every product we offer meets our high standards of quality and reliability.
+          </p>
+          <p class="text-lg leading-relaxed">
+            At AL Ecommerce, we believe in building lasting relationships with our customers through 
+            transparency, integrity, and exceptional service. Thank you for choosing us as your shopping partner.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6 text-center" data-aos="fade-up" data-aos-delay="200">
+          <div class="w-16 h-16 bg-green-light rounded-full flex items-center justify-center mx-auto mb-4">
+            <%= render "shared/svg_icons/star", class: "w-8 h-8 text-green-primary" %>
+          </div>
+          <h3 class="text-xl font-bold text-green-deep mb-2">Quality Products</h3>
+          <p class="text-green-muted">We source only the finest products from trusted suppliers</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6 text-center" data-aos="fade-up" data-aos-delay="300">
+          <div class="w-16 h-16 bg-green-light rounded-full flex items-center justify-center mx-auto mb-4">
+            <%= render "shared/svg_icons/cart", class: "w-8 h-8 text-green-primary" %>
+          </div>
+          <h3 class="text-xl font-bold text-green-deep mb-2">Easy Shopping</h3>
+          <p class="text-green-muted">Simple, intuitive shopping experience for all customers</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6 text-center" data-aos="fade-up" data-aos-delay="400">
+          <div class="w-16 h-16 bg-green-light rounded-full flex items-center justify-center mx-auto mb-4">
+            <%= render "shared/svg_icons/heart", class: "w-8 h-8 text-green-primary" %>
+          </div>
+          <h3 class="text-xl font-bold text-green-deep mb-2">Customer First</h3>
+          <p class="text-green-muted">Your satisfaction is our top priority</p>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-green-primary to-green-dark rounded-lg shadow-lg p-8 md:p-12 text-white text-center" data-aos="fade-up" data-aos-delay="500">
+        <h2 class="text-3xl font-bold mb-4">Join Our Community</h2>
+        <p class="text-lg mb-6 text-white/90">Stay connected with us for the latest updates and exclusive offers</p>
+        <div class="flex justify-center space-x-4">
+          <% if @store_setting.facebook_url.present? %>
+            <%= link_to @store_setting.facebook_url, target: "_blank", class: "w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110" do %>
+              <%= render "shared/svg_icons/facebook", class: "w-6 h-6 text-white" %>
+            <% end %>
+          <% end %>
+          <% if @store_setting.instagram_url.present? %>
+            <%= link_to @store_setting.instagram_url, target: "_blank", class: "w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110" do %>
+              <%= render "shared/svg_icons/instagram", class: "w-6 h-6 text-white" %>
+            <% end %>
+          <% end %>
+          <% if @store_setting.youtube_url.present? %>
+            <%= link_to @store_setting.youtube_url, target: "_blank", class: "w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110" do %>
+              <%= render "shared/svg_icons/youtube", class: "w-6 h-6 text-white" %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>
+

@@ -1,0 +1,84 @@
+<header class="bg-white sticky top-0 z-50 shadow-sm">
+  <div class="bg-green-primary text-white py-2">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center text-sm">
+        <div class="flex items-center space-x-6">
+          <% store_setting = StoreSetting.instance %>
+          <div class="flex items-center">
+            <%= render "shared/svg_icons/phone", class: "w-4 h-4 mr-2" %>
+            <%= link_to store_setting.phone_number, "tel:#{store_setting.phone_number}", class: "hover:text-green-light transition-colors duration-200" %>
+          </div>
+          <div class="flex items-center">
+            <%= render "shared/svg_icons/email", class: "w-4 h-4 mr-2" %>
+            <%= link_to store_setting.email, "mailto:#{store_setting.email}", class: "hover:text-green-light transition-colors duration-200" %>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <% if user_signed_in? %>
+            <%= link_to "Dashboard", dashboard_path, class: "hover:text-green-light transition-colors duration-200" %>
+            <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "hover:text-green-light transition-colors duration-200" %>
+          <% else %>
+            <%= link_to "Login", new_user_session_path, class: "hover:text-green-light transition-colors duration-200" %>
+            <%= link_to "Sign Up", new_user_registration_path, class: "hover:text-green-light transition-colors duration-200" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-12">
+        <%= link_to root_path, class: "flex items-center" do %>
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 bg-green-primary rounded-full flex items-center justify-center">
+              <span class="text-white font-bold text-xl">AL</span>
+            </div>
+            <span class="text-2xl font-bold text-green-deep">Ecommerce</span>
+          </div>
+        <% end %>
+        
+        <div class="hidden lg:flex items-center space-x-8">
+          <%= link_to "Home", root_path, class: "text-green-deep hover:text-green-primary font-medium transition-colors duration-200" %>
+          <%= link_to "Products", products_path, class: "text-green-deep hover:text-green-primary font-medium transition-colors duration-200" %>
+          <%= link_to "Categories", root_path(anchor: "categories"), class: "text-green-deep hover:text-green-primary font-medium transition-colors duration-200" %>
+          <%= link_to "About", about_path, class: "text-green-deep hover:text-green-primary font-medium transition-colors duration-200" %>
+          <%= link_to "Contact", contact_path, class: "text-green-deep hover:text-green-primary font-medium transition-colors duration-200" %>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-6">
+        <div class="hidden md:block relative">
+          <%= form_with url: products_path, method: :get, local: true, class: "relative" do |f| %>
+            <%= f.text_field :name, 
+                value: params[:name], 
+                placeholder: "Search products...", 
+                class: "w-64 px-4 py-2 pr-10 border border-pink-border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-primary focus:border-transparent transition-all duration-200" %>
+            <%= f.button type: :submit, class: "absolute right-3 top-1/2 transform -translate-y-1/2 text-green-muted hover:text-green-primary transition-colors duration-200" do %>
+              <%= render "shared/svg_icons/search", class: "w-5 h-5" %>
+            <% end %>
+          <% end %>
+        </div>
+
+        <%= link_to favorites_path, class: "relative p-2 text-green-deep hover:text-green-primary transition-colors duration-200" do %>
+          <%= render "shared/svg_icons/heart", class: "w-6 h-6" %>
+          <span class="absolute top-0 right-0 w-5 h-5 bg-pink-accent text-white text-xs rounded-full flex items-center justify-center" id="favorites-count">
+            <%= user_signed_in? ? current_user.favorites.count : 0 %>
+          </span>
+        <% end %>
+
+        <%= link_to cart_path, class: "relative p-2 text-green-deep hover:text-green-primary transition-colors duration-200" do %>
+          <%= render "shared/svg_icons/cart", class: "w-6 h-6" %>
+          <span class="absolute top-0 right-0 w-5 h-5 bg-pink-accent text-white text-xs rounded-full flex items-center justify-center">
+            <%= user_signed_in? ? (current_user.cart&.items_count || 0) : 0 %>
+          </span>
+        <% end %>
+
+        <button class="lg:hidden text-green-deep hover:text-green-primary p-2">
+          <%= render "shared/svg_icons/menu", class: "w-6 h-6" %>
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>
+

@@ -1,0 +1,14 @@
+Hello <%= @contact_us.name %>,
+
+Thank you for contacting us. We have received your message regarding "<%= @contact_us.subject %>".
+
+Your Message:
+<%= @contact_us.message %>
+
+Our Response:
+<%= @contact_us.admin_response %>
+
+If you have any further questions, please don't hesitate to contact us.
+
+Best regards,
+<%= @store_setting.email %>

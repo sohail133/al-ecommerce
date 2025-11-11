@@ -1,0 +1,70 @@
+<div class="bg-white rounded-lg border border-pink-border shadow-sm p-4 mb-8" data-controller="filter-accordion">
+  <button data-action="click->filter-accordion#toggle" class="flex items-center justify-between w-full text-left" type="button">
+    <div class="flex items-center space-x-2">
+      <%= render "shared/svg_icons/filter", class: "w-5 h-5 text-green-primary" %>
+      <span class="text-sm font-medium text-green-deep">Filter Products</span>
+      <% if params[:name].present? || params[:category_id].present? || params[:subcategory_id].present? || params[:min_price].present? || params[:max_price].present? || params[:sort].present? %>
+        <span class="bg-green-primary text-white text-xs px-2 py-0.5 rounded-full">Active</span>
+      <% end %>
+    </div>
+    <svg data-filter-accordion-target="icon" class="w-5 h-5 text-green-deep transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+
+  <div data-filter-accordion-target="content" class="hidden mt-4">
+    <%= form_with url: products_path, method: :get, class: "space-y-4" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div>
+          <%= f.label :name, "Search", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.text_field :name, value: params[:name], placeholder: "Search products...", class: "form-input" %>
+        </div>
+
+        <div>
+          <%= f.label :category_id, "Category", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.select :category_id, 
+              options_for_select([["All Categories", ""]] + @categories.map { |c| [c.name, c.id] }, params[:category_id]), 
+              {}, 
+              { class: "form-select" } %>
+        </div>
+
+        <div>
+          <%= f.label :subcategory_id, "Subcategory", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.select :subcategory_id, 
+              options_for_select([["All Subcategories", ""]] + @subcategories.map { |s| [s.name, s.id] }, params[:subcategory_id]), 
+              {}, 
+              { class: "form-select" } %>
+        </div>
+
+        <div>
+          <%= f.label :min_price, "Min Price", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.number_field :min_price, value: params[:min_price], placeholder: "0.00", step: "0.01", min: "0", class: "form-input" %>
+        </div>
+
+        <div>
+          <%= f.label :max_price, "Max Price", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.number_field :max_price, value: params[:max_price], placeholder: "0.00", step: "0.01", min: "0", class: "form-input" %>
+        </div>
+
+        <div>
+          <%= f.label :sort, "Sort By", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.select :sort, 
+              options_for_select([
+                ["Newest First", "newest"], 
+                ["Price: Low to High", "price_asc"], 
+                ["Price: High to Low", "price_desc"],
+                ["Name: A to Z", "name_asc"]
+              ], params[:sort]), 
+              {}, 
+              { class: "form-select" } %>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-3 pt-4 border-t border-pink-border">
+        <%= link_to "Clear Filters", products_path, class: "btn-secondary" %>
+        <%= f.submit "Apply Filters", class: "btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

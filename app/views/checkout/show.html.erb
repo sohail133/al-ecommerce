@@ -1,0 +1,147 @@
+<% content_for :title, "Checkout - AL Ecommerce" %>
+
+<div class="min-h-screen bg-pink-lightest">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold text-green-deep mb-2">Checkout</h1>
+      <p class="text-green-muted">Complete your purchase</p>
+    </div>
+
+    <%= form_with model: @order, url: checkout_path, method: :post, class: "grid grid-cols-1 lg:grid-cols-3 gap-8" do |f| %>
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+          <h2 class="text-xl font-bold text-green-deep mb-4">Shipping Address</h2>
+          
+          <% if @addresses.any? %>
+            <div class="space-y-3 mb-4">
+              <% @addresses.each do |address| %>
+                <label class="flex items-start p-4 border-2 border-pink-border rounded-lg cursor-pointer hover:border-green-primary transition-all duration-200 <%= 'border-green-primary bg-green-light' if address.is_default? %>">
+                  <%= f.radio_button :address_id, address.id, checked: address.is_default?, class: "mt-1 mr-3", required: true %>
+                  <div class="flex-1">
+                    <div class="font-semibold text-green-deep"><%= address.full_name %></div>
+                    <div class="text-sm text-green-muted mt-1">
+                      <%= address.address_line_1 %><br>
+                      <% if address.address_line_2.present? %>
+                        <%= address.address_line_2 %><br>
+                      <% end %>
+                      <%= address.city %>, <%= address.province %> <%= address.postal_code %><br>
+                      <%= address.phone_number %>
+                    </div>
+                    <% if address.is_default? %>
+                      <span class="inline-block mt-2 text-xs bg-green-primary text-white px-2 py-1 rounded">Default</span>
+                    <% end %>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+              <p class="text-sm text-yellow-800 mb-3">You need to add a shipping address before checkout.</p>
+              <%= link_to "Add Address", new_address_path, class: "inline-block bg-green-primary text-white px-4 py-2 rounded-lg hover:bg-green-dark transition-colors text-sm font-medium" %>
+            </div>
+          <% end %>
+
+          <% if @addresses.any? %>
+            <%= link_to new_address_path, class: "text-green-primary hover:text-green-dark text-sm font-medium inline-flex items-center space-x-1" do %>
+              <span>+ Add New Address</span>
+            <% end %>
+          <% end %>
+        </div>
+
+        <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+          <h2 class="text-xl font-bold text-green-deep mb-4">Payment Method</h2>
+          
+          <% if @payment_methods.any? %>
+            <div class="space-y-3">
+              <% @payment_methods.each do |payment_method| %>
+                <label class="flex items-center p-4 border-2 border-pink-border rounded-lg cursor-pointer hover:border-green-primary transition-all duration-200">
+                  <%= f.radio_button :payment_method_id, payment_method.id, checked: @payment_methods.first == payment_method, class: "mr-3", required: true %>
+                  <div class="flex-1">
+                    <div class="font-semibold text-green-deep"><%= payment_method.name %></div>
+                    <div class="text-sm text-green-muted"><%= payment_method.code.upcase %></div>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <p class="text-sm text-yellow-800">No payment methods available. Please contact support.</p>
+            </div>
+          <% end %>
+        </div>
+
+        <% if @order&.errors&.any? %>
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <h3 class="text-sm font-semibold text-red-800 mb-2">Please fix the following errors:</h3>
+            <ul class="text-sm text-red-600 space-y-1 list-disc list-inside">
+              <% @order.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6 sticky top-4">
+          <h2 class="text-xl font-bold text-green-deep mb-6">Order Summary</h2>
+          
+          <div class="space-y-4 mb-6">
+            <% @cart.cart_items.includes(product_variant: { product: [cover_image_attachment: :blob, images_attachments: :blob] }).each do |cart_item| %>
+              <div class="flex items-start space-x-3 pb-4 border-b border-pink-border">
+                <div class="flex-shrink-0">
+                  <% if cart_item.product_variant.product.cover_image.attached? %>
+                    <%= image_tag cart_item.product_variant.product.cover_image, class: "w-16 h-16 object-cover rounded-lg border border-pink-border" %>
+                  <% elsif cart_item.product_variant.product.images.attached? %>
+                    <%= image_tag cart_item.product_variant.product.images.first, class: "w-16 h-16 object-cover rounded-lg border border-pink-border" %>
+                  <% else %>
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-light to-green-primary rounded-lg flex items-center justify-center">
+                      <span class="text-white font-bold text-xs"><%= cart_item.product_variant.product.title.first(2).upcase %></span>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="font-medium text-green-deep text-sm"><%= cart_item.product_variant.product.title %></div>
+                  <div class="text-xs text-green-muted"><%= cart_item.product_variant.name %></div>
+                  <div class="text-sm text-green-muted mt-1">Qty: <%= cart_item.quantity %> × $<%= cart_item.price_snapshot %></div>
+                </div>
+                <div class="text-sm font-semibold text-green-deep">
+                  $<%= cart_item.subtotal.round(2) %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="space-y-3 mb-6">
+            <div class="flex justify-between text-base">
+              <span class="text-green-muted">Subtotal</span>
+              <span class="text-green-deep font-medium">$<%= @cart.total.round(2) %></span>
+            </div>
+            <div class="flex justify-between text-base">
+              <span class="text-green-muted">Shipping</span>
+              <span class="text-green-primary font-medium">Free</span>
+            </div>
+            <div class="flex justify-between text-base">
+              <span class="text-green-muted">Tax</span>
+              <span class="text-green-deep font-medium">$0.00</span>
+            </div>
+            <div class="border-t-2 border-pink-border pt-3 flex justify-between items-center">
+              <span class="font-bold text-green-deep text-lg">Total</span>
+              <span class="font-bold text-green-primary text-2xl">$<%= @cart.total.round(2) %></span>
+            </div>
+          </div>
+
+          <%= f.submit "Place Order", 
+              class: "w-full bg-green-primary text-white px-6 py-4 rounded-lg hover:bg-green-dark transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none mb-4", 
+              disabled: @addresses.empty? || @payment_methods.empty? || @cart.cart_items.empty? %>
+          
+          <%= link_to "← Back to Cart", cart_path, class: "block text-center text-green-primary hover:text-green-dark text-sm font-medium" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>

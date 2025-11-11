@@ -1,0 +1,94 @@
+<% content_for :title, "Edit Review - Admin" %>
+
+<div class="space-y-6">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-green-deep">Edit Review</h1>
+    <p class="mt-2 text-sm text-green-muted">Update review for order #<%= @review.order.id %></p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6">
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold text-green-deep mb-4">Product & Order Information</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Product</label>
+          <p class="text-green-deep"><%= @review.product.title %></p>
+          <p class="text-xs text-green-muted"><%= @review.product_variant.name %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Order ID</label>
+          <p class="text-green-deep">
+            <%= link_to "Order ##{@review.order.id}", admin_order_path(@review.order), class: "text-green-primary hover:text-green-dark" %>
+          </p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Customer</label>
+          <p class="text-green-deep"><%= @review.order.user.full_name %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-green-muted mb-1">Order Date</label>
+          <p class="text-green-deep"><%= @review.order.created_at.strftime("%B %d, %Y") %></p>
+        </div>
+      </div>
+    </div>
+
+    <%= form_with model: [:admin, @review], class: "space-y-6", multipart: true do |f| %>
+      <%= render "shared/form_errors", object: @review %>
+
+      <div>
+        <%= f.label :user_id, "Customer", class: "block text-sm font-medium text-green-deep mb-1" %>
+        <%= f.select :user_id, options_from_collection_for_select(@users, :id, :full_name, @review.user_id), { prompt: "Select customer" }, { class: "form-input", required: true } %>
+      </div>
+
+      <div>
+        <%= f.label :rating, class: "block text-sm font-medium text-green-deep mb-2" %>
+        <div class="flex items-center space-x-2" data-controller="rating">
+          <% 5.times do |i| %>
+            <button
+              type="button"
+              data-rating-target="star"
+              data-rating-value="<%= i + 1 %>"
+              data-action="click->rating#selectRating mouseenter->rating#hoverRating mouseleave->rating#resetRating"
+              class="text-3xl <%= i < (@review.rating || 0) ? 'text-yellow-400' : 'text-gray-300' %> hover:text-yellow-400 transition-colors cursor-pointer"
+              data-selected="<%= i < (@review.rating || 0) %>">
+              ★
+            </button>
+          <% end %>
+          <%= f.hidden_field :rating, id: "review_rating", value: @review.rating || 0, data: { rating_target: "input" } %>
+        </div>
+        <p class="text-xs text-green-muted mt-1">Click on the stars to select a rating (1-5)</p>
+      </div>
+
+      <div>
+        <%= f.label :comment, class: "block text-sm font-medium text-green-deep mb-1" %>
+        <%= f.text_area :comment, rows: 5, class: "form-input", required: true, placeholder: "Enter review comment..." %>
+        <p class="text-xs text-green-muted mt-1">Minimum 10 characters required</p>
+      </div>
+
+      <div>
+        <%= f.label :images, "Upload Images", class: "block text-sm font-medium text-green-deep mb-1" %>
+        <%= f.file_field :images, multiple: true, accept: "image/*", class: "form-input" %>
+        <p class="text-xs text-green-muted mt-1">You can upload multiple images for this review. Existing images will be preserved if no new ones are uploaded.</p>
+      </div>
+
+      <% if @review.images.attached? %>
+        <div class="border-t border-pink-border pt-6">
+          <h3 class="text-sm font-medium text-green-deep mb-4">Current Images</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <% @review.images.each do |image| %>
+              <div class="relative">
+                <%= image_tag image, class: "w-full h-32 object-cover rounded-lg border border-pink-border" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="flex items-center space-x-3 pt-4 border-t border-pink-border">
+        <%= link_to "Cancel", admin_review_path(@review), class: "btn-secondary" %>
+        <%= f.submit "Update Review", class: "btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

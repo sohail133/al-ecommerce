@@ -1,0 +1,65 @@
+<% content_for :title, "New Review - Admin" %>
+
+<div class="space-y-6">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-green-deep">Create New Review</h1>
+    <p class="mt-2 text-sm text-green-muted">Add a review for an order</p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6">
+    <%= form_with model: [:admin, @review], url: create_standalone_admin_reviews_path, class: "space-y-6", multipart: true do |f| %>
+      <%= render "shared/form_errors", object: @review %>
+
+      <div>
+        <%= f.label :order_item_id, "Product (Order Item)", class: "block text-sm font-medium text-green-deep mb-1" %>
+        <%= f.select :order_item_id, 
+            @order_items.map { |oi| ["Order ##{oi.order.id} - #{oi.product_variant.product.title} (#{oi.product_variant.name}) - #{oi.order.user.full_name}", oi.id] },
+            { prompt: "Select a product from an order" }, 
+            { class: "form-input", required: true } %>
+        <p class="text-xs text-green-muted mt-1">Select the product/order item for which you want to create a review</p>
+      </div>
+
+      <div>
+        <%= f.label :user_id, "Customer", class: "block text-sm font-medium text-green-deep mb-1" %>
+        <%= f.select :user_id, options_from_collection_for_select(@users, :id, :full_name, @review.user_id), { prompt: "Select customer" }, { class: "form-input", required: true } %>
+      </div>
+
+      <div>
+        <%= f.label :rating, class: "block text-sm font-medium text-green-deep mb-2" %>
+        <div class="flex items-center space-x-2" data-controller="rating">
+          <% 5.times do |i| %>
+            <button
+              type="button"
+              data-rating-target="star"
+              data-rating-value="<%= i + 1 %>"
+              data-action="click->rating#selectRating mouseenter->rating#hoverRating mouseleave->rating#resetRating"
+              class="text-3xl text-gray-300 hover:text-yellow-400 transition-colors cursor-pointer"
+              data-selected="false">
+              ★
+            </button>
+          <% end %>
+          <%= f.hidden_field :rating, id: "review_rating", value: @review.rating || 0, data: { rating_target: "input" } %>
+        </div>
+        <p class="text-xs text-green-muted mt-1">Click on the stars to select a rating (1-5)</p>
+      </div>
+
+      <div>
+        <%= f.label :comment, class: "block text-sm font-medium text-green-deep mb-1" %>
+        <%= f.text_area :comment, rows: 5, class: "form-input", required: true, placeholder: "Enter review comment..." %>
+        <p class="text-xs text-green-muted mt-1">Minimum 10 characters required</p>
+      </div>
+
+      <div>
+        <%= f.label :images, "Upload Images", class: "block text-sm font-medium text-green-deep mb-1" %>
+        <%= f.file_field :images, multiple: true, accept: "image/*", class: "form-input" %>
+        <p class="text-xs text-green-muted mt-1">You can upload multiple images for this review</p>
+      </div>
+
+      <div class="flex items-center space-x-3 pt-4 border-t border-pink-border">
+        <%= link_to "Cancel", admin_reviews_path, class: "btn-secondary" %>
+        <%= f.submit "Create Review", class: "btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

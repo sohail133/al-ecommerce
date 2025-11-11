@@ -12,46 +12,68 @@
     <% end %>
   </div>
 
-  <div class="bg-white rounded-lg border border-pink-border shadow-sm">
-    <div>
-      <table class="min-w-full divide-y divide-pink-border">
-        <thead class="bg-green-light">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Name</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Category</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Description</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Products</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-green-deep uppercase tracking-wider">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-pink-border">
-          <% @subcategories.each do |subcategory| %>
-            <tr class="hover:bg-green-light transition-colors">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-green-deep"><%= subcategory.name %></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-green-deep"><%= subcategory.category.name %></div>
-              </td>
-              <td class="px-6 py-4">
-                <div class="text-sm text-green-muted line-clamp-2"><%= subcategory.description %></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-green-deep"><%= subcategory.products_count %></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <%= render "admin/shared/actions_dropdown", resource: subcategory, show_path: admin_subcategory_path(subcategory), edit_path: edit_admin_subcategory_path(subcategory), delete_path: admin_subcategory_path(subcategory) %>
-              </td>
-            </tr>
+  <%= render "filters" %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @subcategories.each do |subcategory| %>
+      <div class="bg-white rounded-lg border border-pink-border shadow-sm hover:shadow-md transition-shadow duration-200">
+        <div class="overflow-hidden rounded-t-lg">
+          <% if subcategory.image.attached? %>
+            <%= link_to admin_subcategory_path(subcategory), class: "block" do %>
+              <%= image_tag subcategory.image, class: "w-full h-48 object-cover hover:opacity-90 transition-opacity" %>
+            <% end %>
+          <% else %>
+            <%= link_to admin_subcategory_path(subcategory), class: "block bg-gradient-to-br from-green-light to-green-primary h-48 flex items-center justify-center hover:opacity-90 transition-opacity" do %>
+              <span class="text-5xl font-bold text-white"><%= subcategory.name.first(2).upcase %></span>
+            <% end %>
           <% end %>
-        </tbody>
-      </table>
-    </div>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <div class="text-xs text-green-primary font-medium mb-1"><%= subcategory.category.name %></div>
+              <h3 class="text-lg font-semibold text-green-deep">
+                <%= link_to subcategory.name, admin_subcategory_path(subcategory), class: "hover:text-green-primary transition-colors" %>
+              </h3>
+              <% if subcategory.description.present? %>
+                <p class="mt-2 text-sm text-green-muted line-clamp-2"><%= subcategory.description %></p>
+              <% end %>
+              <div class="mt-4 text-xs text-green-muted">
+                <span><%= subcategory.products_count %> products</span>
+              </div>
+            </div>
+            <div>
+              <%= render "admin/shared/actions_dropdown", resource: subcategory, show_path: admin_subcategory_path(subcategory), edit_path: edit_admin_subcategory_path(subcategory), delete_path: admin_subcategory_path(subcategory) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 
   <% if @subcategories.empty? %>
     <div class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
-      <p class="text-green-muted">No subcategories found. Create your first subcategory to get started.</p>
+      <p class="text-green-muted">
+        <% if filters_active? %>
+          No subcategories found matching your search. Try adjusting your filters.
+        <% else %>
+          No subcategories found. Create your first subcategory to get started.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+
+  <% if @subcategories.present? %>
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-green-muted">
+          Showing <span class="font-medium text-green-deep"><%= @subcategories.offset_value + 1 %></span> to <span class="font-medium text-green-deep"><%= [@subcategories.offset_value + @subcategories.limit_value, @subcategories.total_count].min %></span> of <span class="font-medium text-green-deep"><%= @subcategories.total_count %></span> subcategories
+        </div>
+        <div>
+          <%= paginate @subcategories, theme: 'admin' %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>

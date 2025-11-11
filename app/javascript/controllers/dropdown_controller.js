@@ -3,8 +3,23 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["menu"]
 
-  toggle() {
-    this.menuTarget.classList.toggle("hidden")
+  toggle(event) {
+    event.stopPropagation()
+    
+    const isCurrentlyHidden = this.menuTarget.classList.contains("hidden")
+    
+    this.closeAllDropdowns()
+    
+    if (isCurrentlyHidden) {
+      this.menuTarget.classList.remove("hidden")
+    }
+  }
+
+  closeAllDropdowns() {
+    const allMenus = document.querySelectorAll('[data-dropdown-target="menu"]')
+    allMenus.forEach(menu => {
+      menu.classList.add("hidden")
+    })
   }
 
   close(event) {

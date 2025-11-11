@@ -11,12 +11,12 @@
         <div>
           <%= f.label :email, "Email address", class: "block text-sm font-medium text-green-muted mb-1" %>
           <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email address", class: "form-input" %>
-        </div>
+  </div>
 
         <div>
           <%= f.submit "Send me reset password instructions", class: "btn-primary w-full" %>
-        </div>
-      <% end %>
+  </div>
+<% end %>
 
       <div class="mt-6 space-y-3">
         <%= link_to "Back to log in", new_session_path(resource_name), class: "block w-full text-center btn-secondary" %>

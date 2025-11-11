@@ -1,0 +1,69 @@
+<div class="mb-6 flex justify-between items-center">
+  <div>
+    <h1 class="text-3xl font-bold text-green-deep">Contact Query Details</h1>
+    <p class="mt-2 text-sm text-green-muted">View customer inquiry details</p>
+  </div>
+  <div class="flex items-center space-x-3">
+    <%= link_to "Edit", edit_admin_contact_path(@contact_us), class: "btn-primary" %>
+    <%= render "admin/shared/delete_button", 
+        path: admin_contact_path(@contact_us),
+        confirm: "Are you sure you want to delete this contact query? This action cannot be undone." %>
+    <%= link_to "Back to List", admin_contacts_path, class: "btn-secondary" %>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6">
+    <h2 class="text-lg font-semibold text-green-deep mb-4">Customer Information</h2>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-green-deep mb-1">Name</label>
+        <p class="text-green-deep"><%= @contact_us.name %></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-deep mb-1">Email</label>
+        <p class="text-green-deep">
+          <%= mail_to @contact_us.email, @contact_us.email, class: "text-green-primary hover:text-green-dark" %>
+        </p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-deep mb-1">Subject</label>
+        <p class="text-green-deep"><%= @contact_us.subject %></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-deep mb-1">Submitted</label>
+        <p class="text-green-deep"><%= @contact_us.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-green-deep mb-1">Status</label>
+        <% if @contact_us.replied? %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            Replied on <%= @contact_us.replied_at.strftime("%B %d, %Y") %>
+          </span>
+        <% else %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+            Pending Reply
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6">
+    <h2 class="text-lg font-semibold text-green-deep mb-4">Message</h2>
+    <div class="bg-green-light/30 rounded-lg p-4">
+      <p class="text-green-deep whitespace-pre-wrap"><%= @contact_us.message %></p>
+    </div>
+  </div>
+</div>
+
+<% if @contact_us.replied? %>
+  <div class="mt-6 bg-white rounded-lg shadow-sm border border-pink-border p-6">
+    <h2 class="text-lg font-semibold text-green-deep mb-4">Admin Response</h2>
+    <div class="bg-green-light/30 rounded-lg p-4 border-l-4 border-green-primary">
+      <p class="text-green-deep whitespace-pre-wrap"><%= @contact_us.admin_response %></p>
+      <p class="text-sm text-green-muted mt-2">Sent on <%= @contact_us.replied_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+    </div>
+  </div>
+<% end %>
+

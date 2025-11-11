@@ -8,6 +8,8 @@
     </div>
   </div>
 
+  <%= render "filters" %>
+
   <div class="bg-white rounded-lg border border-pink-border shadow-sm">
     <div>
       <table class="min-w-full divide-y divide-pink-border">
@@ -57,7 +59,26 @@
 
   <% if @orders.empty? %>
     <div class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
-      <p class="text-green-muted">No orders found. Orders will appear here once customers start placing orders.</p>
+      <p class="text-green-muted">
+        <% if filters_active? %>
+          No orders found matching your search. Try adjusting your filters.
+        <% else %>
+          No orders found. Orders will appear here once customers start placing orders.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+
+  <% if @orders.present? %>
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-green-muted">
+          Showing <span class="font-medium text-green-deep"><%= @orders.offset_value + 1 %></span> to <span class="font-medium text-green-deep"><%= [@orders.offset_value + @orders.limit_value, @orders.total_count].min %></span> of <span class="font-medium text-green-deep"><%= @orders.total_count %></span> orders
+        </div>
+        <div>
+          <%= paginate @orders, theme: 'admin' %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>

@@ -1,0 +1,31 @@
+<div class="bg-white rounded-lg border border-pink-border shadow-sm p-4" data-controller="filter-accordion">
+  <button data-action="click->filter-accordion#toggle" class="flex items-center justify-between w-full text-left" type="button">
+    <div class="flex items-center space-x-2">
+      <%= render "shared/svg_icons/filter", class: "w-5 h-5 text-green-primary" %>
+      <span class="text-sm font-medium text-green-deep">Filters</span>
+      <% if filters_active? %>
+        <span class="bg-green-primary text-white text-xs px-2 py-0.5 rounded-full">Active</span>
+      <% end %>
+    </div>
+    <svg data-filter-accordion-target="icon" class="w-5 h-5 text-green-deep transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+
+  <div data-filter-accordion-target="content" class="hidden mt-4">
+    <%= form_with url: admin_categories_path, method: :get, class: "space-y-4" do |f| %>
+      <div class="flex items-end space-x-4">
+        <div class="flex-1">
+          <%= f.label :name, "Category Name", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.text_field :name, value: params[:name], placeholder: "Search by category name", class: "form-input" %>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <%= link_to "Clear", admin_categories_path, class: "btn-secondary" %>
+          <%= f.submit "Apply", class: "btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+

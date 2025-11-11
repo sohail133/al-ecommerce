@@ -23,10 +23,13 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   </head>
 
   <body>
+    <%= render "shared/flash_toast" %>
     <%= render "shared/flash_messages" %>
     <%= yield %>
   </body>

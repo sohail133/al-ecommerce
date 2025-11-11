@@ -2,15 +2,20 @@ class Admin::OrdersController < Admin::BaseController
   before_action :set_order, only: [:show, :edit, :update]
 
   def index
-    @orders = Order.includes(:user, :address, :payment_method).recent
+    @orders = Order.search(filter_params).page(params[:page])
   end
 
   def show
-    @order_items = @order.order_items.includes(:product_variant)
+    @order = Order.includes(
+      order_items: {
+        reviews: [:user, { images_attachments: :blob }],
+        product_variant: :product
+      }
+    ).find(params[:id])
+    @order_items = @order.order_items.includes(:product_variant, reviews: [:user, { images_attachments: :blob }])
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @order.update(order_params)
@@ -28,5 +33,9 @@ class Admin::OrdersController < Admin::BaseController
 
   def order_params
     params.require(:order).permit(:status)
+  end
+
+  def filter_params
+    params.permit(:email, :status, :start_date, :end_date, :min_price, :max_price)
   end
 end

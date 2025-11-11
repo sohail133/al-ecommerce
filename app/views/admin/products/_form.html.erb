@@ -31,6 +31,41 @@
     <%= f.label :active, "Active", class: "ml-2 block text-sm text-green-deep" %>
   </div>
 
+  <div>
+    <%= f.label :cover_image, "Cover Photo", class: "block text-sm font-medium text-green-deep mb-1" %>
+    <div class="mt-2">
+      <% if @product.cover_image.attached? %>
+        <div class="mb-4">
+          <%= image_tag @product.cover_image, class: "w-48 h-48 object-cover rounded-lg border border-pink-border" %>
+          <p class="text-sm text-green-muted mt-2">Current cover photo (uploading a new one will replace it)</p>
+        </div>
+      <% end %>
+      <%= f.file_field :cover_image, accept: "image/*", class: "block w-full text-sm text-green-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-primary file:text-white hover:file:bg-green-dark cursor-pointer" %>
+      <p class="text-xs text-green-muted mt-1">This image will be used as the main product image on listing pages</p>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :images, "Product Images (Multiple)", class: "block text-sm font-medium text-green-deep mb-1" %>
+    <div class="mt-2">
+      <% if @product.images.attached? %>
+        <div class="mb-4">
+          <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <% @product.images.each do |image| %>
+              <div class="relative group">
+                <%= image_tag image, class: "w-full h-32 object-cover rounded-lg border border-pink-border" %>
+                <%= button_to "×", delete_image_admin_product_path(@product, image_id: image.id), method: :delete, data: { turbo_confirm: "Remove this image?" }, class: "absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white w-6 h-6 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity text-lg font-bold leading-none" %>
+              </div>
+            <% end %>
+          </div>
+          <p class="text-sm text-green-muted mt-2"><%= @product.images.count %> image(s) attached</p>
+        </div>
+      <% end %>
+      <%= f.file_field :images, multiple: true, accept: "image/*", class: "block w-full text-sm text-green-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-primary file:text-white hover:file:bg-green-dark cursor-pointer" %>
+      <p class="text-xs text-green-muted mt-1">You can select multiple images at once. These will be shown in the product gallery.</p>
+    </div>
+  </div>
+
   <div class="flex items-center justify-between pt-4 border-t border-pink-border">
     <div>
       <% if @product.persisted? %>

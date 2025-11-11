@@ -12,22 +12,40 @@
     <% end %>
   </div>
 
+  <%= render "filters" %>
+
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <% @categories.each do |category| %>
-      <div class="bg-white rounded-lg border border-pink-border shadow-sm hover:shadow-md transition-shadow duration-200 p-6">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <h3 class="text-lg font-semibold text-green-deep"><%= category.name %></h3>
-            <% if category.description.present? %>
-              <p class="mt-2 text-sm text-green-muted line-clamp-2"><%= category.description %></p>
+      <div class="bg-white rounded-lg border border-pink-border shadow-sm hover:shadow-md transition-shadow duration-200">
+        <div class="overflow-hidden rounded-t-lg">
+          <% if category.image.attached? %>
+            <%= link_to admin_category_path(category), class: "block" do %>
+              <%= image_tag category.image, class: "w-full h-48 object-cover hover:opacity-90 transition-opacity" %>
             <% end %>
-            <div class="mt-4 flex items-center space-x-4 text-xs text-green-muted">
-              <span><%= category.subcategories_count %> subcategories</span>
-              <span><%= category.products_count %> products</span>
+          <% else %>
+            <%= link_to admin_category_path(category), class: "block bg-gradient-to-br from-green-light to-green-primary h-48 flex items-center justify-center hover:opacity-90 transition-opacity" do %>
+              <span class="text-5xl font-bold text-white"><%= category.name.first(2).upcase %></span>
+            <% end %>
+          <% end %>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-green-deep">
+                <%= link_to category.name, admin_category_path(category), class: "hover:text-green-primary transition-colors" %>
+              </h3>
+              <% if category.description.present? %>
+                <p class="mt-2 text-sm text-green-muted line-clamp-2"><%= category.description %></p>
+              <% end %>
+              <div class="mt-4 flex items-center space-x-4 text-xs text-green-muted">
+                <span><%= category.subcategories_count %> subcategories</span>
+                <span><%= category.products_count %> products</span>
+              </div>
             </div>
-          </div>
-          <div>
-            <%= render "admin/shared/actions_dropdown", resource: category, show_path: admin_category_path(category), edit_path: edit_admin_category_path(category), delete_path: admin_category_path(category) %>
+            <div>
+              <%= render "admin/shared/actions_dropdown", resource: category, show_path: admin_category_path(category), edit_path: edit_admin_category_path(category), delete_path: admin_category_path(category) %>
+            </div>
           </div>
         </div>
       </div>
@@ -36,7 +54,26 @@
 
   <% if @categories.empty? %>
     <div class="bg-white rounded-lg border border-pink-border shadow-sm p-12 text-center">
-      <p class="text-green-muted">No categories found. Create your first category to get started.</p>
+      <p class="text-green-muted">
+        <% if params[:name].present? %>
+          No categories found matching your search. Try adjusting your filters.
+        <% else %>
+          No categories found. Create your first category to get started.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+
+  <% if @categories.present? %>
+    <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-green-muted">
+          Showing <span class="font-medium text-green-deep"><%= @categories.offset_value + 1 %></span> to <span class="font-medium text-green-deep"><%= [@categories.offset_value + @categories.limit_value, @categories.total_count].min %></span> of <span class="font-medium text-green-deep"><%= @categories.total_count %></span> categories
+        </div>
+        <div>
+          <%= paginate @categories, theme: 'admin' %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>

@@ -1,1 +1,21 @@
+AL Ecommerce
+===============================================
+
 <%= yield %>
+
+===============================================
+AL Ecommerce
+<% store_setting = StoreSetting.instance %>
+Contact Us:
+📍 <%= store_setting.location %>
+📞 <%= store_setting.phone_number %>
+✉️ <%= store_setting.email %>
+
+<% if store_setting.facebook_url.present? || store_setting.instagram_url.present? || store_setting.youtube_url.present? %>
+Follow Us:
+<% if store_setting.facebook_url.present? %>Facebook: <%= store_setting.facebook_url %><% end %>
+<% if store_setting.instagram_url.present? %>Instagram: <%= store_setting.instagram_url %><% end %>
+<% if store_setting.youtube_url.present? %>YouTube: <%= store_setting.youtube_url %><% end %>
+<% end %>
+
+© <%= Time.now.year %> AL Ecommerce. All rights reserved.

@@ -1,0 +1,159 @@
+<% content_for :title, "Order ##{@order.id} - AL Ecommerce" %>
+
+<div class="min-h-screen bg-pink-lightest">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-6">
+        <%= link_to dashboard_path, class: "inline-flex items-center text-green-primary hover:text-green-dark mb-4" do %>
+          <%= render "shared/svg_icons/chevron_left", class: "w-5 h-5 mr-2" %>
+          Back to Dashboard
+        <% end %>
+        <h1 class="text-3xl font-bold text-green-deep">Order #<%= @order.id %></h1>
+        <p class="text-green-muted mt-2">Placed on <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6">
+          <h2 class="text-lg font-semibold text-green-deep mb-4">Order Status</h2>
+          <%= status_badge(@order.status, type: :order) %>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6">
+          <h2 class="text-lg font-semibold text-green-deep mb-4">Shipping Address</h2>
+          <div class="text-green-deep">
+            <p class="font-medium"><%= @order.address.full_name %></p>
+            <p class="text-sm text-green-muted"><%= @order.address.address_line_1 %></p>
+            <% if @order.address.address_line_2.present? %>
+              <p class="text-sm text-green-muted"><%= @order.address.address_line_2 %></p>
+            <% end %>
+            <p class="text-sm text-green-muted"><%= @order.address.city %>, <%= @order.address.province %> <%= @order.address.postal_code %></p>
+            <p class="text-sm text-green-muted mt-2">Phone: <%= @order.address.phone_number %></p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6">
+          <h2 class="text-lg font-semibold text-green-deep mb-4">Payment Method</h2>
+          <p class="text-green-deep"><%= @order.payment_method.name %></p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm border border-pink-border p-6 mb-6">
+        <h2 class="text-lg font-semibold text-green-deep mb-4">Order Items</h2>
+        <div class="space-y-6">
+          <% @order.order_items.each do |order_item| %>
+            <div class="border-b border-pink-border pb-6 last:border-0">
+              <div class="flex items-start space-x-4 mb-4">
+                <% if order_item.product_variant.product.cover_image.attached? %>
+                  <%= image_tag order_item.product_variant.product.cover_image, class: "w-20 h-20 object-cover rounded-lg border border-pink-border" %>
+                <% else %>
+                  <div class="w-20 h-20 bg-green-light rounded-lg flex items-center justify-center">
+                    <span class="text-green-muted text-xs">No Image</span>
+                  </div>
+                <% end %>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-green-deep"><%= order_item.product_variant.product.title %></h3>
+                  <p class="text-sm text-green-muted"><%= order_item.product_variant.name %></p>
+                  <p class="text-sm text-green-muted mt-1">Quantity: <%= order_item.quantity %></p>
+                </div>
+                <div class="text-right">
+                  <p class="font-semibold text-green-deep"><%= format_currency(order_item.subtotal) %></p>
+                  <p class="text-sm text-green-muted">$<%= order_item.price %> each</p>
+                </div>
+              </div>
+
+              <% if @order.delivered? || @order.canceled? %>
+                <div class="mt-4 pt-4 border-t border-pink-border">
+                  <h4 class="text-md font-semibold text-green-deep mb-3">Reviews for this product</h4>
+                  
+                  <% persisted_reviews = order_item.reviews.select(&:persisted?) %>
+                  <% if persisted_reviews.any? %>
+                    <div class="mb-4 space-y-4">
+                      <% persisted_reviews.each do |review| %>
+                        <div class="bg-green-light/30 rounded-lg p-4 border border-pink-border">
+                          <div class="flex items-center mb-2">
+                            <span class="text-green-deep font-medium mr-4">Rating:</span>
+                            <div class="flex items-center">
+                              <% 5.times do |i| %>
+                                <span class="text-xl text-yellow-400"><%= i < review.rating.to_i ? "★" : "☆" %></span>
+                              <% end %>
+                            </div>
+                            <% if review.created_at.present? %>
+                              <span class="ml-4 text-xs text-green-muted"><%= review.created_at.strftime("%B %d, %Y") %></span>
+                            <% end %>
+                          </div>
+                          <div class="mt-2">
+                            <span class="text-green-deep font-medium block mb-1 text-sm">Comment:</span>
+                            <p class="text-green-deep text-sm"><%= review.comment %></p>
+                          </div>
+                          <% if review.images.attached? %>
+                            <div class="mt-3">
+                              <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                <% review.images.each do |image| %>
+                                  <%= image_tag image, class: "w-full h-24 object-cover rounded-lg border border-pink-border" %>
+                                <% end %>
+                              </div>
+                            </div>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% end %>
+
+                  <div class="pt-3 border-t border-pink-border">
+                    <h5 class="text-sm font-semibold text-green-deep mb-3">Add a Review</h5>
+                    <% review = order_item.reviews.build(user: current_user) %>
+                    <%= form_with model: [@order, order_item, review], url: order_order_item_reviews_path(@order, order_item), method: :post, class: "space-y-4", multipart: true do |f| %>
+                      <%= render "shared/form_errors", object: review %>
+
+                      <div>
+                        <%= f.label :rating, class: "block text-xs font-medium text-green-deep mb-1" %>
+                        <div class="flex items-center space-x-1" data-controller="rating">
+                          <% 5.times do |i| %>
+                            <button
+                              type="button"
+                              data-rating-target="star"
+                              data-rating-value="<%= i + 1 %>"
+                              data-action="click->rating#selectRating mouseenter->rating#hoverRating mouseleave->rating#resetRating"
+                              class="text-2xl text-gray-300 hover:text-yellow-400 transition-colors cursor-pointer"
+                              data-selected="false">
+                              ★
+                            </button>
+                          <% end %>
+                          <%= f.hidden_field :rating, id: "review_rating_#{order_item.id}", value: review.rating || 0, data: { rating_target: "input" } %>
+                        </div>
+                      </div>
+
+                      <div>
+                        <%= f.label :comment, class: "block text-xs font-medium text-green-deep mb-1" %>
+                        <%= f.text_area :comment, rows: 3, class: "form-input text-sm", required: true, placeholder: "Share your experience with this product..." %>
+                      </div>
+
+                      <div>
+                        <%= f.label :images, "Upload Images", class: "block text-xs font-medium text-green-deep mb-1" %>
+                        <%= f.file_field :images, multiple: true, accept: "image/*", class: "form-input text-sm" %>
+                        <p class="text-xs text-green-muted mt-1">You can upload multiple images</p>
+                      </div>
+
+                      <div class="flex items-center space-x-2 pt-2">
+                        <%= f.submit "Submit Review", class: "btn-primary text-sm px-3 py-1.5" %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <div class="mt-6 pt-6 border-t border-pink-border flex justify-between items-center">
+          <span class="text-lg font-semibold text-green-deep">Total Amount:</span>
+          <span class="text-2xl font-bold text-green-primary"><%= format_currency(@order.total_amount) %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>
+
