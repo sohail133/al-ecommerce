@@ -1,0 +1,119 @@
+<% content_for :title, "Shipping Information - AL Ecommerce" %>
+
+<div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
+        <div class="text-center mb-12">
+          <h1 class="text-4xl md:text-5xl font-bold text-green-deep mb-4">Shipping Information</h1>
+          <p class="text-lg text-green-muted">Fast and reliable delivery to your doorstep</p>
+        </div>
+
+        <div class="space-y-8">
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Shipping Methods</h2>
+            <div class="space-y-4">
+              <div class="border border-pink-border rounded-lg p-4">
+                <h3 class="font-bold text-green-deep mb-2">Standard Shipping (5-7 Business Days)</h3>
+                <p class="text-green-muted">Free on orders over $50, otherwise $5.99</p>
+              </div>
+              <div class="border border-pink-border rounded-lg p-4">
+                <h3 class="font-bold text-green-deep mb-2">Express Shipping (2-3 Business Days)</h3>
+                <p class="text-green-muted">$12.99 flat rate</p>
+              </div>
+              <div class="border border-pink-border rounded-lg p-4">
+                <h3 class="font-bold text-green-deep mb-2">Next Day Delivery</h3>
+                <p class="text-green-muted">$24.99 (Order before 2 PM for next day delivery)</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Processing Time</h2>
+            <p class="text-green-muted mb-4">
+              Orders are processed within 1-2 business days. Orders placed on weekends or holidays will be processed on the next business day.
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-green-muted">
+              <li>You'll receive a confirmation email once your order is placed</li>
+              <li>You'll receive a shipping confirmation with tracking number once your order ships</li>
+              <li>Custom or made-to-order items may require additional processing time</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Shipping Locations</h2>
+            <p class="text-green-muted mb-4">
+              We currently ship to all 50 states in the United States and select international locations.
+            </p>
+            <div class="bg-green-light/30 rounded-lg p-4">
+              <p class="text-green-deep font-semibold mb-2">International Shipping:</p>
+              <ul class="list-disc list-inside space-y-1 text-green-muted">
+                <li>Canada: 7-14 business days ($15.99)</li>
+                <li>UK & Europe: 10-21 business days ($24.99)</li>
+                <li>Australia & New Zealand: 14-28 business days ($29.99)</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Order Tracking</h2>
+            <p class="text-green-muted mb-4">
+              Once your order ships, you'll receive a tracking number via email. You can track your package by:
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-green-muted">
+              <li>Logging into your account and viewing your order history</li>
+              <li>Using the tracking link provided in your shipping confirmation email</li>
+              <li>Contacting our customer service team for assistance</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Delivery Issues</h2>
+            <p class="text-green-muted mb-4">
+              If you experience any issues with your delivery, please contact us immediately:
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-green-muted">
+              <li><strong>Lost Package:</strong> Contact us if your package hasn't arrived within the estimated delivery timeframe</li>
+              <li><strong>Damaged Package:</strong> Please document any damage with photos and contact us within 48 hours</li>
+              <li><strong>Wrong Address:</strong> Contact us immediately if you entered the wrong shipping address</li>
+              <li><strong>Missing Items:</strong> Check your package carefully and contact us if items are missing</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Special Instructions</h2>
+            <ul class="list-disc list-inside space-y-2 text-green-muted">
+              <li>We cannot ship to P.O. boxes for certain large items</li>
+              <li>Signature may be required for high-value orders</li>
+              <li>Packages cannot be redirected once shipped</li>
+              <li>We are not responsible for delays caused by weather or carrier issues</li>
+            </ul>
+          </section>
+
+          <div class="bg-pink-light/30 rounded-lg p-6 mt-8">
+            <h3 class="text-xl font-bold text-green-deep mb-3">Questions About Shipping?</h3>
+            <p class="text-green-muted mb-4">
+              Our customer service team is here to help with any shipping questions or concerns.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <%= link_to contact_path, class: "btn-primary inline-flex items-center justify-center" do %>
+                <%= render "shared/svg_icons/email", class: "w-5 h-5 mr-2" %>
+                Contact Support
+              <% end %>
+              <% if user_signed_in? %>
+                <%= link_to orders_path, class: "btn-secondary inline-flex items-center justify-center" do %>
+                  Track My Order
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>
+
