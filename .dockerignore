@@ -1,51 +1,52 @@
-# See https://docs.docker.com/engine/reference/builder/#dockerignore-file for more about ignoring files.
+# Git
+.git
+.gitignore
+.gitattributes
 
-# Ignore git directory.
-/.git/
-/.gitignore
+# Ruby/Rails
+.bundle
+vendor/bundle
+tmp/
+log/
+storage/
+public/assets/
+public/packs/
+public/packs-test/
+node_modules/
 
-# Ignore bundler config.
-/.bundle
+# Database
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-*
 
-# Ignore all environment files.
-/.env*
+# Environment files
+.env
+.env.*
+!.env.example
 
-# Ignore all default key files.
-/config/master.key
-/config/credentials/*.key
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# Ignore all logfiles and tempfiles.
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
+# OS
+.DS_Store
+Thumbs.db
 
-# Ignore pidfiles, but keep the directory.
-/tmp/pids/*
-!/tmp/pids/.keep
+# Testing
+coverage/
+spec/tmp/
+test/tmp/
+test/version_tmp/
 
-# Ignore storage (uploaded files in development and any SQLite databases).
-/storage/*
-!/storage/.keep
-/tmp/storage/*
-!/tmp/storage/.keep
+# Documentation
+README.md
+doc/
+*.md
 
-# Ignore assets.
-/node_modules/
-/app/assets/builds/*
-!/app/assets/builds/.keep
-/public/assets
-
-# Ignore CI service files.
-/.github
-
-# Ignore Kamal files.
-/config/deploy*.yml
-/.kamal
-
-# Ignore development files
-/.devcontainer
-
-# Ignore Docker-related files
-/.dockerignore
-/Dockerfile*
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
