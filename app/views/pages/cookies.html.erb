@@ -1,0 +1,133 @@
+<% content_for :title, "Cookie Policy - AL Ecommerce" %>
+
+<div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
+        <div class="text-center mb-12">
+          <h1 class="text-4xl md:text-5xl font-bold text-green-deep mb-4">Cookie Policy</h1>
+          <p class="text-lg text-green-muted">Last updated: <%= Time.now.strftime("%B %d, %Y") %></p>
+        </div>
+
+        <div class="prose max-w-none space-y-6 text-green-muted">
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">What Are Cookies?</h2>
+            <p>
+              Cookies are small text files that are placed on your computer or mobile device when you visit a website. They are widely used to make websites work more efficiently and provide information to website owners.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">How We Use Cookies</h2>
+            <p class="mb-3">We use cookies to:</p>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>Keep you signed in to your account</li>
+              <li>Remember your shopping cart items</li>
+              <li>Understand how you use our website</li>
+              <li>Personalize your experience</li>
+              <li>Show you relevant advertisements</li>
+              <li>Analyze website traffic and performance</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Types of Cookies We Use</h2>
+            
+            <div class="space-y-4">
+              <div class="border border-pink-border rounded-lg p-4">
+                <h3 class="text-xl font-semibold text-green-deep mb-2">Essential Cookies</h3>
+                <p>These cookies are necessary for the website to function properly. They enable core functionality such as security, network management, and accessibility.</p>
+              </div>
+
+              <div class="border border-pink-border rounded-lg p-4">
+                <h3 class="text-xl font-semibold text-green-deep mb-2">Performance Cookies</h3>
+                <p>These cookies collect information about how you use our website, such as which pages you visit most often. This helps us improve website performance.</p>
+              </div>
+
+              <div class="border border-pink-border rounded-lg p-4">
+                <h3 class="text-xl font-semibold text-green-deep mb-2">Functionality Cookies</h3>
+                <p>These cookies allow the website to remember choices you make (such as your username or language) and provide enhanced features.</p>
+              </div>
+
+              <div class="border border-pink-border rounded-lg p-4">
+                <h3 class="text-xl font-semibold text-green-deep mb-2">Marketing Cookies</h3>
+                <p>These cookies track your browsing habits to show you relevant advertisements and measure the effectiveness of our marketing campaigns.</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Third-Party Cookies</h2>
+            <p class="mb-3">We may also use third-party cookies from services such as:</p>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li><strong>Google Analytics:</strong> To analyze website traffic and user behavior</li>
+              <li><strong>Payment Processors:</strong> To securely process your payments</li>
+              <li><strong>Social Media Platforms:</strong> To enable social sharing features</li>
+              <li><strong>Advertising Networks:</strong> To display relevant advertisements</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Managing Cookies</h2>
+            <p class="mb-3">You have the right to decide whether to accept or reject cookies. You can control cookies through:</p>
+            
+            <div class="bg-green-light/30 rounded-lg p-4 mb-4">
+              <h3 class="font-semibold text-green-deep mb-2">Browser Settings</h3>
+              <p class="mb-2">Most web browsers allow you to control cookies through their settings:</p>
+              <ul class="list-disc list-inside space-y-1 ml-4">
+                <li><strong>Chrome:</strong> Settings → Privacy and security → Cookies and other site data</li>
+                <li><strong>Firefox:</strong> Options → Privacy & Security → Cookies and Site Data</li>
+                <li><strong>Safari:</strong> Preferences → Privacy → Cookies and website data</li>
+                <li><strong>Edge:</strong> Settings → Privacy, search, and services → Cookies and site permissions</li>
+              </ul>
+            </div>
+
+            <div class="bg-pink-light/30 rounded-lg p-4">
+              <h3 class="font-semibold text-green-deep mb-2">Important Note</h3>
+              <p>Please note that blocking certain cookies may impact your experience on our website and limit the functionality available to you. Essential cookies cannot be disabled as they are necessary for the website to work properly.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Cookie Duration</h2>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li><strong>Session Cookies:</strong> Temporary cookies that are deleted when you close your browser</li>
+              <li><strong>Persistent Cookies:</strong> Remain on your device for a set period or until you delete them</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Updates to This Policy</h2>
+            <p>
+              We may update this Cookie Policy from time to time to reflect changes in technology, legislation, or our business practices. Please check this page regularly for updates.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">More Information</h2>
+            <p class="mb-3">For more information about how we handle your personal data, please read our <%= link_to "Privacy Policy", privacy_path, class: "text-green-primary hover:underline font-semibold" %>.</p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Contact Us</h2>
+            <p class="mb-3">If you have questions about our use of cookies, please contact us:</p>
+            <div class="bg-green-light/30 rounded-lg p-4 space-y-2">
+              <p><strong>Email:</strong> <%= link_to @store_setting.email, "mailto:#{@store_setting.email}", class: "text-green-primary hover:underline" %></p>
+              <p><strong>Phone:</strong> <%= link_to @store_setting.phone_number, "tel:#{@store_setting.phone_number}", class: "text-green-primary hover:underline" %></p>
+              <p><strong>Address:</strong> <%= @store_setting.location %></p>
+            </div>
+          </section>
+        </div>
+
+        <div class="mt-8 pt-8 border-t border-pink-border">
+          <%= link_to "← Back to Home", root_path, class: "text-green-primary hover:text-green-dark font-semibold" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>
+

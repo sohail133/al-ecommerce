@@ -1,0 +1,101 @@
+<% content_for :title, "Returns & Exchanges - AL Ecommerce" %>
+
+<div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
+        <div class="text-center mb-12">
+          <h1 class="text-4xl md:text-5xl font-bold text-green-deep mb-4">Returns & Exchanges</h1>
+          <p class="text-lg text-green-muted">Your satisfaction is our priority</p>
+        </div>
+
+        <div class="space-y-8">
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Return Policy</h2>
+            <p class="text-green-muted mb-4">
+              We want you to be completely satisfied with your purchase. If you're not happy with your order, you can return it within <strong class="text-green-deep">30 days</strong> of delivery for a full refund or exchange.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Eligible Items</h2>
+            <ul class="list-disc list-inside space-y-2 text-green-muted">
+              <li>Items must be unused and in the same condition that you received them</li>
+              <li>Items must be in their original packaging</li>
+              <li>Items must have the receipt or proof of purchase</li>
+              <li>Items should not be damaged by the customer</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Non-Returnable Items</h2>
+            <ul class="list-disc list-inside space-y-2 text-green-muted">
+              <li>Perishable goods (such as food, flowers, or plants)</li>
+              <li>Custom products (such as special orders or personalized items)</li>
+              <li>Personal care goods (such as beauty products)</li>
+              <li>Hazardous materials, flammable liquids, or gases</li>
+              <li>Gift cards</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">How to Return</h2>
+            <ol class="list-decimal list-inside space-y-3 text-green-muted">
+              <li>Contact our customer service team at <%= link_to @store_setting.email, "mailto:#{@store_setting.email}", class: "text-green-primary hover:underline font-semibold" %> or <%= link_to @store_setting.phone_number, "tel:#{@store_setting.phone_number}", class: "text-green-primary hover:underline font-semibold" %></li>
+              <li>Provide your order number and reason for return</li>
+              <li>Pack the item securely in its original packaging</li>
+              <li>Ship the item to the address provided by our team</li>
+              <li>Once we receive your return, we'll inspect it and process your refund within 5-7 business days</li>
+            </ol>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Exchanges</h2>
+            <p class="text-green-muted mb-4">
+              If you need to exchange an item for a different size, color, or model, please follow the return process above and place a new order for the item you want. This ensures faster processing and delivery.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Refund Processing</h2>
+            <ul class="list-disc list-inside space-y-2 text-green-muted">
+              <li>Refunds will be issued to the original payment method</li>
+              <li>Please allow 5-7 business days for the refund to appear in your account</li>
+              <li>Shipping costs are non-refundable unless the return is due to our error</li>
+              <li>You'll receive an email confirmation once your refund has been processed</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Damaged or Defective Items</h2>
+            <p class="text-green-muted mb-4">
+              If you receive a damaged or defective item, please contact us immediately with photos of the damage. We'll arrange for a replacement or full refund at no additional cost to you.
+            </p>
+          </section>
+
+          <div class="bg-green-light/30 rounded-lg p-6 mt-8">
+            <h3 class="text-xl font-bold text-green-deep mb-3">Need Help?</h3>
+            <p class="text-green-muted mb-4">
+              If you have any questions about our return policy, please don't hesitate to contact us.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <%= link_to contact_path, class: "btn-primary inline-flex items-center justify-center" do %>
+                <%= render "shared/svg_icons/email", class: "w-5 h-5 mr-2" %>
+                Contact Us
+              <% end %>
+              <%= link_to "tel:#{@store_setting.phone_number}", class: "btn-secondary inline-flex items-center justify-center" do %>
+                <%= render "shared/svg_icons/phone", class: "w-5 h-5 mr-2" %>
+                Call Us
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>
+

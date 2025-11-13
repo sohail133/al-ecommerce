@@ -3,6 +3,12 @@ Rails.application.routes.draw do
   
   get "about", to: "pages#about", as: :about
   get "contact", to: "pages#contact", as: :contact
+  get "returns", to: "pages#returns", as: :returns
+  get "shipping", to: "pages#shipping", as: :shipping
+  get "faqs", to: "pages#faqs", as: :faqs
+  get "privacy", to: "pages#privacy", as: :privacy
+  get "terms", to: "pages#terms", as: :terms
+  get "cookies", to: "pages#cookies", as: :cookies
   
   resources :contacts, only: [:create], controller: "contact_us", path: "contact-us"
   
