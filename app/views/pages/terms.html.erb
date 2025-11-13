@@ -1,0 +1,147 @@
+<% content_for :title, "Terms of Service - AL Ecommerce" %>
+
+<div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
+        <div class="text-center mb-12">
+          <h1 class="text-4xl md:text-5xl font-bold text-green-deep mb-4">Terms of Service</h1>
+          <p class="text-lg text-green-muted">Last updated: <%= Time.now.strftime("%B %d, %Y") %></p>
+        </div>
+
+        <div class="prose max-w-none space-y-6 text-green-muted">
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Agreement to Terms</h2>
+            <p>
+              By accessing and using AL Ecommerce, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using this site.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Use License</h2>
+            <p class="mb-3">Permission is granted to temporarily access the materials on AL Ecommerce's website for personal, non-commercial use only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>Modify or copy the materials</li>
+              <li>Use the materials for any commercial purpose</li>
+              <li>Attempt to reverse engineer any software on the website</li>
+              <li>Remove any copyright or proprietary notations</li>
+              <li>Transfer the materials to another person</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">User Accounts</h2>
+            <p class="mb-3">When you create an account with us, you must provide accurate and complete information. You are responsible for:</p>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>Maintaining the confidentiality of your account credentials</li>
+              <li>All activities that occur under your account</li>
+              <li>Notifying us immediately of any unauthorized use</li>
+            </ul>
+            <p class="mt-3">We reserve the right to suspend or terminate accounts that violate these terms.</p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Products and Services</h2>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>We make every effort to display products accurately, but we cannot guarantee that colors and images exactly match the physical products</li>
+              <li>We reserve the right to limit quantities and discontinue products</li>
+              <li>Prices are subject to change without notice</li>
+              <li>We reserve the right to refuse or cancel any order</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Payment Terms</h2>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>Payment must be made in full before products are shipped</li>
+              <li>We accept credit cards, debit cards, PayPal, JazzCash, and Cash on Delivery</li>
+              <li>All prices are in USD unless otherwise stated</li>
+              <li>You are responsible for any applicable taxes and duties</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Shipping and Delivery</h2>
+            <p>
+              We will make every effort to deliver products within the estimated timeframe. However, we are not responsible for delays caused by shipping carriers, weather conditions, or other circumstances beyond our control. <%= link_to "View our shipping policy", shipping_path, class: "text-green-primary hover:underline font-semibold" %>.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Returns and Refunds</h2>
+            <p>
+              Our return policy allows returns within 30 days of delivery for most items. <%= link_to "Read our full return policy", returns_path, class: "text-green-primary hover:underline font-semibold" %> for details on eligibility and procedures.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Prohibited Activities</h2>
+            <p class="mb-3">You may not use our website to:</p>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>Violate any laws or regulations</li>
+              <li>Infringe on intellectual property rights</li>
+              <li>Transmit harmful code or viruses</li>
+              <li>Engage in fraudulent activities</li>
+              <li>Harass or harm other users</li>
+              <li>Scrape or extract data without permission</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Intellectual Property</h2>
+            <p>
+              All content on this website, including text, graphics, logos, images, and software, is the property of AL Ecommerce and is protected by copyright and trademark laws.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Limitation of Liability</h2>
+            <p>
+              AL Ecommerce shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use our services. Our total liability to you for any claim shall not exceed the amount you paid for the products in question.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Indemnification</h2>
+            <p>
+              You agree to indemnify and hold AL Ecommerce harmless from any claims, losses, damages, liabilities, and expenses arising from your violation of these Terms or your use of our services.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Modifications</h2>
+            <p>
+              We reserve the right to revise these Terms of Service at any time. By continuing to use our website after changes are posted, you accept the revised terms.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Governing Law</h2>
+            <p>
+              These Terms shall be governed by and construed in accordance with the laws of the United States, without regard to its conflict of law provisions.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Contact Information</h2>
+            <p class="mb-3">If you have any questions about these Terms of Service, please contact us:</p>
+            <div class="bg-green-light/30 rounded-lg p-4 space-y-2">
+              <p><strong>Email:</strong> <%= link_to @store_setting.email, "mailto:#{@store_setting.email}", class: "text-green-primary hover:underline" %></p>
+              <p><strong>Phone:</strong> <%= link_to @store_setting.phone_number, "tel:#{@store_setting.phone_number}", class: "text-green-primary hover:underline" %></p>
+              <p><strong>Address:</strong> <%= @store_setting.location %></p>
+            </div>
+          </section>
+        </div>
+
+        <div class="mt-8 pt-8 border-t border-pink-border">
+          <%= link_to "← Back to Home", root_path, class: "text-green-primary hover:text-green-dark font-semibold" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>
+

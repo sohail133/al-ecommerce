@@ -20,4 +20,28 @@ class PagesController < ApplicationController
     @store_setting = StoreSetting.instance
     @contact_us = ContactUs.new
   end
+
+  def returns
+    @store_setting = StoreSetting.instance
+  end
+
+  def shipping
+    @store_setting = StoreSetting.instance
+  end
+
+  def faqs
+    @store_setting = StoreSetting.instance
+  end
+
+  def privacy
+    @store_setting = StoreSetting.instance
+  end
+
+  def terms
+    @store_setting = StoreSetting.instance
+  end
+
+  def cookies
+    @store_setting = StoreSetting.instance
+  end
 end

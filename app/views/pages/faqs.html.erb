@@ -1,0 +1,173 @@
+<% content_for :title, "FAQs - AL Ecommerce" %>
+
+<div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
+        <div class="text-center mb-12">
+          <h1 class="text-4xl md:text-5xl font-bold text-green-deep mb-4">Frequently Asked Questions</h1>
+          <p class="text-lg text-green-muted">Find answers to common questions</p>
+        </div>
+
+        <div class="space-y-6">
+          <!-- Ordering -->
+          <div class="border-b border-pink-border pb-6">
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Ordering</h2>
+            
+            <div class="space-y-4">
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">How do I place an order?</h3>
+                <p class="text-green-muted">Simply browse our products, add items to your cart, and proceed to checkout. You'll need to create an account or log in to complete your purchase.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">Can I modify my order after placing it?</h3>
+                <p class="text-green-muted">Orders can be modified within 1 hour of placement. Please contact our customer service team immediately if you need to make changes.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">What payment methods do you accept?</h3>
+                <p class="text-green-muted">We accept all major credit cards (Visa, MasterCard, American Express), PayPal, JazzCash, and Cash on Delivery (COD) for eligible orders.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">Is my payment information secure?</h3>
+                <p class="text-green-muted">Yes! We use industry-standard SSL encryption to protect your payment information. We never store your complete credit card details on our servers.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipping & Delivery -->
+          <div class="border-b border-pink-border pb-6">
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Shipping & Delivery</h2>
+            
+            <div class="space-y-4">
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">How long does shipping take?</h3>
+                <p class="text-green-muted">Standard shipping takes 5-7 business days, express shipping takes 2-3 business days, and next-day delivery is available for orders placed before 2 PM.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">Do you offer free shipping?</h3>
+                <p class="text-green-muted">Yes! We offer free standard shipping on all orders over $50. Orders under $50 have a $5.99 shipping fee.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">Do you ship internationally?</h3>
+                <p class="text-green-muted">Yes, we ship to Canada, UK, Europe, Australia, and New Zealand. International shipping times and costs vary by location.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">How can I track my order?</h3>
+                <p class="text-green-muted">Once your order ships, you'll receive a tracking number via email. You can also track your order by logging into your account and viewing your order history.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Returns & Refunds -->
+          <div class="border-b border-pink-border pb-6">
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Returns & Refunds</h2>
+            
+            <div class="space-y-4">
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">What is your return policy?</h3>
+                <p class="text-green-muted">We accept returns within 30 days of delivery for unused items in their original packaging. <%= link_to "View full return policy", returns_path, class: "text-green-primary hover:underline font-semibold" %>.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">How do I return an item?</h3>
+                <p class="text-green-muted">Contact our customer service team to initiate a return. We'll provide you with a return shipping address and instructions.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">How long does it take to process a refund?</h3>
+                <p class="text-green-muted">Once we receive your return, we'll inspect it and process your refund within 5-7 business days. Refunds are issued to the original payment method.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">Can I exchange an item?</h3>
+                <p class="text-green-muted">Yes! If you need a different size or color, you can return the original item and place a new order for the item you want.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account & Privacy -->
+          <div class="border-b border-pink-border pb-6">
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Account & Privacy</h2>
+            
+            <div class="space-y-4">
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">Do I need an account to place an order?</h3>
+                <p class="text-green-muted">Yes, you'll need to create an account to complete your purchase. This helps us provide better service and allows you to track your orders.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">How do I reset my password?</h3>
+                <p class="text-green-muted">Click on "Login" and then "Forgot your password?" Enter your email address and we'll send you instructions to reset your password.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">Is my personal information safe?</h3>
+                <p class="text-green-muted">Yes! We take your privacy seriously and use industry-standard security measures to protect your data. <%= link_to "Read our privacy policy", privacy_path, class: "text-green-primary hover:underline font-semibold" %>.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">How can I update my account information?</h3>
+                <p class="text-green-muted">Log into your account and navigate to your dashboard where you can update your personal information, addresses, and preferences.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products -->
+          <div class="pb-6">
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Products</h2>
+            
+            <div class="space-y-4">
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">Are your products authentic?</h3>
+                <p class="text-green-muted">Yes! We only sell 100% authentic products from authorized distributors and manufacturers.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">Do products come with a warranty?</h3>
+                <p class="text-green-muted">Most of our products come with a manufacturer's warranty. Warranty details are provided on each product page.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">What if an item is out of stock?</h3>
+                <p class="text-green-muted">If an item is out of stock, you can sign up for restock notifications on the product page, or contact us to inquire about availability.</p>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-green-deep mb-2">Can I see products in person before buying?</h3>
+                <p class="text-green-muted">We're an online-only store at this time. However, we offer hassle-free returns if you're not satisfied with your purchase.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-green-light/30 rounded-lg p-6 mt-8">
+          <h3 class="text-xl font-bold text-green-deep mb-3">Still Have Questions?</h3>
+          <p class="text-green-muted mb-4">
+            If you couldn't find the answer you're looking for, our customer service team is ready to help!
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <%= link_to contact_path, class: "btn-primary inline-flex items-center justify-center" do %>
+              <%= render "shared/svg_icons/email", class: "w-5 h-5 mr-2" %>
+              Contact Us
+            <% end %>
+            <%= link_to "tel:#{@store_setting.phone_number}", class: "btn-secondary inline-flex items-center justify-center" do %>
+              <%= render "shared/svg_icons/phone", class: "w-5 h-5 mr-2" %>
+              <%= @store_setting.phone_number %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>
+

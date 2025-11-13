@@ -1,0 +1,127 @@
+<% content_for :title, "Privacy Policy - AL Ecommerce" %>
+
+<div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
+  <%= render "pages/shared/header" %>
+
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
+        <div class="text-center mb-12">
+          <h1 class="text-4xl md:text-5xl font-bold text-green-deep mb-4">Privacy Policy</h1>
+          <p class="text-lg text-green-muted">Last updated: <%= Time.now.strftime("%B %d, %Y") %></p>
+        </div>
+
+        <div class="prose max-w-none space-y-6 text-green-muted">
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Introduction</h2>
+            <p>
+              At AL Ecommerce, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Information We Collect</h2>
+            <h3 class="text-xl font-semibold text-green-deep mb-3">Personal Information</h3>
+            <p class="mb-3">We may collect personal information that you provide to us, including:</p>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>Name and contact information (email address, phone number, shipping address)</li>
+              <li>Account credentials (username and password)</li>
+              <li>Payment information (processed securely through our payment providers)</li>
+              <li>Order history and preferences</li>
+              <li>Communication preferences</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold text-green-deep mb-3 mt-6">Automatically Collected Information</h3>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>Device information (IP address, browser type, operating system)</li>
+              <li>Usage data (pages visited, time spent on site, click patterns)</li>
+              <li>Cookies and similar tracking technologies</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">How We Use Your Information</h2>
+            <p class="mb-3">We use the information we collect to:</p>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>Process and fulfill your orders</li>
+              <li>Communicate with you about your orders and account</li>
+              <li>Provide customer support</li>
+              <li>Send marketing communications (with your consent)</li>
+              <li>Improve our website and services</li>
+              <li>Prevent fraud and enhance security</li>
+              <li>Comply with legal obligations</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Information Sharing</h2>
+            <p class="mb-3">We may share your information with:</p>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li><strong>Service Providers:</strong> Third-party companies that help us operate our business (payment processors, shipping companies, email services)</li>
+              <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
+              <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
+            </ul>
+            <p class="mt-3">We do not sell your personal information to third parties.</p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Cookies and Tracking</h2>
+            <p class="mb-3">
+              We use cookies and similar tracking technologies to enhance your browsing experience. You can control cookies through your browser settings. <%= link_to "Learn more about our cookie policy", cookies_path, class: "text-green-primary hover:underline font-semibold" %>.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Data Security</h2>
+            <p>
+              We implement appropriate technical and organizational measures to protect your personal information. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Your Rights</h2>
+            <p class="mb-3">You have the right to:</p>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>Access and receive a copy of your personal information</li>
+              <li>Correct inaccurate or incomplete information</li>
+              <li>Request deletion of your information</li>
+              <li>Opt-out of marketing communications</li>
+              <li>Object to processing of your information</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Children's Privacy</h2>
+            <p>
+              Our services are not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Changes to This Policy</h2>
+            <p>
+              We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-green-deep mb-4">Contact Us</h2>
+            <p class="mb-3">If you have questions about this Privacy Policy, please contact us:</p>
+            <div class="bg-green-light/30 rounded-lg p-4 space-y-2">
+              <p><strong>Email:</strong> <%= link_to @store_setting.email, "mailto:#{@store_setting.email}", class: "text-green-primary hover:underline" %></p>
+              <p><strong>Phone:</strong> <%= link_to @store_setting.phone_number, "tel:#{@store_setting.phone_number}", class: "text-green-primary hover:underline" %></p>
+              <p><strong>Address:</strong> <%= @store_setting.location %></p>
+            </div>
+          </section>
+        </div>
+
+        <div class="mt-8 pt-8 border-t border-pink-border">
+          <%= link_to "← Back to Home", root_path, class: "text-green-primary hover:text-green-dark font-semibold" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/shared/footer" %>
+</div>
+

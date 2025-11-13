@@ -43,11 +43,11 @@
       <div>
         <h3 class="text-lg font-semibold mb-4">Customer Service</h3>
         <ul class="space-y-2">
-          <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-200">My Account</a></li>
-          <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-200">Order Tracking</a></li>
-          <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-200">Returns & Exchanges</a></li>
-          <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-200">Shipping Info</a></li>
-          <li><a href="#" class="text-white/80 hover:text-white transition-colors duration-200">FAQs</a></li>
+          <li><%= link_to user_signed_in? ? dashboard_path : new_user_session_path, class: "text-white/80 hover:text-white transition-colors duration-200" do %>My Account<% end %></li>
+          <li><%= link_to user_signed_in? ? orders_path : new_user_session_path, class: "text-white/80 hover:text-white transition-colors duration-200" do %>Order Tracking<% end %></li>
+          <li><%= link_to returns_path, class: "text-white/80 hover:text-white transition-colors duration-200" do %>Returns & Exchanges<% end %></li>
+          <li><%= link_to shipping_path, class: "text-white/80 hover:text-white transition-colors duration-200" do %>Shipping Info<% end %></li>
+          <li><%= link_to faqs_path, class: "text-white/80 hover:text-white transition-colors duration-200" do %>FAQs<% end %></li>
         </ul>
       </div>
 
@@ -75,9 +75,9 @@
       <div class="flex flex-col md:flex-row justify-between items-center">
         <p class="text-white/80 text-sm">© <%= Time.now.year %> AL Ecommerce. All rights reserved.</p>
         <div class="flex items-center space-x-6 mt-4 md:mt-0">
-          <a href="#" class="text-white/80 hover:text-white text-sm transition-colors duration-200">Privacy Policy</a>
-          <a href="#" class="text-white/80 hover:text-white text-sm transition-colors duration-200">Terms of Service</a>
-          <a href="#" class="text-white/80 hover:text-white text-sm transition-colors duration-200">Cookie Policy</a>
+          <%= link_to privacy_path, class: "text-white/80 hover:text-white text-sm transition-colors duration-200" do %>Privacy Policy<% end %>
+          <%= link_to terms_path, class: "text-white/80 hover:text-white text-sm transition-colors duration-200" do %>Terms of Service<% end %>
+          <%= link_to cookies_path, class: "text-white/80 hover:text-white text-sm transition-colors duration-200" do %>Cookie Policy<% end %>
         </div>
       </div>
     </div>
