@@ -1,0 +1,148 @@
+# Render Blueprint for MoveArc E-commerce Platform
+# This file configures your services on Render
+# Two environments: Staging (staging branch) and Production (production branch)
+
+services:
+  # ═══════════════════════════════════════════════════════════
+  # STAGING ENVIRONMENT
+  # ═══════════════════════════════════════════════════════════
+  
+  - type: web
+    name: movearc-staging
+    runtime: docker
+    plan: starter
+    branch: staging  # Deploys from staging branch
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    
+    # Health check endpoint
+    healthCheckPath: /up
+    
+    # Build and Start Commands
+    buildCommand: bundle install && bundle exec rails assets:precompile && bundle exec rails db:migrate
+    startCommand: bundle exec puma -C config/puma.rb
+    
+    # Auto-deploy on push to staging branch
+    autoDeploy: true
+    
+    # Environment Variables for STAGING
+    envVars:
+      - key: RAILS_ENV
+        value: staging
+      
+      - key: RAILS_MASTER_KEY
+        sync: false # Set manually: 986921230777489cc4ecdddba4b2853d
+      
+      - key: RAILS_LOG_TO_STDOUT
+        value: true
+      
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
+      
+      - key: RAILS_MAX_THREADS
+        value: 5
+      
+      - key: WEB_CONCURRENCY
+        value: 2
+      
+      - key: DATABASE_URL
+        fromDatabase:
+          name: movearc-staging-db
+          property: connectionString
+      
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: movearc-staging-redis
+          property: connectionString
+
+  # ═══════════════════════════════════════════════════════════
+  # PRODUCTION ENVIRONMENT
+  # ═══════════════════════════════════════════════════════════
+  
+  - type: web
+    name: movearc-production
+    runtime: docker
+    plan: standard # Production should use standard or pro plan
+    branch: production  # Deploys from production branch
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    
+    # Health check endpoint
+    healthCheckPath: /up
+    
+    # Build and Start Commands
+    buildCommand: bundle install && bundle exec rails assets:precompile && bundle exec rails db:migrate
+    startCommand: bundle exec puma -C config/puma.rb
+    
+    # Auto-deploy on push to production branch
+    autoDeploy: true
+    
+    # Environment Variables for PRODUCTION
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      
+      - key: RAILS_MASTER_KEY
+        sync: false # Set manually: a14818cb39a6195fb8fd16e6585bbc8b
+      
+      - key: RAILS_LOG_TO_STDOUT
+        value: true
+      
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
+      
+      - key: RAILS_MAX_THREADS
+        value: 5
+      
+      - key: WEB_CONCURRENCY
+        value: 4  # More workers for production
+      
+      - key: DATABASE_URL
+        fromDatabase:
+          name: movearc-production-db
+          property: connectionString
+      
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: movearc-production-redis
+          property: connectionString
+
+# ═══════════════════════════════════════════════════════════
+# DATABASES
+# ═══════════════════════════════════════════════════════════
+
+databases:
+  # Staging Database
+  - name: movearc-staging-db
+    plan: starter
+    databaseName: movearc_staging
+    user: movearc_staging
+    ipAllowList: [] # Empty = allow from Render services only
+  
+  # Production Database
+  - name: movearc-production-db
+    plan: standard # Production should use standard plan
+    databaseName: movearc_production
+    user: movearc_production
+    ipAllowList: []
+
+# ═══════════════════════════════════════════════════════════
+# REDIS SERVICES (Optional - for caching/sessions)
+# ═══════════════════════════════════════════════════════════
+
+# Uncomment if you need Redis for staging
+# - type: redis
+#   name: movearc-staging-redis
+#   plan: starter
+#   maxmemoryPolicy: allkeys-lru
+#   ipAllowList: []
+
+# Uncomment if you need Redis for production
+# - type: redis
+#   name: movearc-production-redis
+#   plan: standard
+#   maxmemoryPolicy: allkeys-lru
+#   ipAllowList: []
+

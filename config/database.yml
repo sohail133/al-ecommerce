@@ -1,31 +1,48 @@
 default: &default
   adapter: postgresql
-  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
-  username: postgres
-  password: postgres
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+default_local: &default_local
+  <<: *default
+  username: <%= ENV.fetch("POSTGRES_USERNAME") { "postgres" } %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD") { "postgres" } %>
+  host: localhost
 
 development:
-  <<: *default
-  database: al-ecommerce-development
+  <<: *default_local
+  database: movearc_development
 
 test:
+  <<: *default_local
+  database: movearc_test
+
+staging:
   <<: *default
-  database: al-ecommerce-test
+  database: movearc_staging
+  username: movearc_staging_user
+
+default_production: &default_production
+  <<: *default
+  username: movearc_user
+  password: <%= ENV["MOVEARC_DATABASE_PASSWORD"] %>
+  host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
 
 production:
-  primary:
-    <<: *default
-    database: al-ecommerce-production
-  cache:
-    <<: *default
-    database: al-ecommerce-production-cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *default
-    database: al-ecommerce-production-queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *default
-    database: al-ecommerce-production-cable
-    migrations_paths: db/cable_migrate
+  <<: *default_production
+  database: movearc_production
+
+cable:
+  <<: *default_production
+  database: movearc_production_cable
+  migrations_paths: db/cable_migrate
+
+queue:
+  <<: *default_production
+  database: movearc_production_queue
+  migrations_paths: db/queue_migrate
+
+cache:
+  <<: *default_production
+  database: movearc_production_cache
+  migrations_paths: db/cache_migrate
