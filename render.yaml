@@ -19,7 +19,7 @@ services:
     healthCheckPath: /up
     
     # Pre-deploy commands (run after image is built, with access to env vars)
-    preDeployCommand: bundle exec rails assets:precompile && bundle exec rails db:migrate
+    preDeployCommand: ./bin/render-predeploy.sh
     
     # Auto-deploy on push to staging branch
     autoDeploy: true
@@ -71,7 +71,7 @@ services:
     healthCheckPath: /up
     
     # Pre-deploy commands (run after image is built, with access to env vars)
-    preDeployCommand: bundle exec rails assets:precompile && bundle exec rails db:migrate
+    preDeployCommand: ./bin/render-predeploy.sh
     
     # Auto-deploy on push to production branch
     autoDeploy: true
