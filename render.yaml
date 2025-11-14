@@ -15,11 +15,11 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     
-    # Docker build arguments
-    dockerCommand: docker build --build-arg RAILS_ENV=staging -t app .
-    
     # Health check endpoint
     healthCheckPath: /up
+    
+    # Pre-deploy commands (run after image is built, with access to env vars)
+    preDeployCommand: bundle exec rails assets:precompile && bundle exec rails db:migrate
     
     # Auto-deploy on push to staging branch
     autoDeploy: true
@@ -67,11 +67,11 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     
-    # Docker build arguments
-    dockerCommand: docker build --build-arg RAILS_ENV=production -t app .
-    
     # Health check endpoint
     healthCheckPath: /up
+    
+    # Pre-deploy commands (run after image is built, with access to env vars)
+    preDeployCommand: bundle exec rails assets:precompile && bundle exec rails db:migrate
     
     # Auto-deploy on push to production branch
     autoDeploy: true
