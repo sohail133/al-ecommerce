@@ -1,6 +1,9 @@
 # Use Ruby 3.3.0 as base image
 FROM ruby:3.3.0-slim
 
+# Build argument for Rails environment (defaults to production)
+ARG RAILS_ENV=production
+
 # Install dependencies
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
@@ -33,8 +36,9 @@ RUN npm ci --omit=dev
 # Copy application code
 COPY . .
 
-# Precompile assets
-RUN SECRET_KEY_BASE=dummy RAILS_ENV=production bundle exec rails assets:precompile
+# Precompile assets using the build argument
+# Create a dummy master key for asset precompilation
+RUN SECRET_KEY_BASE=dummy RAILS_MASTER_KEY=dummy RAILS_ENV=${RAILS_ENV} bundle exec rails assets:precompile
 
 # Create non-root user
 RUN groupadd --system --gid 1000 rails && \

@@ -15,12 +15,11 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     
+    # Docker build arguments
+    dockerCommand: docker build --build-arg RAILS_ENV=staging -t app .
+    
     # Health check endpoint
     healthCheckPath: /up
-    
-    # Build and Start Commands
-    buildCommand: bundle install && bundle exec rails assets:precompile && bundle exec rails db:migrate
-    startCommand: bundle exec puma -C config/puma.rb
     
     # Auto-deploy on push to staging branch
     autoDeploy: true
@@ -68,12 +67,11 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     
+    # Docker build arguments
+    dockerCommand: docker build --build-arg RAILS_ENV=production -t app .
+    
     # Health check endpoint
     healthCheckPath: /up
-    
-    # Build and Start Commands
-    buildCommand: bundle install && bundle exec rails assets:precompile && bundle exec rails db:migrate
-    startCommand: bundle exec puma -C config/puma.rb
     
     # Auto-deploy on push to production branch
     autoDeploy: true
