@@ -20,7 +20,8 @@ RUN apt-get update -qq && \
 WORKDIR /app
 
 # Install gems
-COPY Gemfile Gemfile.lock ./
+# Only copy Gemfile first to let Docker generate platform-specific Gemfile.lock
+COPY Gemfile ./
 RUN bundle config set --local without 'development test' && \
     bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
