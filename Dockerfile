@@ -34,8 +34,9 @@ RUN npm ci
 # Copy application code
 COPY . .
 
-# NOTE: Assets will be precompiled during deployment by Render
-# This allows access to real credentials and environment variables
+# Build JavaScript and CSS assets
+RUN npm run build
+RUN npm run build:css
 
 # Create non-root user
 RUN groupadd --system --gid 1000 rails && \
