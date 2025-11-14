@@ -38,7 +38,7 @@ COPY . .
 
 # Precompile assets using the build argument
 # Create a dummy master key for asset precompilation
-RUN SECRET_KEY_BASE=dummy RAILS_MASTER_KEY=dummy RAILS_ENV=${RAILS_ENV} bundle exec rails assets:precompile
+RUN bundle exec rails assets:precompile
 
 # Create non-root user
 RUN groupadd --system --gid 1000 rails && \
