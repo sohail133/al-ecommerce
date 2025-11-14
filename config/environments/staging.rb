@@ -53,7 +53,7 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: ENV.fetch("STAGING_DOMAIN", "staging.alecommerce.com") }
+  config.action_mailer.default_url_options = { host: ENV.fetch("STAGING_DOMAIN", "staging.shopmovearc.com") }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: ENV["SMTP_ADDRESS"],
@@ -80,7 +80,9 @@ Rails.application.configure do
     IPAddr.new("0.0.0.0/0"),        # All IPv4 addresses.
     IPAddr.new("::/0"),              # All IPv6 addresses.
     "localhost",                     # The localhost reserved domain.
-    ENV["STAGING_DOMAIN"],           # Staging domain
+    "staging.shopmovearc.com",       # Staging domain
+    /.*\.onrender\.com/,             # Render internal domains
+    ENV["STAGING_DOMAIN"],           # Additional staging domain from env
     "web"                            # Docker service name
   ]
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
