@@ -11,6 +11,7 @@ RUN apt-get update -qq && \
     libvips \
     libjemalloc2 \
     libsqlite3-0 \
+    libyaml-dev \
     nodejs \
     npm \
     tzdata \
