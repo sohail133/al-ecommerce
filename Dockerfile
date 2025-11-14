@@ -1,5 +1,5 @@
-# Use Ruby 3.3.0 as base image
-FROM ruby:3.3.0-slim
+# Use Ruby 3.4.7 as base image (matches .ruby-version)
+FROM ruby:3.4.7-slim
 
 # Install dependencies
 RUN apt-get update -qq && \
