@@ -14,7 +14,6 @@ RUN apt-get update -qq && \
     nodejs \
     npm \
     tzdata \
-    && npm install -g yarn \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -28,8 +27,8 @@ RUN bundle config set --local deployment 'true' && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
 # Copy package files and install node modules
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --production
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 
 # Copy application code
 COPY . .
