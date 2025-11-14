@@ -21,8 +21,7 @@ WORKDIR /app
 
 # Install gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle config set --local deployment 'true' && \
-    bundle config set --local without 'development test' && \
+RUN bundle config set --local without 'development test' && \
     bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
