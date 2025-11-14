@@ -1,7 +1,5 @@
 # Configure Propshaft asset pipeline for Rails 8
-Rails.application.configure do
-  # Add the builds directory to Propshaft's load path
-  # This is where esbuild and tailwind output compiled assets
-  config.assets.paths << Rails.root.join("app/assets/builds")
-end
+# Propshaft automatically includes app/assets/builds if it exists
+# Just ensure it's in the load path
+Rails.application.config.assets.paths << Rails.root.join("app/assets/builds") if Rails.root.join("app/assets/builds").exist?
 
