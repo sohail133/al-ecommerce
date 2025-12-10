@@ -12,10 +12,13 @@ RUN apt-get update -qq && \
     libjemalloc2 \
     libsqlite3-0 \
     libyaml-dev \
-    nodejs \
-    npm \
     tzdata \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20.x (required for modern npm packages)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
