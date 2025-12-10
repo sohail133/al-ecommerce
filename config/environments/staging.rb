@@ -15,6 +15,9 @@ Rails.application.configure do
   # Turn on fragment caching in view templates.
   config.action_controller.perform_caching = true
 
+  # Enable serving of static files from the `/public` folder
+  config.public_file_server.enabled = ENV.fetch("RAILS_SERVE_STATIC_FILES", "true") == "true"
+  
   # Cache assets for far-future expiry since they are all digest stamped.
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
@@ -53,7 +56,7 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: ENV.fetch("STAGING_DOMAIN", "staging.alecommerce.com") }
+  config.action_mailer.default_url_options = { host: ENV.fetch("STAGING_DOMAIN", "staging.shopmovearc.com") }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: ENV["SMTP_ADDRESS"],
@@ -80,7 +83,9 @@ Rails.application.configure do
     IPAddr.new("0.0.0.0/0"),        # All IPv4 addresses.
     IPAddr.new("::/0"),              # All IPv6 addresses.
     "localhost",                     # The localhost reserved domain.
-    ENV["STAGING_DOMAIN"],           # Staging domain
+    "staging.shopmovearc.com",       # Staging domain
+    /.*\.onrender\.com/,             # Render internal domains
+    ENV["STAGING_DOMAIN"],           # Additional staging domain from env
     "web"                            # Docker service name
   ]
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
@@ -88,9 +93,9 @@ Rails.application.configure do
   # Ensures that a master key has been made available in ENV["RAILS_MASTER_KEY"].
   config.require_master_key = true
 
-  # Asset compilation
-  config.assets.compile = false
-  config.assets.digest = true
+  # Asset compilation - Rails 8 uses Propshaft, not Sprockets
+  # config.assets.compile = false
+  # config.assets.digest = true
 
   # Active Storage
   config.active_storage.service = :local

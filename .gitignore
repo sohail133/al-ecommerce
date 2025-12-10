@@ -38,10 +38,7 @@
 /app/assets/builds/*
 !/app/assets/builds/.keep
 
-# Ignore npm lockfile (using yarn)
-/package-lock.json
-
-# Ignore yarn error log
+# Ignore yarn error log (if switching back to yarn)
 /.yarn-error.log
 
 

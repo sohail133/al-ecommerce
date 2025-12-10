@@ -1,5 +1,5 @@
-# Use Ruby 3.3.0 as base image
-FROM ruby:3.3.0-slim
+# Use Ruby 3.4.7 as base image (matches .ruby-version)
+FROM ruby:3.4.7-slim
 
 # Install dependencies
 RUN apt-get update -qq && \
@@ -11,10 +11,10 @@ RUN apt-get update -qq && \
     libvips \
     libjemalloc2 \
     libsqlite3-0 \
+    libyaml-dev \
     nodejs \
     npm \
     tzdata \
-    && npm install -g yarn \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -22,20 +22,21 @@ WORKDIR /app
 
 # Install gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle config set --local deployment 'true' && \
-    bundle config set --local without 'development test' && \
+RUN bundle config set --local without 'development test' && \
+    bundle lock --add-platform x86_64-linux && \
     bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
-# Copy package files and install node modules
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --production
+# Copy package files and install node modules (including devDependencies for build tools)
+COPY package.json package-lock.json ./
+RUN npm ci
 
 # Copy application code
 COPY . .
 
-# Precompile assets
-RUN SECRET_KEY_BASE=dummy RAILS_ENV=production bundle exec rails assets:precompile
+# Build JavaScript and CSS assets
+RUN npm run build
+RUN npm run build:css
 
 # Create non-root user
 RUN groupadd --system --gid 1000 rails && \
