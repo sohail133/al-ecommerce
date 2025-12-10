@@ -48,12 +48,6 @@ services:
         fromDatabase:
           name: movearc-staging-db
           property: connectionString
-      
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: movearc-staging-redis
-          property: connectionString
 
   # ═══════════════════════════════════════════════════════════
   # PRODUCTION ENVIRONMENT
@@ -99,12 +93,6 @@ services:
       - key: DATABASE_URL
         fromDatabase:
           name: movearc-production-db
-          property: connectionString
-      
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: movearc-production-redis
           property: connectionString
 
 # ═══════════════════════════════════════════════════════════
