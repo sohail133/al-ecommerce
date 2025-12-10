@@ -16,7 +16,7 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
 
   # Enable serving of static files from the `/public` folder
-  config.public_file_server.enabled = true
+  config.public_file_server.enabled = ENV.fetch("RAILS_SERVE_STATIC_FILES", "true") == "true"
   
   # Cache assets for far-future expiry since they are all digest stamped.
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
