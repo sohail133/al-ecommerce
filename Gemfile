@@ -9,7 +9,7 @@ gem "propshaft"
 # CSV library for exporting data
 gem "csv"
 # Use sqlite3 as the database for Active Record
-gem 'pg', '~> 1.6', '>= 1.6.2'
+gem 'pg', '~> 1.6'
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Use JavaScript bundling [https://github.com/rails/jsbundling-rails]
