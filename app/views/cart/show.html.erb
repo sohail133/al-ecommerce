@@ -49,7 +49,7 @@
                           <option value="<%= variant.id %>" <%= 'selected' if variant.id == cart_item.product_variant_id %> 
                             data-price="<%= variant.price %>"
                             data-stock="<%= variant.inventory&.available_quantity || 0 %>">
-                            <%= variant.name %> - $<%= variant.price %> 
+                            <%= variant.name %> - <%= format_currency(variant.price) %> 
                             (<%= variant.inventory&.available_quantity || 0 %> in stock)
                           </option>
                         <% end %>
@@ -80,13 +80,13 @@
                       
                       <div class="text-sm">
                         <span class="block text-green-muted mb-1">Unit Price:</span>
-                        <span class="font-semibold text-green-deep text-lg">$<%= cart_item.price_snapshot %></span>
+                        <span class="font-semibold text-green-deep text-lg"><%= format_currency(cart_item.price_snapshot) %></span>
                       </div>
                     </div>
                   </div>
                   
                   <div class="text-right">
-                    <div class="font-bold text-green-primary text-2xl mb-4">$<%= cart_item.subtotal.round(2) %></div>
+                    <div class="font-bold text-green-primary text-2xl mb-4"><%= format_currency(cart_item.subtotal) %></div>
                     <%= link_to remove_from_cart_path(cart_item.product_variant_id), method: :delete, 
                         data: { turbo_method: :delete, turbo_confirm: "Remove this item from cart?" }, 
                         class: "inline-flex items-center space-x-1 text-sm text-red-500 hover:text-red-700 hover:underline transition-colors" do %>
@@ -121,7 +121,7 @@
             <div class="space-y-3 mb-6">
               <div class="flex justify-between text-base">
                 <span class="text-green-muted">Subtotal (<%= @cart.items_count %> items)</span>
-                <span class="text-green-deep font-medium">$<%= @cart.total.round(2) %></span>
+                <span class="text-green-deep font-medium"><%= format_currency(@cart.total) %></span>
               </div>
               <div class="flex justify-between text-base">
                 <span class="text-green-muted">Shipping</span>
@@ -129,11 +129,11 @@
               </div>
               <div class="flex justify-between text-base">
                 <span class="text-green-muted">Tax</span>
-                <span class="text-green-deep font-medium">$0.00</span>
+                <span class="text-green-deep font-medium"><%= format_currency(0) %></span>
               </div>
               <div class="border-t border-pink-border pt-3 flex justify-between items-center">
                 <span class="font-bold text-green-deep text-lg">Total</span>
-                <span class="font-bold text-green-primary text-2xl">$<%= @cart.total.round(2) %></span>
+                <span class="font-bold text-green-primary text-2xl"><%= format_currency(@cart.total) %></span>
               </div>
             </div>
 

@@ -6,7 +6,7 @@ puts "🌱 Starting seed process..."
 puts "\n👤 Creating users..."
 admin = User.find_or_create_by(email: 'admin@example.com') do |user|
   user.full_name = 'Admin User'
-  user.password = 'password123'
+  user.password = 'AdminEcommerce123@'
   user.password_confirmation = 'password123'
   user.role = :admin
   user.status = true

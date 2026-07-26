@@ -65,7 +65,7 @@
           </div>
 
           <div class="text-4xl font-bold text-green-primary mb-6">
-            $<%= @product.price %>
+            <%= format_currency(@product.price) %>
           </div>
 
           <% if @product.description.present? %>
@@ -88,7 +88,7 @@
                       data-variant-price="<%= variant.price %>"
                       class="border-2 <%= index == 0 ? 'border-green-primary bg-green-light' : 'border-pink-border bg-white' %> rounded-lg p-3 hover:border-green-primary transition-colors cursor-pointer">
                       <p class="font-medium text-green-deep text-sm"><%= variant.name %></p>
-                      <p class="text-green-primary font-bold">$<%= variant.price %></p>
+                      <p class="text-green-primary font-bold"><%= format_currency(variant.price) %></p>
                       <p class="text-xs text-green-muted"><%= variant.inventory&.available_quantity || 0 %> in stock</p>
                     </div>
                   <% end %>

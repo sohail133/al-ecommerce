@@ -1,0 +1,64 @@
+<div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+  <h2 style="color: #2d5016; font-size: 26px; font-weight: bold; margin: 0 0 25px 0; line-height: 1.3;">
+    Hello <%= @user.full_name.presence || @user.email %>,
+  </h2>
+
+  <p style="color: #333333; font-size: 16px; line-height: 1.7; margin: 0 0 24px 0;">
+    Thank you for your purchase! Your order <strong style="color: #4a7c59; font-weight: 600;">#<%= @order.id %></strong> has been placed successfully and is currently <strong><%= @order.status.humanize %></strong>.
+  </p>
+
+  <h3 style="color: #2d5016; font-size: 18px; font-weight: 700; margin: 0 0 16px 0;">Order Details</h3>
+
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom: 20px;">
+    <%= render "order_mailer/order_items" %>
+  </table>
+
+  <div style="border-top: 2px solid #f0e4e4; padding-top: 16px; margin-bottom: 28px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="color: #2d5016; font-size: 16px; font-weight: 700;">Total Amount</td>
+        <td style="color: #4a7c59; font-size: 20px; font-weight: 700; text-align: right;"><%= format_currency(@order.total_amount) %></td>
+      </tr>
+    </table>
+  </div>
+
+  <% if @order.address.present? %>
+    <div style="background: #fafafa; padding: 20px 24px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #f0e4e4;">
+      <p style="margin: 0 0 8px 0; font-weight: 700; color: #2d5016; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
+        Shipping Address
+      </p>
+      <p style="margin: 0; color: #333333; font-size: 14px; line-height: 1.7;">
+        <strong><%= @order.address.full_name %></strong><br>
+        <%= @order.address.address_line_1 %><br>
+        <% if @order.address.address_line_2.present? %>
+          <%= @order.address.address_line_2 %><br>
+        <% end %>
+        <%= @order.address.city %>, <%= @order.address.province %> <%= @order.address.postal_code %><br>
+        <%= @order.address.phone_number %>
+      </p>
+    </div>
+  <% end %>
+
+  <% if @order.payment_method.present? %>
+    <div style="background: #fafafa; padding: 20px 24px; border-radius: 6px; margin-bottom: 28px; border: 1px solid #f0e4e4;">
+      <p style="margin: 0 0 8px 0; font-weight: 700; color: #2d5016; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
+        Payment Method
+      </p>
+      <p style="margin: 0; color: #333333; font-size: 14px; line-height: 1.7;">
+        <%= @order.payment_method.name %> (<%= @order.payment_method.code.to_s.upcase %>)
+      </p>
+    </div>
+  <% end %>
+
+  <p style="color: #333333; font-size: 15px; line-height: 1.7; margin: 0 0 24px 0;">
+    We will email you again whenever your order status is updated.
+  </p>
+
+  <div style="margin-top: 32px; padding-top: 20px; border-top: 3px solid #e8f5e9;">
+    <p style="margin: 0 0 8px 0; color: #2d5016; font-size: 15px; font-weight: 700;">Best regards,</p>
+    <p style="margin: 0 0 5px 0; color: #4a7c59; font-size: 15px; font-weight: 600;">AL Ecommerce Team</p>
+    <p style="margin: 8px 0 0 0; color: #666666; font-size: 13px;">
+      <a href="mailto:<%= @store_setting.email %>" style="color: #4a7c59; text-decoration: none; font-weight: 500;"><%= @store_setting.email %></a>
+    </p>
+  </div>
+</div>

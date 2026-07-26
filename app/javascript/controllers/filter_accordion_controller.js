@@ -4,15 +4,21 @@ export default class extends Controller {
   static targets = ["content", "icon"]
 
   connect() {
-    const hasActiveFilters = this.element.querySelector('[data-filter-accordion-target="content"]')
-      .querySelector('form').action.includes('?')
-    
-    if (hasActiveFilters || this.hasFiltersInURL()) {
+    if (window.matchMedia("(min-width: 1024px)").matches) {
+      this.show()
+      return
+    }
+
+    if (this.hasFiltersInURL()) {
       this.show()
     }
   }
 
   toggle() {
+    if (window.matchMedia("(min-width: 1024px)").matches) {
+      return
+    }
+
     if (this.contentTarget.classList.contains("hidden")) {
       this.show()
     } else {
@@ -22,18 +28,22 @@ export default class extends Controller {
 
   show() {
     this.contentTarget.classList.remove("hidden")
-    this.iconTarget.classList.add("rotate-180")
+    if (this.hasIconTarget) {
+      this.iconTarget.classList.add("rotate-180")
+    }
   }
 
   hide() {
     this.contentTarget.classList.add("hidden")
-    this.iconTarget.classList.remove("rotate-180")
+    if (this.hasIconTarget) {
+      this.iconTarget.classList.remove("rotate-180")
+    }
   }
 
   hasFiltersInURL() {
     const urlParams = new URLSearchParams(window.location.search)
-    return urlParams.has('name') || urlParams.has('email') || 
-           urlParams.has('role') || urlParams.has('status')
+    return urlParams.has("name") || urlParams.has("category_id") ||
+           urlParams.has("subcategory_id") || urlParams.has("min_price") ||
+           urlParams.has("max_price") || urlParams.has("sort")
   }
 }
-

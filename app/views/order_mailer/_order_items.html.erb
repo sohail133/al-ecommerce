@@ -1,0 +1,32 @@
+<% @order_items.each do |item| %>
+  <% product = item.product_variant.product %>
+  <tr>
+    <td style="padding: 14px 0; border-bottom: 1px solid #f0e4e4; vertical-align: top;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          <td width="72" style="vertical-align: top; padding-right: 14px;">
+            <% if product.cover_image.attached? %>
+              <img src="<%= rails_blob_url(product.cover_image) %>" alt="<%= product.title %>" width="64" height="64" style="display: block; width: 64px; height: 64px; object-fit: cover; border-radius: 8px; border: 1px solid #f0e4e4;" />
+            <% elsif product.images.attached? %>
+              <img src="<%= rails_blob_url(product.images.first) %>" alt="<%= product.title %>" width="64" height="64" style="display: block; width: 64px; height: 64px; object-fit: cover; border-radius: 8px; border: 1px solid #f0e4e4;" />
+            <% else %>
+              <div style="width: 64px; height: 64px; background-color: #4a7c59; border-radius: 8px; color: #ffffff; font-size: 14px; font-weight: bold; text-align: center; line-height: 64px;">
+                <%= product.title.first(2).upcase %>
+              </div>
+            <% end %>
+          </td>
+          <td style="vertical-align: top;">
+            <div style="color: #2d5016; font-size: 15px; font-weight: 600; margin: 0 0 4px 0;"><%= product.title %></div>
+            <div style="color: #666666; font-size: 13px; margin: 0 0 4px 0;">Variant: <%= item.product_variant.name %></div>
+            <div style="color: #666666; font-size: 13px; margin: 0;">
+              Qty: <%= item.quantity %> × <%= format_currency(item.price) %>
+            </div>
+          </td>
+          <td width="100" style="vertical-align: top; text-align: right; color: #2d5016; font-size: 15px; font-weight: 700;">
+            <%= format_currency(item.subtotal) %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<% end %>
