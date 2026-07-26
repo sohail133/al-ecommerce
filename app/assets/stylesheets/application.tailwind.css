@@ -110,6 +110,24 @@
   --color-error: hsl(0, 84.2%, 60.2%);
 }
 
+/* Customer storefront theme. This is scoped to the public application layout,
+   so the admin layout continues using the original palette above. */
+.customer-theme {
+  --color-green-primary: #656176;
+  --color-green-dark: #4f4b5d;
+  --color-green-light: #eeedf1;
+  --color-green-deep: #36333f;
+  --color-green-muted: #777281;
+
+  --color-pink-lightest: #fafafa;
+  --color-pink-light: #f5f4f7;
+  --color-pink-accent: #d9d7df;
+  --color-pink-border: #e5e3e9;
+
+  --color-white: #ffffff;
+  --color-black: #17151c;
+}
+
 /* Dark mode support */
 .dark {
   --color-green-primary: hsl(145, 45%, 50%);

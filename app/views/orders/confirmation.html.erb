@@ -64,7 +64,7 @@
                   <div class="text-sm text-green-muted mt-1">Qty: <%= item.quantity %></div>
                 </div>
                 <div class="text-sm font-semibold text-green-deep">
-                  $<%= item.subtotal %>
+                  <%= format_currency(item.subtotal) %>
                 </div>
               </div>
             <% end %>
@@ -74,7 +74,7 @@
         <div class="border-t border-pink-border pt-4 mt-4">
           <div class="flex justify-between items-center">
             <span class="font-bold text-green-deep">Total Amount</span>
-            <span class="font-bold text-green-primary text-xl">$<%= @order.total_amount %></span>
+            <span class="font-bold text-green-primary text-xl"><%= format_currency(@order.total_amount) %></span>
           </div>
         </div>
       </div>

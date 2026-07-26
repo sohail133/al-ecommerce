@@ -47,10 +47,6 @@ module AdminHelper
     end
   end
 
-  def format_currency(amount)
-    number_to_currency(amount, unit: "Rs", precision: 2)
-  end
-
   def actions_dropdown(resource, resource_path)
     render partial: "admin/shared/actions_dropdown", locals: { resource: resource, resource_path: resource_path }
   end

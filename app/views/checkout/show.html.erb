@@ -105,10 +105,10 @@
                 <div class="flex-1 min-w-0">
                   <div class="font-medium text-green-deep text-sm"><%= cart_item.product_variant.product.title %></div>
                   <div class="text-xs text-green-muted"><%= cart_item.product_variant.name %></div>
-                  <div class="text-sm text-green-muted mt-1">Qty: <%= cart_item.quantity %> × $<%= cart_item.price_snapshot %></div>
+                  <div class="text-sm text-green-muted mt-1">Qty: <%= cart_item.quantity %> × <%= format_currency(cart_item.price_snapshot) %></div>
                 </div>
                 <div class="text-sm font-semibold text-green-deep">
-                  $<%= cart_item.subtotal.round(2) %>
+                  <%= format_currency(cart_item.subtotal) %>
                 </div>
               </div>
             <% end %>
@@ -117,7 +117,7 @@
           <div class="space-y-3 mb-6">
             <div class="flex justify-between text-base">
               <span class="text-green-muted">Subtotal</span>
-              <span class="text-green-deep font-medium">$<%= @cart.total.round(2) %></span>
+              <span class="text-green-deep font-medium"><%= format_currency(@cart.total) %></span>
             </div>
             <div class="flex justify-between text-base">
               <span class="text-green-muted">Shipping</span>
@@ -125,11 +125,11 @@
             </div>
             <div class="flex justify-between text-base">
               <span class="text-green-muted">Tax</span>
-              <span class="text-green-deep font-medium">$0.00</span>
+              <span class="text-green-deep font-medium"><%= format_currency(0) %></span>
             </div>
             <div class="border-t-2 border-pink-border pt-3 flex justify-between items-center">
               <span class="font-bold text-green-deep text-lg">Total</span>
-              <span class="font-bold text-green-primary text-2xl">$<%= @cart.total.round(2) %></span>
+              <span class="font-bold text-green-primary text-2xl"><%= format_currency(@cart.total) %></span>
             </div>
           </div>
 
