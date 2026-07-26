@@ -41,3 +41,6 @@ application.register("product-variant", ProductVariantController)
 
 import FavoriteController from "./favorite_controller"
 application.register("favorite", FavoriteController)
+
+import SearchableSelectController from "./searchable_select_controller"
+application.register("searchable-select", SearchableSelectController)

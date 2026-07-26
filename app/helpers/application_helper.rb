@@ -16,6 +16,17 @@ module ApplicationHelper
   end
 
   def format_currency(amount)
-    number_to_currency(amount, unit: "$", separator: ".", delimiter: ",")
+    number_to_currency(amount, unit: "Rs ", separator: ".", delimiter: ",", precision: 2)
+  end
+
+  def recaptcha_tags
+    return "".html_safe unless RecaptchaVerifier.configured?
+
+    content_tag(:div, class: "recaptcha-wrapper") do
+      safe_join([
+        tag.div(class: "g-recaptcha", data: { sitekey: RecaptchaVerifier.site_key }),
+        javascript_include_tag("https://www.google.com/recaptcha/api.js", async: true, defer: true)
+      ])
+    end
   end
 end

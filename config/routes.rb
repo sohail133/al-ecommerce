@@ -37,6 +37,9 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboard#show", as: :dashboard
   
   resources :orders, only: [:index, :show] do
+    member do
+      post :reorder
+    end
     resources :order_items, only: [] do
       resources :reviews, only: [:create]
     end

@@ -1,0 +1,36 @@
+Hello <%= @user.full_name.presence || @user.email %>,
+
+Thank you for your purchase! Your order #<%= @order.id %> has been placed successfully and is currently <%= @order.status.humanize %>.
+
+Order Details
+-------------
+<% @order_items.each do |item| %>
+<%= item.product_variant.product.title %>
+Variant: <%= item.product_variant.name %>
+Qty: <%= item.quantity %> × <%= format_currency(item.price) %>
+Subtotal: <%= format_currency(item.subtotal) %>
+
+<% end %>
+Total Amount: <%= format_currency(@order.total_amount) %>
+
+<% if @order.address.present? %>
+Shipping Address
+----------------
+<%= @order.address.full_name %>
+<%= @order.address.address_line_1 %>
+<% if @order.address.address_line_2.present? %>
+<%= @order.address.address_line_2 %>
+<% end %>
+<%= @order.address.city %>, <%= @order.address.province %> <%= @order.address.postal_code %>
+<%= @order.address.phone_number %>
+<% end %>
+
+<% if @order.payment_method.present? %>
+Payment Method: <%= @order.payment_method.name %> (<%= @order.payment_method.code.to_s.upcase %>)
+<% end %>
+
+We will email you again whenever your order status is updated.
+
+Best regards,
+AL Ecommerce Team
+<%= @store_setting.email %>

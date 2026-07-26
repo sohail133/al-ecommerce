@@ -19,6 +19,7 @@ class Admin::OrdersController < Admin::BaseController
 
   def update
     if @order.update(order_params)
+      OrderMailer.status_updated(@order).deliver_now if @order.saved_change_to_status?
       redirect_to admin_order_path(@order), notice: "Order updated successfully"
     else
       render :edit, status: :unprocessable_entity

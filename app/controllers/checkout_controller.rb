@@ -43,6 +43,7 @@ class CheckoutController < ApplicationController
 
     if @order.save
       @cart.cart_items.destroy_all
+      OrderMailer.order_placed(@order).deliver_now
       redirect_to order_confirmation_path(@order), notice: "Order placed successfully!"
     else
       load_checkout_data

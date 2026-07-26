@@ -1,0 +1,25 @@
+Hello <%= @user.full_name.presence || @user.email %>,
+
+Your order #<%= @order.id %> status has been updated.
+
+<% if @previous_status.present? %>
+Previous status: <%= @previous_status.to_s.humanize %>
+<% end %>
+New status: <%= @current_status.to_s.humanize %>
+
+Order Details
+-------------
+<% @order_items.each do |item| %>
+<%= item.product_variant.product.title %>
+Variant: <%= item.product_variant.name %>
+Qty: <%= item.quantity %> × <%= format_currency(item.price) %>
+Subtotal: <%= format_currency(item.subtotal) %>
+
+<% end %>
+Total Amount: <%= format_currency(@order.total_amount) %>
+
+You can view your full order details anytime from your account dashboard.
+
+Best regards,
+AL Ecommerce Team
+<%= @store_setting.email %>
