@@ -1,0 +1,9 @@
+<div class="flex items-center gap-3" data-category-attribute-options-target="option">
+  <%= f.hidden_field :id %>
+  <%= f.hidden_field :position, value: f.object.position || 0 %>
+  <%= f.text_field :value, placeholder: "Option value", class: "form-input flex-1" %>
+  <label class="inline-flex items-center text-red-600 whitespace-nowrap">
+    <%= f.check_box :_destroy, class: "form-checkbox" %>
+    <span class="ml-2 text-sm">Remove</span>
+  </label>
+</div>

@@ -2,11 +2,11 @@
   <div class="container mx-auto px-4 py-12">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       <div>
-        <div class="flex items-center space-x-2 mb-4">
-          <div class="w-10 h-10 bg-green-primary rounded-full flex items-center justify-center">
-            <span class="text-white font-bold text-xl">AL</span>
-          </div>
-          <span class="text-2xl font-bold">Ecommerce</span>
+        <div class="flex items-center space-x-2.5 mb-4">
+          <%= image_tag "/images/logo-sm-white.png",
+              alt: "Mahnira",
+              class: "h-11 w-auto object-contain" %>
+          <span class="text-2xl font-bold tracking-tight">Mahnira</span>
         </div>
         <p class="text-white/80 mb-4">Your one-stop shop for quality products at great prices. Shop with confidence!</p>
         <div class="flex items-center space-x-4">
@@ -73,7 +73,7 @@
 
     <div class="border-t border-green-light/20 mt-8 pt-8">
       <div class="flex flex-col md:flex-row justify-between items-center">
-        <p class="text-white/80 text-sm">© <%= Time.now.year %> AL Ecommerce. All rights reserved.</p>
+        <p class="text-white/80 text-sm">© <%= Time.now.year %> Mahnira. All rights reserved.</p>
         <div class="flex items-center space-x-6 mt-4 md:mt-0">
           <%= link_to privacy_path, class: "text-white/80 hover:text-white text-sm transition-colors duration-200" do %>Privacy Policy<% end %>
           <%= link_to terms_path, class: "text-white/80 hover:text-white text-sm transition-colors duration-200" do %>Terms of Service<% end %>

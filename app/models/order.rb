@@ -15,6 +15,7 @@ class Order < ApplicationRecord
   }
 
   validates :total_amount, presence: true, numericality: { greater_than: 0 }
+  validates :shipping_fee, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :user_id, presence: true
   validates :address_id, presence: true
   validates :payment_method_id, presence: true
@@ -27,7 +28,9 @@ class Order < ApplicationRecord
   scope :by_min_price, ->(min_price) { where("total_amount >= ?", min_price) }
   scope :by_max_price, ->(max_price) { where("total_amount <= ?", max_price) }
 
+  before_validation :snapshot_shipping_fee, on: :create
   before_validation :calculate_total, on: :create
+  before_create :assign_order_number
   after_update :restore_inventory_on_cancel, if: :saved_change_to_status?
 
   def self.search(params)
@@ -62,10 +65,43 @@ class Order < ApplicationRecord
     order_items.sum(:quantity)
   end
 
+  # Human-friendly identifier shown to admins and customers (e.g. 20260726001).
+  # Falls back to the raw id for any legacy record without a number.
+  def display_number
+    order_number.presence || id.to_s
+  end
+
+  def items_subtotal
+    order_items.sum(&:subtotal)
+  end
+
   private
 
+  # Store-wide daily sequence: YYYYMMDD + zero-padded counter (001, 002, ... 010).
+  def assign_order_number
+    return if order_number.present?
+
+    prefix = Time.current.strftime("%Y%m%d")
+    last_number = self.class
+                      .where("order_number LIKE ?", "#{prefix}%")
+                      .order(order_number: :desc)
+                      .limit(1)
+                      .pick(:order_number)
+
+    sequence = last_number ? last_number[8..].to_i + 1 : 1
+    self.order_number = format("%s%03d", prefix, sequence)
+  end
+
   def calculate_total
-    self.total_amount = order_items.sum(&:subtotal) if order_items.any?
+    return unless order_items.any?
+
+    self.total_amount = items_subtotal + shipping_fee.to_d
+  end
+
+  # Lock in the admin-configured fee at order time so later setting changes
+  # do not rewrite historical order totals.
+  def snapshot_shipping_fee
+    self.shipping_fee = StoreSetting.current_shipping_fee
   end
 
   def restore_inventory_on_cancel

@@ -1,4 +1,4 @@
-<% content_for :title, "Shopping Cart - AL Ecommerce" %>
+<% content_for :title, "Shopping Cart - Mahnira" %>
 
 <div class="min-h-screen bg-pink-lightest">
   <%= render "pages/shared/header" %>
@@ -125,7 +125,7 @@
               </div>
               <div class="flex justify-between text-base">
                 <span class="text-green-muted">Shipping</span>
-                <span class="text-green-primary font-medium">Free</span>
+                <span class="<%= @shipping_fee.to_d.zero? ? 'text-green-primary' : 'text-green-deep' %> font-medium"><%= format_shipping_fee(@shipping_fee) %></span>
               </div>
               <div class="flex justify-between text-base">
                 <span class="text-green-muted">Tax</span>
@@ -133,7 +133,7 @@
               </div>
               <div class="border-t border-pink-border pt-3 flex justify-between items-center">
                 <span class="font-bold text-green-deep text-lg">Total</span>
-                <span class="font-bold text-green-primary text-2xl"><%= format_currency(@cart.total) %></span>
+                <span class="font-bold text-green-primary text-2xl"><%= format_currency(@cart.total + @shipping_fee) %></span>
               </div>
             </div>
 

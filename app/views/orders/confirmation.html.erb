@@ -1,4 +1,4 @@
-<% content_for :title, "Order Confirmation - AL Ecommerce" %>
+<% content_for :title, "Order Confirmation - Mahnira" %>
 
 <div class="min-h-screen bg-pink-lightest">
   <%= render "pages/shared/header" %>
@@ -11,7 +11,7 @@
         </div>
         <h1 class="text-3xl font-bold text-green-deep mb-2">Order Confirmed!</h1>
         <p class="text-green-muted">Thank you for your purchase. Your order has been received.</p>
-        <div class="mt-4 text-lg font-semibold text-green-primary">Order #<%= @order.id %></div>
+        <div class="mt-4 text-lg font-semibold text-green-primary">Order #<%= @order.display_number %></div>
       </div>
 
       <div class="bg-white rounded-lg border border-pink-border shadow-sm p-6 mb-6">
@@ -71,8 +71,16 @@
           </div>
         </div>
 
-        <div class="border-t border-pink-border pt-4 mt-4">
-          <div class="flex justify-between items-center">
+        <div class="border-t border-pink-border pt-4 mt-4 space-y-2">
+          <div class="flex justify-between text-sm">
+            <span class="text-green-muted">Subtotal</span>
+            <span class="text-green-deep font-medium"><%= format_currency(@order.items_subtotal) %></span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-green-muted">Shipping</span>
+            <span class="text-green-deep font-medium"><%= format_shipping_fee(@order.shipping_fee) %></span>
+          </div>
+          <div class="flex justify-between items-center pt-2 border-t border-pink-border">
             <span class="font-bold text-green-deep">Total Amount</span>
             <span class="font-bold text-green-primary text-xl"><%= format_currency(@order.total_amount) %></span>
           </div>

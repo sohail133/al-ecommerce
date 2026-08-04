@@ -1,4 +1,4 @@
-<% content_for :title, "Order ##{@order.id} - AL Ecommerce" %>
+<% content_for :title, "Order ##{@order.display_number} - Mahnira" %>
 
 <div class="min-h-screen bg-pink-lightest">
   <%= render "pages/shared/header" %>
@@ -10,7 +10,7 @@
           <%= render "shared/svg_icons/chevron_left", class: "w-5 h-5 mr-2" %>
           Back to Dashboard
         <% end %>
-        <h1 class="text-3xl font-bold text-green-deep">Order #<%= @order.id %></h1>
+        <h1 class="text-3xl font-bold text-green-deep">Order #<%= @order.display_number %></h1>
         <p class="text-green-muted mt-2">Placed on <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
         <div class="mt-4">
           <%= button_to "Reorder",
@@ -152,9 +152,19 @@
             </div>
           <% end %>
         </div>
-        <div class="mt-6 pt-6 border-t border-pink-border flex justify-between items-center">
-          <span class="text-lg font-semibold text-green-deep">Total Amount:</span>
-          <span class="text-2xl font-bold text-green-primary"><%= format_currency(@order.total_amount) %></span>
+        <div class="mt-6 pt-6 border-t border-pink-border space-y-2">
+          <div class="flex justify-between text-sm">
+            <span class="text-green-muted">Subtotal</span>
+            <span class="text-green-deep font-medium"><%= format_currency(@order.items_subtotal) %></span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-green-muted">Shipping</span>
+            <span class="text-green-deep font-medium"><%= format_shipping_fee(@order.shipping_fee) %></span>
+          </div>
+          <div class="flex justify-between items-center pt-2">
+            <span class="text-lg font-semibold text-green-deep">Total Amount:</span>
+            <span class="text-2xl font-bold text-green-primary"><%= format_currency(@order.total_amount) %></span>
+          </div>
         </div>
       </div>
     </div>

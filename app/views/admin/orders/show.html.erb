@@ -1,9 +1,9 @@
-<% content_for :title, "Order ##{@order.id} - Admin" %>
+<% content_for :title, "Order ##{@order.display_number} - Admin" %>
 
 <div class="space-y-6">
   <div class="flex items-center justify-between">
     <div>
-      <h1 class="text-3xl font-bold text-green-deep">Order #<%= @order.id %></h1>
+      <h1 class="text-3xl font-bold text-green-deep">Order #<%= @order.display_number %></h1>
       <p class="mt-2 text-sm text-green-muted">Order details and customer information</p>
     </div>
     <div class="flex items-center space-x-2">
@@ -24,7 +24,7 @@
       <div class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-green-muted mb-1">Order ID</label>
-          <p class="text-sm font-medium text-green-deep">#<%= @order.id %></p>
+          <p class="text-sm font-medium text-green-deep">#<%= @order.display_number %></p>
         </div>
         <div>
           <label class="block text-sm font-medium text-green-muted mb-1">Status</label>
@@ -119,7 +119,15 @@
         </tbody>
         <tfoot class="bg-green-light">
           <tr>
-            <td colspan="5" class="px-6 py-3 text-right text-sm font-medium text-green-deep">Total</td>
+            <td colspan="5" class="px-6 py-3 text-right text-sm font-medium text-green-deep">Subtotal</td>
+            <td class="px-6 py-3 text-left text-sm font-medium text-green-deep"><%= format_currency(@order.items_subtotal) %></td>
+          </tr>
+          <tr>
+            <td colspan="5" class="px-6 py-3 text-right text-sm font-medium text-green-deep">Shipping</td>
+            <td class="px-6 py-3 text-left text-sm font-medium text-green-deep"><%= format_shipping_fee(@order.shipping_fee) %></td>
+          </tr>
+          <tr>
+            <td colspan="5" class="px-6 py-3 text-right text-sm font-bold text-green-deep">Total</td>
             <td class="px-6 py-3 text-left text-sm font-bold text-green-deep"><%= format_currency(@order.total_amount) %></td>
           </tr>
         </tfoot>

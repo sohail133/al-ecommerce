@@ -28,7 +28,7 @@
           <% @orders.each do |order| %>
             <tr class="hover:bg-green-light transition-colors">
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-green-deep">#<%= order.id %></div>
+                <div class="text-sm font-medium text-green-deep">#<%= order.display_number %></div>
               </td>
               <td class="px-6 py-4">
                 <div class="text-sm font-medium text-green-deep"><%= order.user.full_name %></div>
