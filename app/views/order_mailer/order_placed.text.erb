@@ -1,6 +1,6 @@
 Hello <%= @user.full_name.presence || @user.email %>,
 
-Thank you for your purchase! Your order #<%= @order.id %> has been placed successfully and is currently <%= @order.status.humanize %>.
+Thank you for your purchase! Your order #<%= @order.display_number %> has been placed successfully and is currently <%= @order.status.humanize %>.
 
 Order Details
 -------------
@@ -11,6 +11,8 @@ Qty: <%= item.quantity %> × <%= format_currency(item.price) %>
 Subtotal: <%= format_currency(item.subtotal) %>
 
 <% end %>
+Subtotal: <%= format_currency(@order.items_subtotal) %>
+Shipping: <%= format_shipping_fee(@order.shipping_fee) %>
 Total Amount: <%= format_currency(@order.total_amount) %>
 
 <% if @order.address.present? %>
@@ -32,5 +34,5 @@ Payment Method: <%= @order.payment_method.name %> (<%= @order.payment_method.cod
 We will email you again whenever your order status is updated.
 
 Best regards,
-AL Ecommerce Team
+Mahnira Team
 <%= @store_setting.email %>

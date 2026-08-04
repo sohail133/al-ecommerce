@@ -1,9 +1,26 @@
-<%= form_with model: [:admin, @product_variant], local: true, class: "space-y-6" do |f| %>
+<%= form_with model: [:admin, @product_variant],
+    local: true,
+    class: "space-y-6",
+    data: {
+      controller: "variant-attributes",
+      variant_attributes_url_template_value: attribute_fields_admin_product_variants_path(product_id: "PRODUCT_ID"),
+      variant_attributes_autoload_value: @product_variant.new_record?,
+      variant_attributes_variant_id_value: @product_variant.persisted? ? @product_variant.id : 0
+    } do |f| %>
   <%= render "shared/form_errors", object: @product_variant %>
 
   <div>
     <%= f.label :product_id, class: "block text-sm font-medium text-green-deep mb-1" %>
-    <%= f.select :product_id, options_from_collection_for_select(@products, :id, :title, @product_variant.product_id), { prompt: "Select a product" }, { class: "form-select" } %>
+    <%= f.select :product_id,
+        options_from_collection_for_select(@products, :id, :title, @product_variant.product_id),
+        { prompt: "Select a product" },
+        {
+          class: "form-select",
+          data: {
+            variant_attributes_target: "productSelect",
+            action: "change->variant-attributes#changeProduct"
+          }
+        } %>
   </div>
 
   <div>
@@ -12,8 +29,22 @@
   </div>
 
   <div>
-    <%= f.label :name, class: "block text-sm font-medium text-green-deep mb-1" %>
-    <%= f.text_field :name, placeholder: "e.g., Large - Red", class: "form-input" %>
+    <%= f.label :name, "Display Name", class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.text_field :name,
+        placeholder: "Auto-filled from attributes (or enter manually)",
+        class: "form-input",
+        data: { variant_attributes_target: "nameField" } %>
+    <p class="text-xs text-green-muted mt-1">If category attributes are filled, this name is generated automatically.</p>
+  </div>
+
+  <div class="border border-pink-border rounded-lg p-4 space-y-4">
+    <div>
+      <h3 class="text-sm font-semibold text-green-deep">Category Attributes</h3>
+      <p class="text-xs text-green-muted mt-1">These fields come from the selected product's category.</p>
+    </div>
+    <div data-variant-attributes-target="attributesContainer">
+      <%= render "admin/product_variants/attribute_fields", product_variant: @product_variant %>
+    </div>
   </div>
 
   <div>
@@ -38,4 +69,3 @@
     </div>
   </div>
 <% end %>
-

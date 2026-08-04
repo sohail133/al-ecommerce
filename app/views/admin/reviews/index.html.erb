@@ -31,7 +31,7 @@
             <% @reviews.each do |review| %>
               <tr class="hover:bg-green-light transition-colors cursor-pointer" data-controller="row-click" data-row-click-url-value="<%= admin_review_path(review) %>">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-green-deep">Order #<%= review.order.id %></div>
+                  <div class="text-sm font-medium text-green-deep">Order #<%= review.order.display_number %></div>
                 </td>
                 <td class="px-6 py-4">
                   <div class="text-sm font-medium text-green-deep"><%= review.product.title %></div>

@@ -87,7 +87,11 @@ Rails.application.routes.draw do
         delete :delete_image
       end
     end
-    resources :product_variants
+    resources :product_variants do
+      collection do
+        get :attribute_fields
+      end
+    end
     resources :inventories, only: [:edit, :create, :update]
     resources :payment_methods
     resources :orders, only: [:index, :show, :edit, :update]

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_11_132530) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_26_220000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -85,6 +85,31 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_11_132530) do
     t.index ["slug"], name: "index_categories_on_slug", unique: true
   end
 
+  create_table "category_attribute_options", force: :cascade do |t|
+    t.bigint "category_attribute_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.string "value", null: false
+    t.index ["category_attribute_id", "position"], name: "index_category_attribute_options_on_attr_and_position"
+    t.index ["category_attribute_id", "value"], name: "index_category_attribute_options_on_attr_and_value", unique: true
+    t.index ["category_attribute_id"], name: "index_category_attribute_options_on_category_attribute_id"
+  end
+
+  create_table "category_attributes", force: :cascade do |t|
+    t.bigint "category_id", null: false
+    t.datetime "created_at", null: false
+    t.string "input_type", default: "select", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.boolean "required", default: false, null: false
+    t.string "slug", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id", "position"], name: "index_category_attributes_on_category_id_and_position"
+    t.index ["category_id", "slug"], name: "index_category_attributes_on_category_id_and_slug", unique: true
+    t.index ["category_id"], name: "index_category_attributes_on_category_id"
+  end
+
   create_table "contact_us", force: :cascade do |t|
     t.text "admin_response"
     t.datetime "created_at", null: false
@@ -152,12 +177,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_11_132530) do
   create_table "orders", force: :cascade do |t|
     t.bigint "address_id", null: false
     t.datetime "created_at", null: false
+    t.string "order_number"
     t.bigint "payment_method_id", null: false
+    t.decimal "shipping_fee", precision: 10, scale: 2, default: "0.0", null: false
     t.integer "status", default: 0
     t.decimal "total_amount", precision: 10, scale: 2
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["address_id"], name: "index_orders_on_address_id"
+    t.index ["order_number"], name: "index_orders_on_order_number", unique: true
     t.index ["payment_method_id"], name: "index_orders_on_payment_method_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
@@ -168,6 +196,17 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_11_132530) do
     t.datetime "created_at", null: false
     t.string "name"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "product_variant_attribute_values", force: :cascade do |t|
+    t.bigint "category_attribute_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "product_variant_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "value", null: false
+    t.index ["category_attribute_id"], name: "idx_on_category_attribute_id_2b66f5ae1f"
+    t.index ["product_variant_id", "category_attribute_id"], name: "index_variant_attribute_values_uniqueness", unique: true
+    t.index ["product_variant_id"], name: "index_product_variant_attribute_values_on_product_variant_id"
   end
 
   create_table "product_variants", force: :cascade do |t|
@@ -209,12 +248,17 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_11_132530) do
   end
 
   create_table "store_settings", force: :cascade do |t|
+    t.string "banner_background_color"
+    t.boolean "banner_enabled", default: true, null: false
+    t.string "banner_text"
+    t.string "banner_text_color"
     t.datetime "created_at", null: false
     t.string "email"
     t.string "facebook_url"
     t.string "instagram_url"
     t.text "location"
     t.string "phone_number"
+    t.decimal "shipping_fee", precision: 10, scale: 2, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.string "youtube_url"
   end
@@ -224,6 +268,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_11_132530) do
     t.datetime "created_at", null: false
     t.text "description"
     t.string "name"
+    t.boolean "size_required", default: false, null: false
     t.string "slug"
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_subcategories_on_category_id"
@@ -262,6 +307,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_11_132530) do
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "product_variants"
   add_foreign_key "carts", "users"
+  add_foreign_key "category_attribute_options", "category_attributes"
+  add_foreign_key "category_attributes", "categories"
   add_foreign_key "favorites", "products"
   add_foreign_key "favorites", "users"
   add_foreign_key "inventories", "product_variants"
@@ -270,6 +317,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_11_132530) do
   add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "payment_methods"
   add_foreign_key "orders", "users"
+  add_foreign_key "product_variant_attribute_values", "category_attributes"
+  add_foreign_key "product_variant_attribute_values", "product_variants"
   add_foreign_key "product_variants", "products"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "subcategories"

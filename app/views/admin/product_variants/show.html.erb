@@ -42,6 +42,19 @@
           <label class="block text-sm font-medium text-green-muted mb-1">Name</label>
           <p class="text-sm text-green-deep"><%= @product_variant.name %></p>
         </div>
+        <% if @product_variant.attribute_values.any? %>
+          <div>
+            <label class="block text-sm font-medium text-green-muted mb-1">Attributes</label>
+            <div class="space-y-1">
+              <% @product_variant.attribute_values.includes(:category_attribute).sort_by { |v| v.category_attribute.position }.each do |attribute_value| %>
+                <p class="text-sm text-green-deep">
+                  <span class="text-green-muted"><%= attribute_value.category_attribute.name %>:</span>
+                  <%= attribute_value.value %>
+                </p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
         <div>
           <label class="block text-sm font-medium text-green-muted mb-1">SKU</label>
           <p class="text-sm text-green-deep font-mono"><%= @product_variant.sku %></p>

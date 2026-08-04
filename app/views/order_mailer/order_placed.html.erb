@@ -4,7 +4,7 @@
   </h2>
 
   <p style="color: #333333; font-size: 16px; line-height: 1.7; margin: 0 0 24px 0;">
-    Thank you for your purchase! Your order <strong style="color: #4a7c59; font-weight: 600;">#<%= @order.id %></strong> has been placed successfully and is currently <strong><%= @order.status.humanize %></strong>.
+    Thank you for your purchase! Your order <strong style="color: #4a7c59; font-weight: 600;">#<%= @order.display_number %></strong> has been placed successfully and is currently <strong><%= @order.status.humanize %></strong>.
   </p>
 
   <h3 style="color: #2d5016; font-size: 18px; font-weight: 700; margin: 0 0 16px 0;">Order Details</h3>
@@ -15,6 +15,14 @@
 
   <div style="border-top: 2px solid #f0e4e4; padding-top: 16px; margin-bottom: 28px;">
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="color: #666666; font-size: 14px; padding-bottom: 8px;">Subtotal</td>
+        <td style="color: #2d5016; font-size: 14px; text-align: right; padding-bottom: 8px;"><%= format_currency(@order.items_subtotal) %></td>
+      </tr>
+      <tr>
+        <td style="color: #666666; font-size: 14px; padding-bottom: 8px;">Shipping</td>
+        <td style="color: #2d5016; font-size: 14px; text-align: right; padding-bottom: 8px;"><%= format_shipping_fee(@order.shipping_fee) %></td>
+      </tr>
       <tr>
         <td style="color: #2d5016; font-size: 16px; font-weight: 700;">Total Amount</td>
         <td style="color: #4a7c59; font-size: 20px; font-weight: 700; text-align: right;"><%= format_currency(@order.total_amount) %></td>
@@ -56,7 +64,7 @@
 
   <div style="margin-top: 32px; padding-top: 20px; border-top: 3px solid #e8f5e9;">
     <p style="margin: 0 0 8px 0; color: #2d5016; font-size: 15px; font-weight: 700;">Best regards,</p>
-    <p style="margin: 0 0 5px 0; color: #4a7c59; font-size: 15px; font-weight: 600;">AL Ecommerce Team</p>
+    <p style="margin: 0 0 5px 0; color: #4a7c59; font-size: 15px; font-weight: 600;">Mahnira Team</p>
     <p style="margin: 8px 0 0 0; color: #666666; font-size: 13px;">
       <a href="mailto:<%= @store_setting.email %>" style="color: #4a7c59; text-decoration: none; font-weight: 500;"><%= @store_setting.email %></a>
     </p>

@@ -19,6 +19,11 @@ module ApplicationHelper
     number_to_currency(amount, unit: "Rs ", separator: ".", delimiter: ",", precision: 2)
   end
 
+  def format_shipping_fee(amount)
+    amount = amount.to_d
+    amount.zero? ? "Free" : format_currency(amount)
+  end
+
   def recaptcha_tags
     return "".html_safe unless RecaptchaVerifier.configured?
 

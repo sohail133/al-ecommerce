@@ -13,16 +13,21 @@ class ProductsController < ApplicationController
     @related_products = Product.active
                                .where(category_id: @product.category_id)
                                .where.not(id: @product.id)
-                               .includes(:category, :subcategory, cover_image_attachment: :blob, images_attachments: :blob)
+                               .includes(:product_variants, :category, :subcategory, cover_image_attachment: :blob, images_attachments: :blob)
                                .limit(4)
   end
 
   private
 
   def set_product
-    @product = Product.includes(:category, :subcategory, :product_variants, 
-                                cover_image_attachment: :blob, 
-                                images_attachments: :blob).friendly.find(params[:id])
+    @product = Product.includes(
+      { category: :category_attributes },
+      :subcategory,
+      { product_variants: [:inventory, { attribute_values: :category_attribute }] },
+      cover_image_attachment: :blob,
+      images_attachments: :blob
+    ).friendly.find(params[:id])
+    @favorited_product_ids = user_signed_in? ? current_user.favorited_product_ids : []
   end
 
   def filter_params
