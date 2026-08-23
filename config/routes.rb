@@ -1,8 +1,12 @@
 Rails.application.routes.draw do
   root "pages#home"
+
+  get "robots.txt", to: "robots#show", as: :robots
+  get "sitemap.xml", to: "sitemaps#show", as: :sitemap
   
   get "about", to: "pages#about", as: :about
   get "contact", to: "pages#contact", as: :contact
+  get "collections", to: "pages#collections", as: :collections
   get "returns", to: "pages#returns", as: :returns
   get "shipping", to: "pages#shipping", as: :shipping
   get "faqs", to: "pages#faqs", as: :faqs
@@ -19,6 +23,7 @@ Rails.application.routes.draw do
   end
   
   resources :products, only: [:index, :show]
+  get "new-arrivals", to: "products#new_arrivals", as: :new_arrivals
   resources :categories, only: [:show]
   
   get "cart", to: "cart#show", as: :cart
@@ -87,7 +92,11 @@ Rails.application.routes.draw do
         delete :delete_image
       end
     end
-    resources :product_variants
+    resources :product_variants do
+      collection do
+        get :attribute_fields
+      end
+    end
     resources :inventories, only: [:edit, :create, :update]
     resources :payment_methods
     resources :orders, only: [:index, :show, :edit, :update]

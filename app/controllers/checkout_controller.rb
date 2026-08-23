@@ -60,6 +60,7 @@ class CheckoutController < ApplicationController
   def load_checkout_data
     @addresses = current_user.addresses.order(is_default: :desc, created_at: :desc)
     @payment_methods = PaymentMethod.active.order(:name)
+    @shipping_fee = StoreSetting.current_shipping_fee
   end
 
   def order_params

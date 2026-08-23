@@ -16,6 +16,18 @@
     <%= f.text_area :description, rows: 4, class: "form-textarea" %>
   </div>
 
+  <div class="p-4 rounded-lg border border-pink-border bg-pink-lightest">
+    <label class="flex items-start space-x-3 cursor-pointer">
+      <%= f.check_box :size_required, class: "mt-1" %>
+      <span>
+        <span class="block text-sm font-medium text-green-deep">Size is required for this collection</span>
+        <span class="block text-xs text-green-muted mt-1">
+          Turn this on for rings and bangles. Every variant must then have a size, and customers must pick one before ordering.
+        </span>
+      </span>
+    </label>
+  </div>
+
   <div>
     <%= f.label :image, "Subcategory Image", class: "block text-sm font-medium text-green-deep mb-1" %>
     <div class="mt-2">

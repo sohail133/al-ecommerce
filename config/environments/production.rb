@@ -58,7 +58,15 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  # Prefer SITE_URL (e.g. https://mahnira.com) for production SEO and absolute URLs.
+  site_uri = URI.parse(ENV.fetch("SITE_URL", "https://example.com"))
+  config.action_mailer.default_url_options = {
+    host: site_uri.host || "example.com",
+    protocol: site_uri.scheme || "https"
+  }.tap do |opts|
+    opts[:port] = site_uri.port if site_uri.port && ![80, 443].include?(site_uri.port)
+  end
+  Rails.application.routes.default_url_options = config.action_mailer.default_url_options
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {

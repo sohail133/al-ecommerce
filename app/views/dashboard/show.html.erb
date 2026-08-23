@@ -1,4 +1,4 @@
-<% content_for :title, "Dashboard - AL Ecommerce" %>
+<% content_for :title, "Dashboard - Mahnira" %>
 
 <div class="min-h-screen bg-pink-lightest">
   <%= render "pages/shared/header" %>
@@ -34,7 +34,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <%= link_to order_path(order), class: "flex-1 block" do %>
                         <div class="flex items-center space-x-4 mb-2">
-                          <h3 class="text-lg font-semibold text-green-deep">Order #<%= order.id %></h3>
+                          <h3 class="text-lg font-semibold text-green-deep">Order #<%= order.display_number %></h3>
                           <%= status_badge(order.status, type: :order) %>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-green-muted">

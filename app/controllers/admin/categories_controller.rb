@@ -5,10 +5,13 @@ class Admin::CategoriesController < Admin::BaseController
     @categories = Category.search(filter_params).page(params[:page])
   end
 
-  def show; end
+  def show
+    @category = Category.includes(category_attributes: :category_attribute_options).friendly.find(params[:id])
+  end
 
   def new
     @category = Category.new
+    @category.category_attributes.build(position: 0, input_type: "select")
   end
 
   def create
@@ -20,7 +23,12 @@ class Admin::CategoriesController < Admin::BaseController
     end
   end
 
-  def edit; end
+  def edit
+    @category = Category.includes(category_attributes: :category_attribute_options).friendly.find(params[:id])
+    if @category.category_attributes.empty?
+      @category.category_attributes.build(position: 0, input_type: "select")
+    end
+  end
 
   def update
     if @category.update(category_params)
@@ -42,7 +50,28 @@ class Admin::CategoriesController < Admin::BaseController
   end
 
   def category_params
-    params.require(:category).permit(:name, :description, :image)
+    params.require(:category).permit(
+      :name,
+      :description,
+      :seo_title,
+      :seo_description,
+      :image,
+      category_attributes_attributes: [
+        :id,
+        :name,
+        :slug,
+        :input_type,
+        :required,
+        :position,
+        :_destroy,
+        category_attribute_options_attributes: [
+          :id,
+          :value,
+          :position,
+          :_destroy
+        ]
+      ]
+    )
   end
 
   def filter_params

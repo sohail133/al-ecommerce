@@ -1,4 +1,11 @@
-<% content_for :title, "Cookie Policy - AL Ecommerce" %>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "Cookie Policy | Mahnira",
+        description: "Learn how Mahnira uses cookies to improve your shopping experience.",
+        canonical: Site.absolute_url(cookies_path),
+        robots: "noindex, follow"
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
   <%= render "pages/shared/header" %>

@@ -1,9 +1,9 @@
-<% content_for :title, "Edit Order ##{@order.id} - Admin" %>
+<% content_for :title, "Edit Order ##{@order.display_number} - Admin" %>
 
 <div class="space-y-6">
   <div class="flex items-center justify-between">
     <div>
-      <h1 class="text-3xl font-bold text-green-deep">Edit Order #<%= @order.id %></h1>
+      <h1 class="text-3xl font-bold text-green-deep">Edit Order #<%= @order.display_number %></h1>
       <p class="mt-2 text-sm text-green-muted">Update order status</p>
     </div>
     <div class="flex items-center space-x-2">
@@ -39,7 +39,7 @@
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-medium text-green-muted mb-1">Order ID</label>
-            <p class="text-sm font-medium text-green-deep">#<%= @order.id %></p>
+            <p class="text-sm font-medium text-green-deep">#<%= @order.display_number %></p>
           </div>
           <div>
             <label class="block text-xs font-medium text-green-muted mb-1">Customer</label>

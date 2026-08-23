@@ -29,4 +29,9 @@ class Subcategory < ApplicationRecord
   def products_count
     products.count
   end
+
+  # Attributes whose name ends in "Size" (Ring Size, Bangle Size, ...) count as sizing
+  def size_attributes
+    category.category_attributes.ordered.select { |attribute| attribute.name.match?(/size\z/i) }
+  end
 end

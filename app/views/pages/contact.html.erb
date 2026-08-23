@@ -1,4 +1,17 @@
-<% content_for :title, "Contact Us - AL Ecommerce" %>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "Contact Mahnira | Customer Support in Pakistan",
+        description: "Get in touch with Mahnira for order help, product questions or support. We’re here to help customers across Pakistan.",
+        canonical: Site.absolute_url(contact_path),
+        image: Site::DEFAULT_OG_IMAGE
+      ) %>
+  <%= json_ld(
+        breadcrumb_json_ld([
+          { name: "Home", url: Site.absolute_url(root_path) },
+          { name: "Contact", url: Site.absolute_url(contact_path) }
+        ])
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-pink-lightest">
   <%= render "pages/shared/header" %>

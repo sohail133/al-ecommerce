@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title><%= content_for(:title) || "Al Ecommerce" %></title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Al Ecommerce">
+    <meta name="application-name" content="Mahnira">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -14,13 +14,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <%= yield :head %>
+    <%= yield :seo %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <% unless content_for?(:seo) %>
+      <%= seo_tags(
+            title: content_for?(:title) ? content_for(:title) : "Mahnira",
+            description: "Shop quality products online at Mahnira across Pakistan.",
+            noindex: @seo_noindex == true
+          ) %>
+    <% end %>
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="icon" href="/icon.png?v=mahnira" type="image/png">
+    <link rel="icon" href="/icon.svg?v=mahnira" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png?v=mahnira">
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />

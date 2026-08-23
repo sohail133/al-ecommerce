@@ -1,0 +1,124 @@
+<%
+  active_variants = product.product_variants.select(&:active?)
+  category_attributes = product.category&.category_attributes&.ordered || []
+  has_structured_attrs = category_attributes.any? && active_variants.any? { |variant| variant.attribute_values.any? }
+  size_required = product.subcategory&.size_required?
+
+  variants_payload = active_variants.map do |variant|
+    {
+      id: variant.id,
+      price: variant.price.to_f,
+      price_formatted: format_currency(variant.price),
+      stock: variant.available_quantity,
+      attrs: variant.attribute_values.each_with_object({}) do |value, hash|
+        hash[value.category_attribute.name] = value.value
+      end
+    }
+  end
+%>
+
+<% if active_variants.any? %>
+  <div data-controller="product-variant"
+       data-product-variant-variants-value="<%= ERB::Util.html_escape(variants_payload.to_json) %>"
+       data-product-variant-product-id-value="<%= product.id %>">
+    <% if has_structured_attrs %>
+      <div class="space-y-5 mb-6">
+        <% category_attributes.each do |attribute| %>
+          <%
+            option_values = active_variants.flat_map { |variant|
+              variant.attribute_values.select { |value| value.category_attribute_id == attribute.id }.map(&:value)
+            }.uniq
+            option_values = option_values.sort_by { |value| Float(value) rescue value.to_s }
+            mandatory = attribute.required? || (size_required && attribute.name.match?(/size\z/i))
+          %>
+          <% next if option_values.empty? %>
+
+          <div data-product-variant-target="group"
+               data-attribute-name="<%= attribute.name %>"
+               data-mandatory="<%= mandatory %>">
+            <div class="flex items-baseline justify-between mb-2">
+              <p class="text-sm font-semibold text-green-deep">
+                <%= attribute.name %><% if mandatory %><span class="text-red-500">*</span><% end %>
+              </p>
+              <% if mandatory %>
+                <span class="text-xs text-green-muted" data-product-variant-target="groupHint">Please select</span>
+              <% end %>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <% option_values.each do |option_value| %>
+                <button type="button"
+                        data-product-variant-target="option"
+                        data-action="click->product-variant#selectOption"
+                        data-attribute-name="<%= attribute.name %>"
+                        data-option-value="<%= option_value %>"
+                        class="min-w-[2.75rem] px-4 py-2 text-sm border-2 border-pink-border rounded-full bg-white text-green-deep hover:border-green-primary transition-all">
+                  <%= option_value %>
+                </button>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% elsif active_variants.size > 1 %>
+      <div class="mb-6">
+        <p class="text-sm font-semibold text-green-deep mb-2">Choose option</p>
+        <div class="flex flex-wrap gap-2">
+          <% active_variants.each_with_index do |variant, index| %>
+            <button type="button"
+                    data-action="click->product-variant#select"
+                    data-variant-id="<%= variant.id %>"
+                    data-variant-price="<%= variant.price %>"
+                    data-variant-price-formatted="<%= format_currency(variant.price) %>"
+                    class="px-4 py-2 text-sm border-2 rounded-full transition-all <%= index.zero? ? 'border-green-primary bg-green-light text-green-primary' : 'border-pink-border bg-white text-green-deep' %>">
+              <%= variant.name %>
+            </button>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="mb-4">
+      <p class="text-3xl font-bold text-green-primary" data-product-variant-target="price">
+        <%= format_currency(active_variants.first.price) %>
+      </p>
+      <p class="text-sm text-green-muted mt-1" data-product-variant-target="stock">
+        <%= active_variants.first.available_quantity %> in stock
+      </p>
+      <p class="text-sm text-green-muted mt-1" data-product-variant-target="availability">Ready to ship</p>
+    </div>
+
+    <div class="flex gap-3">
+      <%= form_with url: add_to_cart_path, method: :post, class: "flex-1" do |f| %>
+        <%= f.hidden_field :variant_id, value: active_variants.first.id, data: { product_variant_target: "input" } %>
+        <%= f.hidden_field :quantity, value: 1 %>
+        <%= f.button type: :submit,
+            data: { product_variant_target: "submit" },
+            class: "w-full bg-green-primary text-white px-8 py-3.5 rounded-full hover:bg-green-dark transition-all duration-200 flex items-center justify-center space-x-2 font-semibold" do %>
+          <%= render "shared/svg_icons/cart", class: "w-5 h-5" %>
+          <span data-product-variant-target="submitLabel">Add to Cart</span>
+        <% end %>
+      <% end %>
+
+      <% is_favorited = user_signed_in? && (defined?(@favorited_product_ids) && @favorited_product_ids ? @favorited_product_ids.include?(product.id) : current_user.favorited?(product.id)) %>
+      <%= form_with url: is_favorited ? unfavorite_product_path(product) : favorite_product_path(product),
+          method: is_favorited ? :delete : :post,
+          data: { turbo_method: is_favorited ? :delete : :post },
+          class: "inline-block m-0 p-0" do |f| %>
+        <%= f.button type: :submit,
+            class: "h-full px-4 border-2 border-green-primary text-green-primary rounded-full hover:bg-green-light transition-all #{'text-pink-accent border-pink-accent' if is_favorited}" do %>
+          <% if is_favorited %>
+            <%= render "shared/svg_icons/heart_filled", class: "w-6 h-6" %>
+          <% else %>
+            <%= render "shared/svg_icons/heart", class: "w-6 h-6" %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div class="flex gap-3">
+    <button class="flex-1 bg-green-primary/60 text-white px-8 py-3.5 rounded-full font-semibold" disabled>
+      Currently unavailable
+    </button>
+  </div>
+<% end %>

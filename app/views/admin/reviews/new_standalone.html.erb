@@ -13,7 +13,7 @@
       <div>
         <%= f.label :order_item_id, "Product (Order Item)", class: "block text-sm font-medium text-green-deep mb-1" %>
         <%= f.select :order_item_id, 
-            @order_items.map { |oi| ["Order ##{oi.order.id} - #{oi.product_variant.product.title} (#{oi.product_variant.name}) - #{oi.order.user.full_name}", oi.id] },
+            @order_items.map { |oi| ["Order ##{oi.order.display_number} - #{oi.product_variant.product.title} (#{oi.product_variant.name}) - #{oi.order.user.full_name}", oi.id] },
             { prompt: "Select a product from an order" }, 
             { class: "form-input", required: true } %>
         <p class="text-xs text-green-muted mt-1">Select the product/order item for which you want to create a review</p>

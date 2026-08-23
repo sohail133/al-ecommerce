@@ -1,4 +1,10 @@
-<% content_for :title, "FAQs - AL Ecommerce" %>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "FAQs | Mahnira Online Shopping Help",
+        description: "Find answers to common questions about shopping at Mahnira — orders, shipping, payments and more.",
+        canonical: Site.absolute_url(faqs_path)
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
   <%= render "pages/shared/header" %>

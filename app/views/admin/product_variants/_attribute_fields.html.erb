@@ -1,0 +1,49 @@
+<%
+  attributes = product_variant.product&.category&.category_attributes&.includes(:category_attribute_options)&.ordered || []
+  subcategory = product_variant.product&.subcategory
+  size_required_ids = subcategory&.size_required? ? subcategory.size_attributes.map(&:id) : []
+%>
+
+<% if attributes.any? %>
+  <%= fields_for "product_variant", product_variant do |f| %>
+    <div class="space-y-4">
+      <% attributes.each_with_index do |attribute, index| %>
+        <% value_record = product_variant.attribute_value_for(attribute) || product_variant.attribute_values.build(category_attribute: attribute) %>
+        <% mandatory = attribute.required? || size_required_ids.include?(attribute.id) %>
+        <%= f.fields_for :attribute_values, value_record, child_index: index do |value_form| %>
+          <%= value_form.hidden_field :id %>
+          <%= value_form.hidden_field :category_attribute_id, value: attribute.id %>
+
+          <div>
+            <%= value_form.label :value, "#{attribute.name}#{" *" if mandatory}", class: "block text-sm font-medium text-green-deep mb-1" %>
+            <% if attribute.select? %>
+              <%= value_form.select :value,
+                  options_for_select(
+                    [["Select #{attribute.name}", ""]] + attribute.category_attribute_options.ordered.map { |option| [option.value, option.value] },
+                    value_form.object.value
+                  ),
+                  {},
+                  { class: "form-select", required: mandatory } %>
+            <% else %>
+              <%= value_form.text_field :value,
+                  value: value_form.object.value,
+                  placeholder: "Enter #{attribute.name.downcase}",
+                  class: "form-input",
+                  required: mandatory %>
+            <% end %>
+            <% if size_required_ids.include?(attribute.id) %>
+              <p class="text-xs text-green-muted mt-1">Required — <%= subcategory.name %> cannot be ordered without a size.</p>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% elsif product_variant.product_id.present? %>
+  <p class="text-sm text-green-muted">
+    This product's category has no attributes yet.
+    Add attributes on the category edit page (e.g. Size, Color, Material).
+  </p>
+<% else %>
+  <p class="text-sm text-green-muted">Select a product to load category attributes.</p>
+<% end %>

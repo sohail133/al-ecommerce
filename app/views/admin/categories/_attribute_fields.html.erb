@@ -1,0 +1,55 @@
+<div class="border border-pink-border rounded-lg p-4 bg-green-light/20 space-y-4"
+     data-controller="category-attribute-options"
+     data-category-attributes-target="attribute">
+  <%= f.hidden_field :id %>
+  <%= f.hidden_field :position, value: f.object.position || 0 %>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="md:col-span-2">
+      <%= f.label :name, "Attribute Name", class: "block text-sm font-medium text-green-deep mb-1" %>
+      <%= f.text_field :name, placeholder: "e.g. Size, Color, Material", class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :input_type, "Input Type", class: "block text-sm font-medium text-green-deep mb-1" %>
+      <%= f.select :input_type,
+          options_for_select([["Dropdown", "select"], ["Text", "text"]], f.object.input_type || "select"),
+          {},
+          { class: "form-select", data: { action: "change->category-attribute-options#toggleOptions", category_attribute_options_target: "inputType" } } %>
+    </div>
+
+    <div class="flex items-end justify-between gap-3">
+      <label class="inline-flex items-center pb-2">
+        <%= f.check_box :required, class: "form-checkbox" %>
+        <span class="ml-2 text-sm text-green-deep">Required</span>
+      </label>
+      <label class="inline-flex items-center pb-2 text-red-600">
+        <%= f.check_box :_destroy, class: "form-checkbox" %>
+        <span class="ml-2 text-sm">Remove</span>
+      </label>
+    </div>
+  </div>
+
+  <div data-category-attribute-options-target="optionsSection" class="<%= 'hidden' if f.object.input_type == 'text' %>">
+    <div class="flex items-center justify-between mb-2">
+      <p class="text-sm font-medium text-green-deep">Dropdown Options</p>
+      <button type="button"
+              class="text-sm text-green-primary hover:text-green-dark font-medium"
+              data-action="click->category-attribute-options#addOption">
+        + Add Option
+      </button>
+    </div>
+
+    <div data-category-attribute-options-target="optionsList" class="space-y-2">
+      <%= f.fields_for :category_attribute_options do |option_form| %>
+        <%= render "admin/categories/option_fields", f: option_form %>
+      <% end %>
+    </div>
+
+    <template data-category-attribute-options-target="optionTemplate">
+      <%= f.fields_for :category_attribute_options, CategoryAttributeOption.new(position: 0), child_index: "NEW_OPTION" do |option_form| %>
+        <%= render "admin/categories/option_fields", f: option_form %>
+      <% end %>
+    </template>
+  </div>
+</div>

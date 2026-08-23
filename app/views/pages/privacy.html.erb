@@ -1,4 +1,11 @@
-<% content_for :title, "Privacy Policy - AL Ecommerce" %>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "Privacy Policy | Mahnira",
+        description: "How Mahnira collects, uses and protects your personal information when you shop online with us.",
+        canonical: Site.absolute_url(privacy_path),
+        robots: "noindex, follow"
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
   <%= render "pages/shared/header" %>
@@ -15,7 +22,7 @@
           <section>
             <h2 class="text-2xl font-bold text-green-deep mb-4">Introduction</h2>
             <p>
-              At AL Ecommerce, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
+              At Mahnira, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
             </p>
           </section>
 

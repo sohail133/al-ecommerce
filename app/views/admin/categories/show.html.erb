@@ -38,6 +38,47 @@
           <p class="text-sm text-green-deep"><%= @category.description %></p>
         </div>
       <% end %>
+      <div class="md:col-span-2 pt-4 border-t border-pink-border">
+        <h3 class="text-sm font-semibold text-green-deep mb-3">SEO Preview</h3>
+        <p class="text-sm font-medium text-blue-700"><%= @category.seo_page_title %></p>
+        <p class="text-sm text-green-muted mt-1"><%= @category.seo_page_description %></p>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-pink-border">
+      <h3 class="text-lg font-semibold text-green-deep mb-4">Product Attributes</h3>
+      <% if @category.category_attributes.any? %>
+        <div class="space-y-3">
+          <% @category.category_attributes.ordered.each do |attribute| %>
+            <div class="p-4 border border-pink-border rounded-lg">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <p class="font-medium text-green-deep">
+                    <%= attribute.name %>
+                    <% if attribute.required? %>
+                      <span class="text-xs text-red-600">Required</span>
+                    <% end %>
+                  </p>
+                  <p class="text-xs text-green-muted mt-1">
+                    Type: <%= attribute.input_type.humanize %>
+                  </p>
+                </div>
+              </div>
+              <% if attribute.select? && attribute.category_attribute_options.any? %>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <% attribute.category_attribute_options.ordered.each do |option| %>
+                    <span class="px-2.5 py-1 text-xs rounded-full bg-green-light text-green-deep border border-pink-border">
+                      <%= option.value %>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-green-muted">No attributes defined. Edit this category to add Size, Color, Material, etc.</p>
+      <% end %>
     </div>
 
     <div class="mt-6 pt-6 border-t border-pink-border">

@@ -2,14 +2,29 @@ class PagesController < ApplicationController
   def home
     @store_setting = StoreSetting.instance
     @categories = Category.includes(:products, image_attachment: :blob).order(:name)
-    @featured_products = Product.active.includes(:category, :subcategory, cover_image_attachment: :blob, images_attachments: :blob).limit(8)
-    @best_sellers = Product.active.includes(:product_variants, :category, :subcategory, cover_image_attachment: :blob, images_attachments: :blob).limit(4)
+    @shop_collections = Subcategory.includes(:category, image_attachment: :blob)
+                                   .joins(:category)
+                                   .order("categories.name ASC, subcategories.name ASC")
+                                   .limit(8)
+    @featured_products = Product.active
+                                .includes(:product_variants, :category, :subcategory, cover_image_attachment: :blob, images_attachments: :blob)
+                                .limit(8)
+    @new_arrivals = Product.active.recent
+                           .includes(:product_variants, :category, :subcategory, cover_image_attachment: :blob, images_attachments: :blob)
+                           .limit(8)
+    @best_sellers = Product.active
+                           .includes(:product_variants, :category, :subcategory, cover_image_attachment: :blob, images_attachments: :blob)
+                           .limit(8)
     @hero_images = HeroImage.active.ordered.includes(images_attachments: :blob)
     @recent_reviews = Review.includes(:user, order_item: { product_variant: :product })
                             .recent
                             .limit(6)
-    # Preload favorites for current user to avoid N+1 queries
     @favorited_product_ids = user_signed_in? ? current_user.favorited_product_ids : []
+  end
+
+  def collections
+    @store_setting = StoreSetting.instance
+    @categories = Category.includes(:subcategories, image_attachment: :blob).order(:name)
   end
 
   def about

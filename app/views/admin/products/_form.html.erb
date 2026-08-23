@@ -17,8 +17,9 @@
   </div>
 
   <div>
-    <%= f.label :description, class: "block text-sm font-medium text-green-deep mb-1" %>
-    <%= f.text_area :description, rows: 4, class: "form-textarea" %>
+    <%= f.label :description, "Description (shown on storefront)", class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= f.text_area :description, rows: 4, class: "form-textarea", placeholder: "Describe this product for shoppers..." %>
+    <p class="text-xs text-green-muted mt-1">Used on the product page. Also used for SEO if the SEO description below is blank.</p>
   </div>
 
   <div>
@@ -30,6 +31,13 @@
     <%= f.check_box :active, class: "form-checkbox" %>
     <%= f.label :active, "Active", class: "ml-2 block text-sm text-green-deep" %>
   </div>
+
+  <%= render "admin/shared/seo_fields",
+      form: f,
+      title_value: @product.seo_title,
+      description_value: @product.seo_description,
+      title_placeholder: "#{@product.title.presence || 'Product name'} | Mahnira",
+      description_placeholder: "Buy this product online at Mahnira. Quality products with convenient shopping across Pakistan." %>
 
   <div>
     <%= f.label :cover_image, "Cover Photo", class: "block text-sm font-medium text-green-deep mb-1" %>

@@ -1,4 +1,11 @@
-<% content_for :title, "Terms of Service - AL Ecommerce" %>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "Terms of Service | Mahnira",
+        description: "Terms and conditions for using the Mahnira online store and related services.",
+        canonical: Site.absolute_url(terms_path),
+        robots: "noindex, follow"
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
   <%= render "pages/shared/header" %>
@@ -15,13 +22,13 @@
           <section>
             <h2 class="text-2xl font-bold text-green-deep mb-4">Agreement to Terms</h2>
             <p>
-              By accessing and using AL Ecommerce, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using this site.
+              By accessing and using Mahnira, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using this site.
             </p>
           </section>
 
           <section>
             <h2 class="text-2xl font-bold text-green-deep mb-4">Use License</h2>
-            <p class="mb-3">Permission is granted to temporarily access the materials on AL Ecommerce's website for personal, non-commercial use only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+            <p class="mb-3">Permission is granted to temporarily access the materials on Mahnira's website for personal, non-commercial use only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
             <ul class="list-disc list-inside space-y-2 ml-4">
               <li>Modify or copy the materials</li>
               <li>Use the materials for any commercial purpose</li>
@@ -92,21 +99,21 @@
           <section>
             <h2 class="text-2xl font-bold text-green-deep mb-4">Intellectual Property</h2>
             <p>
-              All content on this website, including text, graphics, logos, images, and software, is the property of AL Ecommerce and is protected by copyright and trademark laws.
+              All content on this website, including text, graphics, logos, images, and software, is the property of Mahnira and is protected by copyright and trademark laws.
             </p>
           </section>
 
           <section>
             <h2 class="text-2xl font-bold text-green-deep mb-4">Limitation of Liability</h2>
             <p>
-              AL Ecommerce shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use our services. Our total liability to you for any claim shall not exceed the amount you paid for the products in question.
+              Mahnira shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use our services. Our total liability to you for any claim shall not exceed the amount you paid for the products in question.
             </p>
           </section>
 
           <section>
             <h2 class="text-2xl font-bold text-green-deep mb-4">Indemnification</h2>
             <p>
-              You agree to indemnify and hold AL Ecommerce harmless from any claims, losses, damages, liabilities, and expenses arising from your violation of these Terms or your use of our services.
+              You agree to indemnify and hold Mahnira harmless from any claims, losses, damages, liabilities, and expenses arising from your violation of these Terms or your use of our services.
             </p>
           </section>
 

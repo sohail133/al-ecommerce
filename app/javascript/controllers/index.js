@@ -44,3 +44,15 @@ application.register("favorite", FavoriteController)
 
 import SearchableSelectController from "./searchable_select_controller"
 application.register("searchable-select", SearchableSelectController)
+
+import CategoryAttributesController from "./category_attributes_controller"
+application.register("category-attributes", CategoryAttributesController)
+
+import CategoryAttributeOptionsController from "./category_attribute_options_controller"
+application.register("category-attribute-options", CategoryAttributeOptionsController)
+
+import VariantAttributesController from "./variant_attributes_controller"
+application.register("variant-attributes", VariantAttributesController)
+
+import SeoCharCountController from "./seo_char_count_controller"
+application.register("seo-char-count", SeoCharCountController)

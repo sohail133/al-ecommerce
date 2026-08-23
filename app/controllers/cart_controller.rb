@@ -4,6 +4,7 @@ class CartController < ApplicationController
 
   def show
     @cart = current_user.cart || current_user.create_cart
+    @shipping_fee = StoreSetting.current_shipping_fee
   end
 
   def add
