@@ -11,6 +11,7 @@ RUN apt-get update -qq && \
     libvips \
     libjemalloc2 \
     libsqlite3-0 \
+    libyaml-dev \
     nodejs \
     npm \
     tzdata \
@@ -21,20 +22,21 @@ WORKDIR /app
 
 # Install gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle config set --local deployment 'true' && \
-    bundle config set --local without 'development test' && \
+RUN bundle config set --local without 'development test' && \
+    bundle lock --add-platform x86_64-linux && \
     bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
-# Copy package files and install node modules
+# Copy package files and install node modules (including devDependencies for build tools)
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+RUN npm ci
 
 # Copy application code
 COPY . .
 
-# NOTE: Assets will be precompiled during deployment by Render
-# This allows access to real credentials and environment variables
+# Build JavaScript and CSS assets
+RUN npm run build
+RUN npm run build:css
 
 # Create non-root user
 RUN groupadd --system --gid 1000 rails && \
