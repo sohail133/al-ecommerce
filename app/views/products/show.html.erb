@@ -1,10 +1,33 @@
-<% content_for :title, "#{@product.title} - Mahnira" %>
+<%
+  product_description = @product.seo_page_description
+  product_image = seo_product_image(@product)
+%>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: @product.seo_page_title,
+        description: product_description,
+        canonical: Site.absolute_url(product_path(@product)),
+        image: product_image,
+        type: "product"
+      ) %>
+  <%= json_ld(product_json_ld(@product)) %>
+  <%= json_ld(
+        breadcrumb_json_ld(
+          [
+            { name: "Home", url: Site.absolute_url(root_path) },
+            { name: @product.category.name, url: Site.absolute_url(category_path(@product.category)) },
+            (@product.subcategory ? { name: @product.subcategory.name, url: Site.absolute_url(products_path(subcategory_id: @product.subcategory_id)) } : nil),
+            { name: @product.title, url: Site.absolute_url(product_path(@product)) }
+          ].compact
+        )
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-pink-lightest">
   <%= render "pages/shared/header" %>
 
-  <div class="container mx-auto px-4 py-8">
-    <nav class="mb-6 text-sm text-green-muted">
+  <main class="container mx-auto px-4 py-8">
+    <nav class="mb-6 text-sm text-green-muted" aria-label="Breadcrumb">
       <%= link_to "Home", root_path, class: "hover:text-green-primary" %>
       <span class="mx-2">/</span>
       <%= link_to @product.category.name, category_path(@product.category), class: "hover:text-green-primary" %>
@@ -20,9 +43,9 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         <div>
           <% if @product.cover_image.attached? %>
-            <%= image_tag @product.cover_image, alt: @product.title, class: "w-full aspect-square object-cover rounded-2xl mb-4" %>
+            <%= image_tag @product.cover_image, alt: @product.title, loading: "eager", fetchpriority: "high", class: "w-full aspect-square object-cover rounded-2xl mb-4", width: 800, height: 800 %>
           <% elsif @product.images.attached? %>
-            <%= image_tag @product.images.first, alt: @product.title, class: "w-full aspect-square object-cover rounded-2xl mb-4" %>
+            <%= image_tag @product.images.first, alt: @product.title, loading: "eager", fetchpriority: "high", class: "w-full aspect-square object-cover rounded-2xl mb-4", width: 800, height: 800 %>
           <% else %>
             <div class="w-full aspect-square bg-green-light rounded-2xl mb-4 flex items-center justify-center">
               <span class="text-6xl font-bold text-green-primary"><%= @product.title.first(2).upcase %></span>
@@ -32,7 +55,7 @@
           <% if @product.images.attached? && @product.images.count > 1 %>
             <div class="grid grid-cols-4 gap-2">
               <% @product.images.take(4).each do |image| %>
-                <%= image_tag image, alt: @product.title, class: "w-full aspect-square object-cover rounded-xl border border-pink-border" %>
+                <%= image_tag image, alt: "#{@product.title} gallery image", loading: "lazy", class: "w-full aspect-square object-cover rounded-xl border border-pink-border", width: 200, height: 200 %>
               <% end %>
             </div>
           <% end %>
@@ -148,7 +171,7 @@
         </div>
       </div>
     <% end %>
-  </div>
+  </main>
 
   <%= render "pages/shared/footer" %>
 </div>

@@ -17,6 +17,8 @@ class Product < ApplicationRecord
   validates :title, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :category_id, presence: true
+  validates :seo_title, length: { maximum: 70 }, allow_blank: true
+  validates :seo_description, length: { maximum: 180 }, allow_blank: true
 
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
@@ -72,5 +74,15 @@ class Product < ApplicationRecord
     Review.joins(order_item: :product_variant)
           .where(product_variants: { product_id: id })
           .count
+  end
+
+  def seo_page_title
+    seo_title.presence || "#{title} | Mahnira"
+  end
+
+  def seo_page_description
+    seo_description.presence ||
+      description.presence ||
+      "Buy #{title} online at Mahnira. Quality products with convenient shopping across Pakistan."
   end
 end

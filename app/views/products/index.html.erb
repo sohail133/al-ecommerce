@@ -1,20 +1,63 @@
-<% content_for :title, "Products - Mahnira" %>
+<%
+  if @new_arrivals_page
+    seo_title = "New Arrivals | Latest Products at Mahnira Pakistan"
+    seo_description = "Discover the latest arrivals at Mahnira. Shop new toys, clothing, jewelry and more with convenient delivery across Pakistan."
+    seo_canonical = Site.absolute_url(new_arrivals_path)
+    page_heading = "New Arrivals"
+    page_intro = "Fresh picks just added — explore what’s new at Mahnira"
+  else
+    seo_title = "Shop Online | Toys, Clothing, Jewelry & More | Mahnira"
+    seo_description = "Browse the Mahnira shop for toys, clothing, jewelry and more. Filter by category, find your style, and order online across Pakistan."
+    seo_canonical = Site.absolute_url(products_path)
+    page_heading = "Shop"
+    page_intro = "Browse our full range — pick your size and style with ease"
+  end
+%>
+
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: seo_title,
+        description: seo_description,
+        canonical: seo_canonical,
+        image: Site::DEFAULT_OG_IMAGE,
+        noindex: @seo_noindex == true
+      ) %>
+  <%= json_ld(
+        collection_page_json_ld(
+          name: page_heading,
+          description: seo_description,
+          url: seo_canonical,
+          products: @products
+        )
+      ) %>
+  <%= json_ld(
+        breadcrumb_json_ld([
+          { name: "Home", url: Site.absolute_url(root_path) },
+          { name: page_heading, url: seo_canonical }
+        ])
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-pink-lightest">
   <%= render "pages/shared/header" %>
 
-  <div class="container mx-auto px-4 py-8">
-    <div class="mb-8">
-      <h1 class="text-3xl md:text-4xl font-bold text-green-deep mb-2">Shop</h1>
-      <p class="text-green-muted">Browse jewelry & fashion — pick your size and style with ease</p>
-    </div>
+  <main class="container mx-auto px-4 py-8">
+    <header class="mb-8">
+      <nav class="text-sm text-green-muted mb-3" aria-label="Breadcrumb">
+        <%= link_to "Home", root_path, class: "hover:text-green-primary transition-colors" %>
+        <span class="mx-2">/</span>
+        <span class="text-green-deep"><%= page_heading %></span>
+      </nav>
+      <h1 class="text-3xl md:text-4xl font-bold text-green-deep mb-2"><%= page_heading %></h1>
+      <p class="text-green-muted"><%= page_intro %></p>
+    </header>
 
     <div class="flex flex-col lg:flex-row gap-8">
-      <aside class="w-full lg:w-72 flex-shrink-0">
+      <aside class="w-full lg:w-72 flex-shrink-0" aria-label="Product filters">
         <%= render "filters" %>
       </aside>
 
-      <div class="flex-1 min-w-0">
+      <section class="flex-1 min-w-0" aria-label="Product listings">
         <% if @products.any? %>
           <div class="mb-4 flex items-center justify-between">
             <p class="text-sm text-green-muted">
@@ -36,20 +79,20 @@
         <% else %>
           <div class="bg-white rounded-lg shadow-sm border border-pink-border p-12 text-center">
             <p class="text-green-muted text-lg">
-              <% if params[:name].present? || params[:category_id].present? || params[:subcategory_id].present? || params[:min_price].present? || params[:max_price].present? || params[:sort].present? %>
+              <% if params[:name].present? || params[:category_id].present? || params[:subcategory_id].present? || params[:min_price].present? || params[:max_price].present? || (params[:sort].present? && !@new_arrivals_page) %>
                 No products found matching your filters. Try adjusting your search.
               <% else %>
                 No products available at the moment.
               <% end %>
             </p>
-            <% if params[:name].present? || params[:category_id].present? || params[:subcategory_id].present? || params[:min_price].present? || params[:max_price].present? || params[:sort].present? %>
-              <%= link_to "Clear Filters", products_path, class: "inline-block mt-4 bg-green-primary text-white px-6 py-2 rounded-lg hover:bg-green-dark transition-colors" %>
+            <% if params[:name].present? || params[:category_id].present? || params[:subcategory_id].present? || params[:min_price].present? || params[:max_price].present? || (params[:sort].present? && !@new_arrivals_page) %>
+              <%= link_to "Clear Filters", @new_arrivals_page ? new_arrivals_path : products_path, class: "inline-block mt-4 bg-green-primary text-white px-6 py-2 rounded-lg hover:bg-green-dark transition-colors" %>
             <% end %>
           </div>
         <% end %>
-      </div>
+      </section>
     </div>
-  </div>
+  </main>
 
   <%= render "pages/shared/footer" %>
 </div>

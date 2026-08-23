@@ -1,4 +1,10 @@
-<% content_for :title, "Returns & Exchanges - Mahnira" %>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "Returns & Exchanges | Mahnira Pakistan",
+        description: "Read Mahnira’s returns and exchanges policy for online orders placed across Pakistan.",
+        canonical: Site.absolute_url(returns_path)
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
   <%= render "pages/shared/header" %>

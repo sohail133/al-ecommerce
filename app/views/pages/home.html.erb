@@ -1,7 +1,19 @@
-<% content_for :title, "Home - Mahnira" %>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "Mahnira | Toys, Clothing, Jewelry & More Online in Pakistan",
+        description: "Shop toys, clothing, jewelry and more at Mahnira. Discover quality products, new arrivals and convenient online shopping across Pakistan.",
+        canonical: Site.absolute_url(root_path),
+        image: Site::DEFAULT_OG_IMAGE,
+        type: "website"
+      ) %>
+  <%= json_ld(organization_json_ld) %>
+  <%= json_ld(website_json_ld) %>
+<% end %>
 
 <div class="min-h-screen bg-pink-lightest">
   <%= render "pages/shared/header" %>
+
+  <main>
 
   <section class="relative overflow-hidden" data-controller="hero-slider" data-hero-slider-interval-value="5000">
     <div class="relative h-[520px] md:h-[620px] lg:h-[700px]">
@@ -9,14 +21,19 @@
         <% @hero_images.each_with_index do |hero_image, index| %>
           <% if hero_image.images.attached? %>
             <% hero_image.images.each_with_index do |image, img_index| %>
-              <div data-hero-slider-target="slide" class="absolute inset-0 transition-opacity duration-1000 <%= 'hidden opacity-0' unless index == 0 && img_index == 0 %>">
-                <div class="relative h-full bg-cover bg-center" style="background-image: linear-gradient(rgba(101, 97, 118, 0.35), rgba(101, 97, 118, 0.45)), url('<%= url_for(image) %>');">
+              <% slide_active = index == 0 && img_index == 0 %>
+              <div data-hero-slider-target="slide" class="absolute inset-0 transition-opacity duration-1000 <%= 'hidden opacity-0' unless slide_active %>">
+                <div class="relative h-full bg-cover bg-center" style="background-image: linear-gradient(rgba(101, 97, 118, 0.35), rgba(101, 97, 118, 0.45)), url('<%= url_for(image) %>');" role="img" aria-label="<%= hero_image.title %>">
                   <div class="container mx-auto px-4 h-full flex items-center">
                     <div class="text-white max-w-xl">
                       <% if hero_image.subtitle.present? %>
                         <p class="text-sm md:text-base mb-3 uppercase tracking-[0.2em] font-medium text-white/90"><%= hero_image.subtitle %></p>
                       <% end %>
-                      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight"><%= hero_image.title %></h1>
+                      <% if slide_active %>
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight"><%= hero_image.title %></h1>
+                      <% else %>
+                        <p class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight"><%= hero_image.title %></p>
+                      <% end %>
                       <% if hero_image.description.present? %>
                         <p class="text-base md:text-lg mb-8 text-white/90 max-w-md"><%= hero_image.description %></p>
                       <% end %>
@@ -41,16 +58,16 @@
     </div>
 
     <% if @hero_images.any? && @hero_images.sum { |hi| hi.images.count } > 1 %>
-      <button data-action="click->hero-slider#previous" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow transition-all duration-200 z-10">
+      <button type="button" aria-label="Previous slide" data-action="click->hero-slider#previous" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow transition-all duration-200 z-10">
         <%= render "shared/svg_icons/chevron_left", class: "w-5 h-5 text-green-deep" %>
       </button>
-      <button data-action="click->hero-slider#next" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow transition-all duration-200 z-10">
+      <button type="button" aria-label="Next slide" data-action="click->hero-slider#next" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow transition-all duration-200 z-10">
         <%= render "shared/svg_icons/chevron_right", class: "w-5 h-5 text-green-deep" %>
       </button>
-      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2 z-10" role="tablist" aria-label="Hero slides">
         <% total_slides = @hero_images.sum { |hi| hi.images.count } %>
         <% total_slides.times do |index| %>
-          <button data-action="click->hero-slider#goToSlide" data-index="<%= index %>" class="w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white transition-colors duration-200"></button>
+          <button type="button" aria-label="Go to slide <%= index + 1 %>" data-action="click->hero-slider#goToSlide" data-index="<%= index %>" class="w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white transition-colors duration-200"></button>
         <% end %>
       </div>
     <% end %>
@@ -132,7 +149,7 @@
           <h2 class="text-3xl font-bold text-green-deep">New Arrivals</h2>
           <p class="text-green-muted text-sm mt-1">Fresh pieces just added</p>
         </div>
-        <%= link_to "View all", products_path(sort: "newest"), class: "text-sm font-semibold text-green-primary hover:text-green-dark" %>
+        <%= link_to "View all", new_arrivals_path, class: "text-sm font-semibold text-green-primary hover:text-green-dark" %>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -249,6 +266,7 @@
       </div>
     </div>
   </section>
+  </main>
 
   <%= render "pages/shared/footer" %>
 </div>

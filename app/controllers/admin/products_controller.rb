@@ -56,7 +56,10 @@ class Admin::ProductsController < Admin::BaseController
   end
 
   def product_params
-    params.require(:product).permit(:category_id, :subcategory_id, :title, :description, :price, :active, :cover_image, images: [])
+    params.require(:product).permit(
+      :category_id, :subcategory_id, :title, :description, :price, :active,
+      :seo_title, :seo_description, :cover_image, images: []
+    )
   end
 
   def filter_params

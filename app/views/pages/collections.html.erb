@@ -1,0 +1,79 @@
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "Collections | Shop by Category at Mahnira Pakistan",
+        description: "Explore Mahnira collections across categories. Browse toys, clothing, jewelry and more — new collections are added as we grow.",
+        canonical: Site.absolute_url(collections_path),
+        image: Site::DEFAULT_OG_IMAGE
+      ) %>
+  <%= json_ld(
+        collection_page_json_ld(
+          name: "Mahnira Collections",
+          description: "Browse Mahnira product collections by category.",
+          url: Site.absolute_url(collections_path),
+          products: []
+        )
+      ) %>
+  <%= json_ld(
+        breadcrumb_json_ld([
+          { name: "Home", url: Site.absolute_url(root_path) },
+          { name: "Collections", url: Site.absolute_url(collections_path) }
+        ])
+      ) %>
+<% end %>
+
+<div class="min-h-screen bg-pink-lightest">
+  <%= render "pages/shared/header" %>
+
+  <main class="container mx-auto px-4 py-10">
+    <nav class="text-sm text-green-muted mb-4" aria-label="Breadcrumb">
+      <%= link_to "Home", root_path, class: "hover:text-green-primary transition-colors" %>
+      <span class="mx-2">/</span>
+      <span class="text-green-deep">Collections</span>
+    </nav>
+
+    <header class="mb-10 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold text-green-deep mb-2">Collections</h1>
+      <p class="text-green-muted">Shop by category — discover what Mahnira has for you</p>
+    </header>
+
+    <% if @categories.any? %>
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="Product categories">
+        <% @categories.each do |category| %>
+          <%= link_to category_path(category), class: "group bg-white rounded-2xl border border-pink-border overflow-hidden hover:border-green-primary transition-all duration-200 shadow-sm" do %>
+            <div class="aspect-[4/3] bg-green-light overflow-hidden">
+              <% if category.image.attached? %>
+                <%= image_tag category.image,
+                    alt: "#{category.name} collection at Mahnira",
+                    loading: "lazy",
+                    class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+              <% else %>
+                <div class="w-full h-full flex items-center justify-center">
+                  <span class="text-4xl font-bold text-green-primary"><%= category.name.first(2).upcase %></span>
+                </div>
+              <% end %>
+            </div>
+            <div class="p-5">
+              <h2 class="text-xl font-bold text-green-deep group-hover:text-green-primary transition-colors"><%= category.name %></h2>
+              <% if category.description.present? %>
+                <p class="text-sm text-green-muted mt-2 line-clamp-2"><%= category.description %></p>
+              <% else %>
+                <p class="text-sm text-green-muted mt-2">Browse <%= category.name.downcase %> at Mahnira</p>
+              <% end %>
+              <% if category.subcategories.any? %>
+                <p class="text-xs text-green-muted mt-3"><%= category.subcategories.size %> subcollections</p>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </section>
+    <% else %>
+      <div class="bg-white rounded-lg border border-pink-border p-12 text-center">
+        <h2 class="text-2xl font-bold text-green-deep mb-2">Collections coming soon</h2>
+        <p class="text-green-muted mb-6">Check back shortly or browse all products.</p>
+        <%= link_to "Shop all products", products_path, class: "btn-primary inline-flex items-center" %>
+      </div>
+    <% end %>
+  </main>
+
+  <%= render "pages/shared/footer" %>
+</div>

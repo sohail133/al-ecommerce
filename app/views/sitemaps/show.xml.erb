@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc><%= Site.absolute_url(root_path) %></loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc><%= Site.absolute_url(products_path) %></loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc><%= Site.absolute_url(new_arrivals_path) %></loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc><%= Site.absolute_url(collections_path) %></loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc><%= Site.absolute_url(about_path) %></loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc><%= Site.absolute_url(contact_path) %></loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc><%= Site.absolute_url(shipping_path) %></loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc><%= Site.absolute_url(returns_path) %></loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc><%= Site.absolute_url(faqs_path) %></loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc><%= Site.absolute_url(privacy_path) %></loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc><%= Site.absolute_url(terms_path) %></loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <% @categories.each do |category| %>
+    <url>
+      <loc><%= Site.absolute_url(category_path(category)) %></loc>
+      <lastmod><%= category.updated_at.utc.strftime("%Y-%m-%d") %></lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.7</priority>
+    </url>
+  <% end %>
+  <% @products.each do |product| %>
+    <url>
+      <loc><%= Site.absolute_url(product_path(product)) %></loc>
+      <lastmod><%= product.updated_at.utc.strftime("%Y-%m-%d") %></lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.8</priority>
+    </url>
+  <% end %>
+</urlset>

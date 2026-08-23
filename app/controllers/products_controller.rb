@@ -5,8 +5,18 @@ class ProductsController < ApplicationController
     @products = Product.search(filter_params).page(params[:page]).per(12)
     @categories = Category.includes(image_attachment: :blob).order(:name)
     @subcategories = Subcategory.includes(image_attachment: :blob).order(:name)
-    # Preload favorites for current user to avoid N+1 queries
     @favorited_product_ids = user_signed_in? ? current_user.favorited_product_ids : []
+    @seo_noindex = listing_filtered?
+  end
+
+  def new_arrivals
+    @products = Product.search(filter_params.merge(sort: "newest")).page(params[:page]).per(12)
+    @categories = Category.includes(image_attachment: :blob).order(:name)
+    @subcategories = Subcategory.includes(image_attachment: :blob).order(:name)
+    @favorited_product_ids = user_signed_in? ? current_user.favorited_product_ids : []
+    @new_arrivals_page = true
+    @seo_noindex = listing_filtered?(ignore_sort: true)
+    render :index
   end
 
   def show
@@ -32,5 +42,12 @@ class ProductsController < ApplicationController
 
   def filter_params
     params.permit(:name, :category_id, :subcategory_id, :min_price, :max_price, :sort)
+  end
+
+  def listing_filtered?(ignore_sort: false)
+    filtered = %i[name category_id subcategory_id min_price max_price].any? { |key| params[key].present? }
+    return filtered if ignore_sort
+
+    filtered || (params[:sort].present? && params[:sort] != "newest")
   end
 end

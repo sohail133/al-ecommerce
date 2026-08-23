@@ -1,4 +1,18 @@
-<% content_for :title, "About Us - Mahnira" %>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "About Mahnira | Our Story & Online Store in Pakistan",
+        description: "Learn about Mahnira — a multi-category online store in Pakistan offering toys, clothing, jewelry and more, with quality products and customer-first shopping.",
+        canonical: Site.absolute_url(about_path),
+        image: Site::DEFAULT_OG_IMAGE
+      ) %>
+  <%= json_ld(organization_json_ld) %>
+  <%= json_ld(
+        breadcrumb_json_ld([
+          { name: "Home", url: Site.absolute_url(root_path) },
+          { name: "About", url: Site.absolute_url(about_path) }
+        ])
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-pink-lightest">
   <%= render "pages/shared/header" %>
