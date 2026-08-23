@@ -29,20 +29,21 @@ default_production: &default_production
   host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
 
 production:
-  <<: *default_production
-  database: mahnira_production
+  primary:
+    <<: *default_production
+    database: mahnira_production
 
-cable:
-  <<: *default_production
-  database: mahnira_production_cable
-  migrations_paths: db/cable_migrate
+  cable:
+    <<: *default_production
+    database: mahnira_production_cable
+    migrations_paths: db/cable_migrate
 
-queue:
-  <<: *default_production
-  database: mahnira_production_queue
-  migrations_paths: db/queue_migrate
+  queue:
+    <<: *default_production
+    database: mahnira_production_queue
+    migrations_paths: db/queue_migrate
 
-cache:
-  <<: *default_production
-  database: mahnira_production_cache
-  migrations_paths: db/cache_migrate
+  cache:
+    <<: *default_production
+    database: mahnira_production_cache
+    migrations_paths: db/cache_migrate
