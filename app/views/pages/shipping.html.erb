@@ -1,4 +1,10 @@
-<% content_for :title, "Shipping Information - Mahnira" %>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "Shipping Information | Mahnira Pakistan",
+        description: "Learn about Mahnira shipping options, delivery timelines and shipping fees for orders across Pakistan.",
+        canonical: Site.absolute_url(shipping_path)
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
   <%= render "pages/shared/header" %>

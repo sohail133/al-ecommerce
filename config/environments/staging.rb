@@ -53,7 +53,12 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: ENV.fetch("STAGING_DOMAIN", "staging.alecommerce.com") }
+  site_uri = URI.parse(ENV.fetch("SITE_URL", "https://#{ENV.fetch('STAGING_DOMAIN', 'staging.alecommerce.com')}"))
+  config.action_mailer.default_url_options = {
+    host: site_uri.host,
+    protocol: site_uri.scheme || "https"
+  }
+  Rails.application.routes.default_url_options = config.action_mailer.default_url_options
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: ENV["SMTP_ADDRESS"],

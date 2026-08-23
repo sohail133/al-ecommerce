@@ -53,6 +53,8 @@ class Admin::CategoriesController < Admin::BaseController
     params.require(:category).permit(
       :name,
       :description,
+      :seo_title,
+      :seo_description,
       :image,
       category_attributes_attributes: [
         :id,

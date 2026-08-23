@@ -1,4 +1,11 @@
-<% content_for :title, "Terms of Service - Mahnira" %>
+<% content_for :seo do %>
+  <%= seo_tags(
+        title: "Terms of Service | Mahnira",
+        description: "Terms and conditions for using the Mahnira online store and related services.",
+        canonical: Site.absolute_url(terms_path),
+        robots: "noindex, follow"
+      ) %>
+<% end %>
 
 <div class="min-h-screen bg-gradient-to-br from-green-light/30 to-pink-light/30">
   <%= render "pages/shared/header" %>

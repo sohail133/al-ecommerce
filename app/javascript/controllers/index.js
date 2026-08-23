@@ -53,3 +53,6 @@ application.register("category-attribute-options", CategoryAttributeOptionsContr
 
 import VariantAttributesController from "./variant_attributes_controller"
 application.register("variant-attributes", VariantAttributesController)
+
+import SeoCharCountController from "./seo_char_count_controller"
+application.register("seo-char-count", SeoCharCountController)

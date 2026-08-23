@@ -1,0 +1,39 @@
+<%# locals: form, title_value:, description_value:, title_placeholder:, description_placeholder: %>
+<div class="pt-6 border-t border-pink-border space-y-4">
+  <div>
+    <h2 class="text-lg font-semibold text-green-deep">SEO Settings</h2>
+    <p class="text-sm text-green-muted mt-1">
+      These fields control how this page appears in Google and social shares.
+      Leave blank to auto-generate from the name/description.
+    </p>
+  </div>
+
+  <div data-controller="seo-char-count" data-seo-char-count-max-value="60">
+    <%= form.label :seo_title, "SEO Title", class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= form.text_field :seo_title,
+        value: title_value,
+        maxlength: 70,
+        placeholder: title_placeholder,
+        class: "form-input",
+        data: { seo_char_count_target: "input", action: "input->seo-char-count#update" } %>
+    <div class="mt-1 flex items-center justify-between gap-3">
+      <p class="text-xs text-green-muted">Recommended ~50–60 characters. Include the page topic and “Mahnira”.</p>
+      <span class="text-xs text-green-muted whitespace-nowrap" data-seo-char-count-target="count">0/60</span>
+    </div>
+  </div>
+
+  <div data-controller="seo-char-count" data-seo-char-count-max-value="160">
+    <%= form.label :seo_description, "SEO Description", class: "block text-sm font-medium text-green-deep mb-1" %>
+    <%= form.text_area :seo_description,
+        value: description_value,
+        rows: 3,
+        maxlength: 180,
+        placeholder: description_placeholder,
+        class: "form-textarea",
+        data: { seo_char_count_target: "input", action: "input->seo-char-count#update" } %>
+    <div class="mt-1 flex items-center justify-between gap-3">
+      <p class="text-xs text-green-muted">Recommended ~140–160 characters. Write a natural summary customers would click.</p>
+      <span class="text-xs text-green-muted whitespace-nowrap" data-seo-char-count-target="count">0/160</span>
+    </div>
+  </div>
+</div>

@@ -22,6 +22,11 @@ class PagesController < ApplicationController
     @favorited_product_ids = user_signed_in? ? current_user.favorited_product_ids : []
   end
 
+  def collections
+    @store_setting = StoreSetting.instance
+    @categories = Category.includes(:subcategories, image_attachment: :blob).order(:name)
+  end
+
   def about
     @store_setting = StoreSetting.instance
   end
