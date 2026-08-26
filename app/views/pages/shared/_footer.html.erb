@@ -12,18 +12,23 @@
         <div class="flex items-center space-x-4">
           <% store_setting = StoreSetting.instance %>
           <% if store_setting.facebook_url.present? %>
-            <%= link_to store_setting.facebook_url, target: "_blank", class: "text-white hover:text-green-primary transition-colors duration-200" do %>
+            <%= link_to store_setting.facebook_url, target: "_blank", rel: "noopener", class: "text-white hover:text-green-primary transition-colors duration-200", "aria-label": "Facebook" do %>
               <%= render "shared/svg_icons/facebook", class: "w-5 h-5" %>
             <% end %>
           <% end %>
           <% if store_setting.instagram_url.present? %>
-            <%= link_to store_setting.instagram_url, target: "_blank", class: "text-white hover:text-green-primary transition-colors duration-200" do %>
+            <%= link_to store_setting.instagram_url, target: "_blank", rel: "noopener", class: "text-white hover:text-green-primary transition-colors duration-200", "aria-label": "Instagram" do %>
               <%= render "shared/svg_icons/instagram", class: "w-5 h-5" %>
             <% end %>
           <% end %>
           <% if store_setting.youtube_url.present? %>
-            <%= link_to store_setting.youtube_url, target: "_blank", class: "text-white hover:text-green-primary transition-colors duration-200" do %>
+            <%= link_to store_setting.youtube_url, target: "_blank", rel: "noopener", class: "text-white hover:text-green-primary transition-colors duration-200", "aria-label": "YouTube" do %>
               <%= render "shared/svg_icons/youtube", class: "w-5 h-5" %>
+            <% end %>
+          <% end %>
+          <% if store_setting.whatsapp_enabled? %>
+            <%= link_to store_setting.whatsapp_chat_url, target: "_blank", rel: "noopener", class: "text-white hover:text-green-primary transition-colors duration-200", "aria-label": "Chat on WhatsApp" do %>
+              <%= render "shared/svg_icons/whatsapp", class: "w-5 h-5" %>
             <% end %>
           <% end %>
         </div>
@@ -64,6 +69,12 @@
             <%= render "shared/svg_icons/phone", class: "w-5 h-5 mr-2 flex-shrink-0 text-white/80" %>
             <%= link_to store_setting.phone_number, "tel:#{store_setting.phone_number}", class: "text-white/80 hover:text-white transition-colors" %>
           </li>
+          <% if store_setting.whatsapp_enabled? %>
+            <li class="flex items-center">
+              <%= render "shared/svg_icons/whatsapp", class: "w-5 h-5 mr-2 flex-shrink-0 text-white/80" %>
+              <%= link_to "Chat on WhatsApp", store_setting.whatsapp_chat_url, target: "_blank", rel: "noopener", class: "text-white/80 hover:text-white transition-colors" %>
+            </li>
+          <% end %>
           <li class="flex items-center">
             <%= render "shared/svg_icons/email", class: "w-5 h-5 mr-2 flex-shrink-0 text-white/80" %>
             <%= link_to store_setting.email, "mailto:#{store_setting.email}", class: "text-white/80 hover:text-white transition-colors" %>
