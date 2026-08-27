@@ -64,7 +64,7 @@ module SeoHelper
         "addressCountry" => "PK",
         "streetAddress" => setting.location
       }.compact,
-      "sameAs" => [setting.facebook_url, setting.instagram_url, setting.youtube_url].compact_blank
+      "sameAs" => [setting.facebook_url, setting.instagram_url, setting.youtube_url, setting.whatsapp_chat_url].compact_blank
     }.compact
   end
 

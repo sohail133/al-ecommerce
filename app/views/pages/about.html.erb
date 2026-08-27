@@ -75,18 +75,23 @@
         <p class="text-lg mb-6 text-white/90">Stay connected with us for the latest updates and exclusive offers</p>
         <div class="flex justify-center space-x-4">
           <% if @store_setting.facebook_url.present? %>
-            <%= link_to @store_setting.facebook_url, target: "_blank", class: "w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110" do %>
+            <%= link_to @store_setting.facebook_url, target: "_blank", rel: "noopener", class: "w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110", "aria-label": "Facebook" do %>
               <%= render "shared/svg_icons/facebook", class: "w-6 h-6 text-white" %>
             <% end %>
           <% end %>
           <% if @store_setting.instagram_url.present? %>
-            <%= link_to @store_setting.instagram_url, target: "_blank", class: "w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110" do %>
+            <%= link_to @store_setting.instagram_url, target: "_blank", rel: "noopener", class: "w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110", "aria-label": "Instagram" do %>
               <%= render "shared/svg_icons/instagram", class: "w-6 h-6 text-white" %>
             <% end %>
           <% end %>
           <% if @store_setting.youtube_url.present? %>
-            <%= link_to @store_setting.youtube_url, target: "_blank", class: "w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110" do %>
+            <%= link_to @store_setting.youtube_url, target: "_blank", rel: "noopener", class: "w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110", "aria-label": "YouTube" do %>
               <%= render "shared/svg_icons/youtube", class: "w-6 h-6 text-white" %>
+            <% end %>
+          <% end %>
+          <% if @store_setting.whatsapp_enabled? %>
+            <%= link_to @store_setting.whatsapp_chat_url, target: "_blank", rel: "noopener", class: "w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110", "aria-label": "Chat on WhatsApp" do %>
+              <%= render "shared/svg_icons/whatsapp", class: "w-6 h-6 text-white" %>
             <% end %>
           <% end %>
         </div>

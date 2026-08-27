@@ -16,6 +16,15 @@
         <%= f.label :phone_number, class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.text_field :phone_number, class: "form-input", required: true %>
       </div>
+      <div>
+        <%= f.label :whatsapp_number, "WhatsApp Number", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :whatsapp_number,
+            class: "form-input",
+            placeholder: "+92 300 1234567" %>
+        <p class="mt-1 text-xs text-gray-500">
+          Include country code. Customers will open WhatsApp chat with this number. Leave blank to hide WhatsApp.
+        </p>
+      </div>
       <div class="md:col-span-2">
         <%= f.label :location, class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.text_area :location, rows: 3, class: "form-input", required: true %>

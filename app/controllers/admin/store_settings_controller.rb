@@ -23,7 +23,8 @@ class Admin::StoreSettingsController < Admin::BaseController
 
   def store_setting_params
     permitted = params.require(:store_setting).permit(
-      :email, :location, :phone_number, :facebook_url, :instagram_url, :youtube_url, :shipping_fee,
+      :email, :location, :phone_number, :whatsapp_number,
+      :facebook_url, :instagram_url, :youtube_url, :shipping_fee,
       :banner_enabled, :banner_text, :banner_background_color, :banner_text_color
     )
 

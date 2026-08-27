@@ -10,6 +10,7 @@ class StoreSetting < ApplicationRecord
 
   validate :valid_url_format
   validate :valid_banner_colors
+  validate :valid_whatsapp_number
 
   def self.instance
     first_or_create! do |setting|
@@ -45,6 +46,30 @@ class StoreSetting < ApplicationRecord
     classes.join(" ")
   end
 
+  def whatsapp_enabled?
+    whatsapp_digits.present?
+  end
+
+  # Opens WhatsApp chat for this store number.
+  # Accepts values like +92 300 1234567, 03001234567, or 923001234567.
+  def whatsapp_chat_url(message: nil)
+    return nil unless whatsapp_enabled?
+
+    url = "https://wa.me/#{whatsapp_digits}"
+    return url if message.blank?
+
+    "#{url}?text=#{ERB::Util.url_encode(message)}"
+  end
+
+  def whatsapp_digits
+    digits = whatsapp_number.to_s.gsub(/\D/, "")
+    return "" if digits.blank?
+
+    # Convert local Pakistani numbers (03XXXXXXXXX) to international format.
+    digits = "92#{digits[1..]}" if digits.match?(/\A03\d{9}\z/)
+    digits
+  end
+
   private
 
   def valid_url_format
@@ -62,6 +87,15 @@ class StoreSetting < ApplicationRecord
       next if color.blank?
 
       errors.add(attr, "must be a hex color like #4a7c59") unless color.match?(HEX_COLOR_FORMAT)
+    end
+  end
+
+  def valid_whatsapp_number
+    return if whatsapp_number.blank?
+
+    digits = whatsapp_digits
+    unless digits.match?(/\A\d{10,15}\z/)
+      errors.add(:whatsapp_number, "must be a valid phone number with country code (e.g. +92 300 1234567)")
     end
   end
 end
