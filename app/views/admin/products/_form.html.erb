@@ -16,6 +16,8 @@
     <%= f.text_field :title, class: "form-input" %>
   </div>
 
+  <%= render "public_url", product: @product %>
+
   <div>
     <%= f.label :description, "Description (shown on storefront)", class: "block text-sm font-medium text-green-deep mb-1" %>
     <%= f.text_area :description, rows: 4, class: "form-textarea", placeholder: "Describe this product for shoppers..." %>
