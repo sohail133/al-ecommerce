@@ -20,6 +20,8 @@ class Product < ApplicationRecord
   validates :seo_title, length: { maximum: 70 }, allow_blank: true
   validates :seo_description, length: { maximum: 180 }, allow_blank: true
 
+  before_save :assign_public_url
+
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
   scope :ordered, -> { order(title: :asc) }
@@ -84,5 +86,21 @@ class Product < ApplicationRecord
     seo_description.presence ||
       description.presence ||
       "Buy #{title} online at Mahnira. Quality products with convenient shopping across Pakistan."
+  end
+
+  def campaign_url
+    public_url.presence || build_public_url
+  end
+
+  private
+
+  def assign_public_url
+    self.public_url = build_public_url
+  end
+
+  def build_public_url
+    return if slug.blank?
+
+    Site.absolute_url("/products/#{slug}")
   end
 end

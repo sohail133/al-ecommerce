@@ -50,6 +50,17 @@
                   
                   <div class="flex-1 min-w-0">
                     <div class="text-sm font-medium text-green-deep"><%= link_to product.title, admin_product_path(product), class: "hover:text-green-primary transition-colors" %></div>
+                    <% if product.campaign_url.present? %>
+                      <div class="mt-1 flex items-center gap-2 min-w-0">
+                        <span class="text-xs text-green-muted truncate" title="<%= product.campaign_url %>"><%= product.campaign_url %></span>
+                        <button type="button"
+                                class="text-xs font-medium text-green-primary hover:text-green-dark shrink-0"
+                                data-url="<%= product.campaign_url %>"
+                                onclick="navigator.clipboard.writeText(this.dataset.url).then(() => { const label = this.textContent; this.textContent = 'Copied'; setTimeout(() => this.textContent = label, 1500); })">
+                          Copy
+                        </button>
+                      </div>
+                    <% end %>
                     <% if product.description.present? %>
                       <div class="text-xs text-green-muted line-clamp-1 mt-1"><%= product.description %></div>
                     <% end %>
