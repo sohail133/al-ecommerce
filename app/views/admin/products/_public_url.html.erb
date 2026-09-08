@@ -1,0 +1,31 @@
+<% url = product.campaign_url %>
+<% if url.present? %>
+  <div>
+    <label class="block text-sm font-medium text-green-muted mb-1">Public URL</label>
+    <div class="flex items-stretch gap-2">
+      <input type="text"
+             readonly
+             value="<%= url %>"
+             class="form-input flex-1 text-sm bg-green-light/40"
+             onclick="this.select()"
+             aria-label="Product public URL">
+      <button type="button"
+              class="btn-secondary whitespace-nowrap"
+              data-url="<%= url %>"
+              onclick="navigator.clipboard.writeText(this.dataset.url).then(() => { const label = this.textContent; this.textContent = 'Copied'; setTimeout(() => this.textContent = label, 1500); })">
+        Copy
+      </button>
+    </div>
+    <p class="text-xs text-green-muted mt-1">
+      Use this link in Instagram / Facebook posts so shoppers can open the product and buy.
+      Saved automatically when the product is created or the title (slug) changes.
+    </p>
+  </div>
+<% else %>
+  <div>
+    <label class="block text-sm font-medium text-green-muted mb-1">Public URL</label>
+    <p class="text-sm text-green-muted">
+      Saved automatically after you create the product. Then you can copy it for campaigns.
+    </p>
+  </div>
+<% end %>
