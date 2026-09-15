@@ -19,8 +19,10 @@ class Product < ApplicationRecord
   validates :category_id, presence: true
   validates :seo_title, length: { maximum: 70 }, allow_blank: true
   validates :seo_description, length: { maximum: 180 }, allow_blank: true
+  validates :public_url, format: { with: /\Ahttps?:\/\/.+\z/i, message: "must be a valid URL starting with http:// or https://" }, allow_blank: true
 
-  before_save :assign_public_url
+  before_validation :normalize_public_url
+  before_save :assign_public_url, if: -> { public_url.blank? }
 
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
@@ -93,6 +95,10 @@ class Product < ApplicationRecord
   end
 
   private
+
+  def normalize_public_url
+    self.public_url = public_url.to_s.strip.presence
+  end
 
   def assign_public_url
     self.public_url = build_public_url

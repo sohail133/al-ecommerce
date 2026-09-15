@@ -146,8 +146,8 @@ module Markaz
         )
       end
 
-      if clothing_like?(category_name)
-        ensure_clothing_like_attributes!(category)
+      if clothing_like?(category_name) || sized_category?(category_name) || scraped_sizes.any?
+        ensure_size_and_color_attributes!(category, scraped_sizes)
       elsif jewelry_like?(category_name)
         ensure_jewelry_attributes!(category)
       end
@@ -155,11 +155,18 @@ module Markaz
       category
     end
 
+    def scraped_sizes
+      sizes = Array(@data["sizes"]).map { |size| size.to_s.strip }.reject(&:blank?)
+      return sizes if sizes.any?
+
+      Array(@data["size_variants"]).filter_map { |row| row["size"].to_s.strip.presence }
+    end
+
     def find_or_create_subcategory!(category, subcategory_name)
       subcategory = Subcategory.find_or_initialize_by(name: subcategory_name, category: category)
-      if subcategory.new_record?
-        subcategory.description = "Browse #{subcategory_name} in #{category.name} at Mahnira."
-        subcategory.size_required = subcategory_name.match?(/\Arings?\z/i)
+      if subcategory.new_record? || scraped_sizes.any?
+        subcategory.description ||= "Browse #{subcategory_name} in #{category.name} at Mahnira."
+        subcategory.size_required = scraped_sizes.any? || subcategory_name.match?(/\Arings?\z/i)
         subcategory.save!
       end
 
@@ -189,6 +196,41 @@ module Markaz
     end
 
     def create_variant_and_inventory!(product, category, category_name, subcategory_name)
+      size_rows = size_variant_rows
+      color_value = infer_color(product.title, @data["description"])
+
+      if size_rows.any?
+        ensure_size_and_color_attributes!(category, size_rows.map { |row| row["size"] })
+        size_attr = category.category_attributes.find_by(name: "Size")
+        color_attr = category.category_attributes.find_by(name: "Color")
+        ensure_option!(color_attr, color_value) if color_attr
+
+        size_rows.each do |row|
+          size_value = row["size"].to_s
+          sku = variant_sku_for(size_value)
+          next if ProductVariant.exists?(sku: sku)
+
+          ensure_option!(size_attr, size_value)
+          variant = product.product_variants.build(
+            sku: sku,
+            price: (@price.presence || row["price"]).to_d,
+            active: true,
+            name: size_value
+          )
+
+          if size_attr
+            variant.attribute_values.build(category_attribute: size_attr, value: size_value)
+          end
+          if color_attr && color_value.present?
+            variant.attribute_values.build(category_attribute: color_attr, value: color_value)
+          end
+
+          variant.save!
+          assign_inventory!(variant, row["stock"])
+        end
+        return
+      end
+
       sku = @data["sku"].presence || "MZ-#{@data['source_id']}"
       raise ArgumentError, "A variant with SKU #{sku} already exists" if ProductVariant.exists?(sku: sku)
 
@@ -200,11 +242,10 @@ module Markaz
       )
 
       attribute_values = {}
-      if clothing_like?(category_name)
+      if clothing_like?(category_name) || sized_category?(category_name)
         size_attr = category.category_attributes.find_by(name: "Size")
         color_attr = category.category_attributes.find_by(name: "Color")
         size_value = infer_size(product.title, @data["description"], subcategory_name)
-        color_value = infer_color(product.title, @data["description"])
         ensure_option!(size_attr, size_value)
         ensure_option!(color_attr, color_value)
         attribute_values[size_attr] = size_value if size_attr
@@ -217,7 +258,6 @@ module Markaz
           attribute_values[ring_attr] = "Adjustable"
         end
         if color_attr
-          color_value = infer_color(product.title, @data["description"])
           ensure_option!(color_attr, color_value)
           attribute_values[color_attr] = color_value
         end
@@ -228,9 +268,43 @@ module Markaz
       end
 
       variant.save!
+      assign_inventory!(variant, @data["stock"])
+    end
 
-      stock = @data["stock"].to_i
+    def size_variant_rows
+      rows = Array(@data["size_variants"]).filter_map do |row|
+        size = row["size"].to_s.strip
+        next if size.blank?
+
+        {
+          "size" => size,
+          "price" => row["price"].presence || @price,
+          "stock" => row["stock"].presence || @data["stock"] || 10
+        }
+      end
+      return rows if rows.any?
+
+      scraped_sizes.map do |size|
+        {
+          "size" => size,
+          "price" => @price,
+          "stock" => @data["stock"].presence || 10
+        }
+      end
+    end
+
+    def variant_sku_for(size_value)
+      base = @data["sku"].presence || "MZ-#{@data['source_id']}"
+      "#{base}-#{size_value.to_s.parameterize.upcase}"
+    end
+
+    def assign_inventory!(variant, stock_value)
+      stock = stock_value.to_i
       stock = 10 if stock.negative?
+      # Markaz sometimes reports placeholder stock like 100; keep a sensible shelf qty.
+      stock = [@data["stock"].to_i, 10].max if stock > 50 && @data["stock"].to_i.positive?
+      stock = 10 if stock > 50
+
       variant.inventory.update!(
         quantity: stock,
         reserved_quantity: 0,
@@ -276,13 +350,19 @@ module Markaz
     end
 
     def ensure_clothing_like_attributes!(category)
+      ensure_size_and_color_attributes!(category)
+    end
+
+    def ensure_size_and_color_attributes!(category, extra_sizes = [])
+      default_sizes = %w[XS S M L XL XXL] + ["Standard Size", "One Size", '22"', '23"'] +
+                      %w[36 37 38 39 40 41 42 43 44 45]
       ensure_attribute!(
         category: category,
         name: "Size",
         input_type: "select",
         required: true,
         position: 0,
-        options: %w[XS S M L XL XXL] + ["Standard Size", "One Size", '22"', '23"']
+        options: (default_sizes + Array(extra_sizes).map(&:to_s)).uniq
       )
       ensure_attribute!(
         category: category,
@@ -290,7 +370,7 @@ module Markaz
         input_type: "select",
         required: true,
         position: 1,
-        options: %w[Black White Blue Red Green Beige Pink Navy Grey Peach Multicolor Brown Purple Orange Yellow]
+        options: %w[Black White Blue Red Green Beige Pink Navy Grey Peach Multicolor Brown Purple Orange Yellow Maroon]
       )
     end
 
@@ -309,12 +389,16 @@ module Markaz
         input_type: "select",
         required: false,
         position: 1,
-        options: ["Gold", "Silver", "Rose Gold", "Black", "White", "Red", "Multicolor"]
+        options: ["Gold", "Silver", "Rose Gold", "Black", "White", "Red", "Multicolor", "Maroon"]
       )
     end
 
     def clothing_like?(category_name)
       category_name.match?(/cloth|stitch|fashion|women|men|kid/i)
+    end
+
+    def sized_category?(category_name)
+      category_name.match?(/shoe|pump|sandal|sneaker|footwear|apparel|dress/i)
     end
 
     def jewelry_like?(category_name)
@@ -336,7 +420,7 @@ module Markaz
     end
 
     def infer_color(title, description)
-      colors = %w[Black White Blue Red Green Beige Pink Navy Grey Peach Brown Purple Orange Yellow Multicolor]
+      colors = %w[Black White Blue Red Green Beige Pink Navy Grey Peach Brown Purple Orange Yellow Maroon Multicolor]
       haystack = "#{title} #{description}"
       colors.find { |color| haystack.match?(/\b#{Regexp.escape(color)}\b/i) } || "Multicolor"
     end

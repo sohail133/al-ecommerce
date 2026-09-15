@@ -51,6 +51,10 @@ module Markaz
         end
       end
 
+      size_variants = extract_size_variants(html)
+      sizes = size_variants.map { |row| row["size"] }
+      sizes = extract_available_sizes(html, product["description"].to_s) if sizes.empty?
+
       {
         "source_id" => source_id,
         "source_url" => canonical_url(source_id),
@@ -62,6 +66,8 @@ module Markaz
         "category" => category.presence || "General",
         "subcategory" => subcategory.presence || "General",
         "images" => images,
+        "sizes" => sizes,
+        "size_variants" => size_variants,
         "markaz_category_path" => product["category"],
         "brand" => product.dig("brand", "name")
       }
@@ -141,6 +147,33 @@ module Markaz
       return 0 if availability.to_s.include?("OutOfStock")
 
       10
+    end
+
+    # Markaz embeds selectable sizes like: "options":{"Size":"36"},"price":2339,...,"stock":100
+    def extract_size_variants(html)
+      text = html.to_s.tr('\\"', '"')
+      rows = text.scan(
+        /"options"\s*:\s*\{\s*"Size"\s*:\s*"([^"]+)"\s*\}\s*,\s*"price"\s*:\s*(\d+)\s*,\s*"oldPrice"\s*:\s*\d+\s*,\s*"discount"\s*:\s*\d+\s*,\s*"stock"\s*:\s*(\d+)/i
+      )
+
+      rows.filter_map do |size, price, stock|
+        next if size.blank?
+
+        {
+          "size" => size.to_s.strip,
+          "price" => price.to_d,
+          "stock" => stock.to_i
+        }
+      end.uniq { |row| row["size"] }
+    end
+
+    def extract_available_sizes(html, description)
+      text = "#{html} #{description}".tr('\\"', '"')
+      if (match = text.match(/Available Sizes:\s*([0-9A-Za-z\-,\s\/]+)/i))
+        return match[1].split(/[,\/]/).map { |part| part.to_s.strip }.reject(&:blank?).uniq
+      end
+
+      []
     end
   end
 end
