@@ -21,7 +21,7 @@ module Site
     when "staging"
       "https://#{ENV.fetch('STAGING_DOMAIN', 'staging.alecommerce.com')}"
     else
-      host = Rails.application.config.action_mailer.default_url_options&.dig(:host).presence || "example.com"
+      host = Rails.application.config.action_mailer.default_url_options&.dig(:host).presence || "www.mahnira.com"
       protocol = Rails.application.config.action_mailer.default_url_options&.dig(:protocol).presence || "https"
       port = Rails.application.config.action_mailer.default_url_options&.dig(:port)
       base = "#{protocol}://#{host}"
