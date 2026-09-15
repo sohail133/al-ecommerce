@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 # Canonical site configuration for SEO, mailers, and absolute URLs.
-# Set SITE_URL in production, e.g. https://mahnira.com (no trailing slash).
+# Set SITE_URL in production, e.g. https://www.mahnira.com (no trailing slash).
 module Site
   BRAND = "Mahnira"
   DEFAULT_OG_IMAGE = "/images/logo.png"
   CURRENCY = "PKR"
   LOCALE = "en_PK"
+  DEFAULT_PRODUCTION_URL = "https://www.mahnira.com"
 
   module_function
 
@@ -21,7 +22,9 @@ module Site
     when "staging"
       "https://#{ENV.fetch('STAGING_DOMAIN', 'staging.alecommerce.com')}"
     else
-      host = Rails.application.config.action_mailer.default_url_options&.dig(:host).presence || "www.mahnira.com"
+      host = Rails.application.config.action_mailer.default_url_options&.dig(:host).presence
+      # Never persist campaign/public URLs against the Rails placeholder host.
+      host = "www.mahnira.com" if host.blank? || host == "example.com"
       protocol = Rails.application.config.action_mailer.default_url_options&.dig(:protocol).presence || "https"
       port = Rails.application.config.action_mailer.default_url_options&.dig(:port)
       base = "#{protocol}://#{host}"
