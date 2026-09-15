@@ -26,7 +26,11 @@ class Admin::ProductsController < Admin::BaseController
   def edit; end
 
   def update
-    if @product.update(product_params)
+    attrs = product_params
+    attrs = attrs.except(:images) unless uploaded_files?(attrs[:images])
+    attrs = attrs.except(:cover_image) unless uploaded_file?(attrs[:cover_image])
+
+    if @product.update(attrs)
       redirect_to admin_product_path(@product), notice: "Product updated successfully"
     else
       render :edit, status: :unprocessable_entity
@@ -58,8 +62,16 @@ class Admin::ProductsController < Admin::BaseController
   def product_params
     params.require(:product).permit(
       :category_id, :subcategory_id, :title, :description, :price, :active,
-      :seo_title, :seo_description, :cover_image, images: []
+      :seo_title, :seo_description, :public_url, :cover_image, images: []
     )
+  end
+
+  def uploaded_files?(files)
+    Array(files).reject(&:blank?).any?
+  end
+
+  def uploaded_file?(file)
+    file.present?
   end
 
   def filter_params
