@@ -92,6 +92,7 @@ Rails.application.routes.draw do
         delete :delete_image
       end
     end
+    resources :product_imports, only: [:create]
     resources :product_variants do
       collection do
         get :attribute_fields

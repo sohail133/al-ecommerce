@@ -56,3 +56,9 @@ application.register("variant-attributes", VariantAttributesController)
 
 import SeoCharCountController from "./seo_char_count_controller"
 application.register("seo-char-count", SeoCharCountController)
+
+import ProductImportController from "./product_import_controller"
+application.register("product-import", ProductImportController)
+
+import ProductGalleryController from "./product_gallery_controller"
+application.register("product-gallery", ProductGalleryController)
