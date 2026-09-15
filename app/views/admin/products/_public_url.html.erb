@@ -1,5 +1,28 @@
 <% url = product.campaign_url %>
-<% if url.present? %>
+
+<% if local_assigns[:form] %>
+  <div>
+    <%= form.label :public_url, "Public URL", class: "block text-sm font-medium text-green-deep mb-1" %>
+    <div class="flex items-stretch gap-2">
+      <%= form.text_field :public_url,
+          value: product.public_url.presence || url,
+          placeholder: "https://www.mahnira.com/products/your-product",
+          class: "form-input flex-1 text-sm",
+          autocomplete: "off" %>
+      <% if (product.public_url.presence || url).present? %>
+        <button type="button"
+                class="btn-secondary whitespace-nowrap"
+                data-url="<%= product.public_url.presence || url %>"
+                onclick="const input = this.parentElement.querySelector('input'); navigator.clipboard.writeText((input && input.value) || this.dataset.url).then(() => { const label = this.textContent; this.textContent = 'Copied'; setTimeout(() => this.textContent = label, 1500); })">
+          Copy
+        </button>
+      <% end %>
+    </div>
+    <p class="text-xs text-green-muted mt-1">
+      Used for Instagram / Facebook campaigns. Auto-filled on create if left blank; you can edit it anytime.
+    </p>
+  </div>
+<% elsif url.present? %>
   <div>
     <label class="block text-sm font-medium text-green-muted mb-1">Public URL</label>
     <div class="flex items-stretch gap-2">
@@ -17,15 +40,14 @@
       </button>
     </div>
     <p class="text-xs text-green-muted mt-1">
-      Use this link in Instagram / Facebook posts so shoppers can open the product and buy.
-      Saved automatically when the product is created or the title (slug) changes.
+      Edit this from the product edit page if you need to change the campaign link.
     </p>
   </div>
 <% else %>
   <div>
     <label class="block text-sm font-medium text-green-muted mb-1">Public URL</label>
     <p class="text-sm text-green-muted">
-      Saved automatically after you create the product. Then you can copy it for campaigns.
+      Saved automatically after you create the product. Then you can edit or copy it for campaigns.
     </p>
   </div>
 <% end %>
