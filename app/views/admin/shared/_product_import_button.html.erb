@@ -1,0 +1,76 @@
+<div data-controller="product-import"
+     data-action="keydown@window->product-import#closeOnEscape">
+  <button type="button"
+          data-action="click->product-import#open"
+          class="relative p-2 text-green-deep dark:text-green-deep hover:text-green-primary dark:hover:text-green-primary hover:bg-green-light dark:hover:bg-green-light rounded-lg transition-colors duration-200"
+          title="Import product from URL"
+          aria-label="Import product from URL">
+    <%= render "shared/svg_icons/link" %>
+  </button>
+
+  <div data-product-import-target="modal"
+       data-action="click->product-import#closeOnBackdrop"
+       class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+    <div class="w-full max-w-lg bg-white rounded-xl shadow-xl border border-pink-border"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="product-import-title">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-pink-border">
+        <div>
+          <h2 id="product-import-title" class="text-lg font-semibold text-green-deep">Import Product from URL</h2>
+          <p class="text-xs text-green-muted mt-1">Paste a Markaz product link and your selling price.</p>
+        </div>
+        <button type="button"
+                data-action="click->product-import#close"
+                class="p-2 text-green-muted hover:text-green-deep hover:bg-green-light rounded-lg transition-colors"
+                aria-label="Close">
+          <%= render "shared/svg_icons/close", class: "w-4 h-4" %>
+        </button>
+      </div>
+
+      <%= form_with url: admin_product_imports_path,
+                    scope: :product_import,
+                    method: :post,
+                    local: true,
+                    html: {
+                      data: {
+                        product_import_target: "form",
+                        action: "submit->product-import#submitting"
+                      },
+                      class: "px-5 py-5 space-y-4"
+                    } do |f| %>
+        <div>
+          <%= f.label :source_url, "Product URL", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.url_field :source_url,
+              required: true,
+              placeholder: "https://www.markaz.app/shop/product/p/723650",
+              class: "form-input w-full" %>
+        </div>
+
+        <div>
+          <%= f.label :price, "Your Price (PKR)", class: "block text-sm font-medium text-green-deep mb-1" %>
+          <%= f.number_field :price,
+              required: true,
+              min: 0.01,
+              step: 0.01,
+              placeholder: "1999",
+              class: "form-input w-full" %>
+          <p class="text-xs text-green-muted mt-1">
+            Category, images, description, and SEO are filled automatically. Existing products are not duplicated.
+          </p>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <button type="button" data-action="click->product-import#close" class="btn-secondary">
+            Cancel
+          </button>
+          <button type="submit"
+                  data-product-import-target="submit"
+                  class="btn-primary disabled:opacity-60 disabled:cursor-not-allowed">
+            <span data-product-import-target="submitLabel">Import Product</span>
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

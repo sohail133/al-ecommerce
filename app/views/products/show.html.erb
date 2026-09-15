@@ -41,21 +41,49 @@
 
     <div class="bg-white rounded-2xl border border-pink-border p-4 md:p-8 mb-10">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        <div>
-          <% if @product.cover_image.attached? %>
-            <%= image_tag @product.cover_image, alt: @product.title, loading: "eager", fetchpriority: "high", class: "w-full aspect-square object-cover rounded-2xl mb-4", width: 800, height: 800 %>
-          <% elsif @product.images.attached? %>
-            <%= image_tag @product.images.first, alt: @product.title, loading: "eager", fetchpriority: "high", class: "w-full aspect-square object-cover rounded-2xl mb-4", width: 800, height: 800 %>
+        <div data-controller="product-gallery">
+          <%
+            gallery_images = []
+            gallery_images << @product.cover_image if @product.cover_image.attached?
+            gallery_images.concat(@product.images.to_a) if @product.images.attached?
+            gallery_images = gallery_images.uniq(&:blob_id)
+            main_image = gallery_images.first
+          %>
+
+          <% if main_image.present? %>
+            <%= image_tag main_image,
+                alt: @product.title,
+                loading: "eager",
+                fetchpriority: "high",
+                class: "w-full aspect-square object-cover rounded-2xl mb-4",
+                width: 800,
+                height: 800,
+                data: { product_gallery_target: "main" } %>
           <% else %>
             <div class="w-full aspect-square bg-green-light rounded-2xl mb-4 flex items-center justify-center">
               <span class="text-6xl font-bold text-green-primary"><%= @product.title.first(2).upcase %></span>
             </div>
           <% end %>
 
-          <% if @product.images.attached? && @product.images.count > 1 %>
-            <div class="grid grid-cols-4 gap-2">
-              <% @product.images.take(4).each do |image| %>
-                <%= image_tag image, alt: "#{@product.title} gallery image", loading: "lazy", class: "w-full aspect-square object-cover rounded-xl border border-pink-border", width: 200, height: 200 %>
+          <% if gallery_images.size > 1 %>
+            <div class="grid grid-cols-4 gap-2" role="list">
+              <% gallery_images.each_with_index do |image, index| %>
+                <button type="button"
+                        role="listitem"
+                        data-action="click->product-gallery#select"
+                        data-product-gallery-target="thumb"
+                        data-url="<%= url_for(image) %>"
+                        data-alt="<%= @product.title %> image <%= index + 1 %>"
+                        aria-label="Show image <%= index + 1 %>"
+                        aria-pressed="<%= index.zero? %>"
+                        class="p-0 overflow-hidden rounded-xl border <%= index.zero? ? 'border-green-primary ring-2 ring-green-primary' : 'border-pink-border' %> hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-green-primary cursor-pointer">
+                  <%= image_tag image,
+                      alt: "#{@product.title} thumbnail #{index + 1}",
+                      loading: "lazy",
+                      class: "w-full aspect-square object-cover pointer-events-none",
+                      width: 200,
+                      height: 200 %>
+                </button>
               <% end %>
             </div>
           <% end %>
